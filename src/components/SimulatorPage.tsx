@@ -1,0 +1,480 @@
+import React, { useState } from 'react';
+import {
+  Sliders,
+  ArrowLeft,
+  Sparkles,
+  Info,
+  TrendingUp,
+  Send,
+} from 'lucide-react';
+import type { LanguageCode } from '../types';
+import { LANGUAGES } from '../data/languages';
+
+interface SimulatorPageProps {
+  currentLang: LanguageCode;
+  onSelectLang: (lang: LanguageCode) => void;
+  onBackToChat: () => void;
+  onAskAIWithSummary?: (summaryText: string) => void;
+}
+
+export const SimulatorPage: React.FC<SimulatorPageProps> = ({
+  currentLang,
+  onSelectLang,
+  onBackToChat,
+  onAskAIWithSummary,
+}) => {
+  // Input Controls State
+  const [monthlyAmount, setMonthlyAmount] = useState<number>(1500);
+  const [durationYears, setDurationYears] = useState<number>(3);
+  const [compareFD, setCompareFD] = useState<boolean>(true);
+
+  const sipRate = 12.0; // 12% expected annual return
+  const fdRate = 6.5; // 6.5% guaranteed FD annual return
+
+  // Calculate SIP returns
+  const calculateSIPReturns = (amount: number, years: number, rate: number) => {
+    const monthlyRate = rate / 12 / 100;
+    const months = years * 12;
+    const factor =
+      ((Math.pow(1 + monthlyRate, months) - 1) / monthlyRate) * (1 + monthlyRate);
+    const finalValue = Math.round(amount * factor);
+    const totalInvested = amount * months;
+    const wealthGain = Math.max(0, finalValue - totalInvested);
+    return { finalValue, totalInvested, wealthGain };
+  };
+
+  // Calculate FD returns (Recurring Deposit / Compound quarterly)
+  const calculateFDReturns = (amount: number, years: number, rate: number) => {
+    const monthlyRate = rate / 12 / 100;
+    const months = years * 12;
+    // Simple RD formula approximation
+    let finalVal = 0;
+    for (let i = 1; i <= months; i++) {
+      finalVal += amount * Math.pow(1 + monthlyRate, months - i + 1);
+    }
+    const finalValue = Math.round(finalVal);
+    const totalInvested = amount * months;
+    const wealthGain = Math.max(0, finalValue - totalInvested);
+    return { finalValue, totalInvested, wealthGain };
+  };
+
+  const sipResult = calculateSIPReturns(monthlyAmount, durationYears, sipRate);
+  const fdResult = calculateFDReturns(monthlyAmount, durationYears, fdRate);
+  const currentLangObj = LANGUAGES.find((l) => l.code === currentLang) || LANGUAGES[0];
+
+  // Generate Year-by-Year Data Points for SVG Chart
+  const chartPoints = [];
+  const totalMonths = durationYears * 12;
+  const numSteps = Math.min(10, totalMonths);
+  const stepMonths = totalMonths / numSteps;
+
+  for (let i = 0; i <= numSteps; i++) {
+    const monthIndex = Math.round(i * stepMonths);
+    const currentYears = monthIndex / 12;
+    const sipVal = monthIndex === 0 ? 0 : calculateSIPReturns(monthlyAmount, currentYears, sipRate).finalValue;
+    const fdVal = monthIndex === 0 ? 0 : calculateFDReturns(monthlyAmount, currentYears, fdRate).finalValue;
+    chartPoints.push({ monthIndex, yearLabel: Math.round(currentYears * 10) / 10, sipVal, fdVal });
+  }
+
+  // SVG Chart Dimensions & Scale
+  const maxVal = Math.max(sipResult.finalValue, fdResult.finalValue, 1000);
+  const chartWidth = 500;
+  const chartHeight = 220;
+  const padding = 30;
+
+  const getSvgX = (index: number) => {
+    return padding + (index / (chartPoints.length - 1)) * (chartWidth - 2 * padding);
+  };
+
+  const getSvgY = (val: number) => {
+    return chartHeight - padding - (val / maxVal) * (chartHeight - 2 * padding);
+  };
+
+  // Generate SVG Path String for SIP Area & Line
+  const sipLinePath = chartPoints
+    .map((pt, idx) => `${idx === 0 ? 'M' : 'L'} ${getSvgX(idx)} ${getSvgY(pt.sipVal)}`)
+    .join(' ');
+
+  const sipAreaPath = `${sipLinePath} L ${getSvgX(chartPoints.length - 1)} ${chartHeight - padding} L ${getSvgX(0)} ${chartHeight - padding} Z`;
+
+  // Generate SVG Path String for FD Line
+  const fdLinePath = chartPoints
+    .map((pt, idx) => `${idx === 0 ? 'M' : 'L'} ${getSvgX(idx)} ${getSvgY(pt.fdVal)}`)
+    .join(' ');
+
+  // Dynamic Vernacular Summary Sentence Generation
+  const getDynamicSummary = () => {
+    const amtStr = `₹${monthlyAmount.toLocaleString('en-IN')}`;
+    const yrsStr = `${durationYears} ${durationYears === 1 ? 'year' : 'years'}`;
+    const totalInvStr = `₹${sipResult.totalInvested.toLocaleString('en-IN')}`;
+    const growthStr = `₹${sipResult.wealthGain.toLocaleString('en-IN')}`;
+    const finalValStr = `₹${sipResult.finalValue.toLocaleString('en-IN')}`;
+
+    switch (currentLang) {
+      case 'hi':
+        return `यदि आप ${durationYears} वर्षों के लिए हर महीने ${amtStr} का निवेश करते हैं, तो आपका कुल निवेश ${totalInvStr} होगा और अनुमानित लाभ ${growthStr} होगा (कुल ${finalValStr})।`;
+      case 'ta':
+        return `நீங்கள் ${durationYears} ஆண்டுகளுக்கு மாதம் ${amtStr} முதலீடு செய்தால், உங்கள் மொத்த முதலீடு ${totalInvStr} மற்றும் கணிக்கப்பட்ட லாபம் ${growthStr} ஆகும் (மொத்தம் ${finalValStr}).`;
+      case 'te':
+        return `మీరు ${durationYears} సంవత్సరాలకు నెలకు ${amtStr} పెట్టుబడి పెడితే, మీ మొత్తం పెట్టుబడి ${totalInvStr} మరియు అంచనా లాభం ${growthStr} అవుతుంది (మొత్తం ${finalValStr}).`;
+      case 'mr':
+        return `तुम्ही ${durationYears} वर्षांसाठी दरमहा ${amtStr} गुंतवल्यास, तुमची एकूण गुंतवणूक ${totalInvStr} आणि अंदाज नफा ${growthStr} होईल (एकूण ${finalValStr}).`;
+      case 'bn':
+        return `আপনি যদি ${durationYears} বছরের জন্য প্রতি মাসে ${amtStr} বিনিয়োগ করেন, তবে আপনার মোট বিনিয়োগ হবে ${totalInvStr} এবং আনুমানিক লাভ ${growthStr} (মোট ${finalValStr})।`;
+      case 'gu':
+        return `જો તમે ${durationYears} વર્ષ માટે દર મહિને ${amtStr} રોકાણ કરો છો, તો તમારું કુલ રોકાણ ${totalInvStr} થશે અને અંદાજિત નફો ${growthStr} થશે (કુલ ${finalValStr}).`;
+      case 'kn':
+        return `ನೀವು ${durationYears} ವರ್ಷಗಳಿಗೆ ತಿಂಗಳಿಗೆ ${amtStr} ಹೂಡಿಕೆ ಮಾಡಿದರೆ, ನಿಮ್ಮ ಒಟ್ಟು ಹೂಡಿಕೆ ${totalInvStr} ಮತ್ತು ಅಂದಾಜು ಲಾಭ ${growthStr} ಆಗುತ್ತದೆ (ಒಟ್ಟು ${finalValStr}).`;
+      default:
+        return `If you invest ${amtStr} monthly for ${yrsStr}, your total investment will be ${totalInvStr} with an estimated growth of ${growthStr} for a total value of ${finalValStr}.`;
+    }
+  };
+
+  const handleAskAI = () => {
+    const summaryText = `I analyzed a scenario on the Simulator:
+• Monthly Contribution: ₹${monthlyAmount.toLocaleString('en-IN')}/month
+• Duration: ${durationYears} Years (${durationYears * 12} Months)
+• SIP Projected Growth: ₹${sipResult.wealthGain.toLocaleString('en-IN')} (Total Value: ₹${sipResult.finalValue.toLocaleString('en-IN')})
+• FD Return: ₹${fdResult.wealthGain.toLocaleString('en-IN')} (Total Value: ₹${fdResult.finalValue.toLocaleString('en-IN')})
+
+Can you explain the risk difference between SIP and FD for my profile?`;
+
+    if (onAskAIWithSummary) {
+      onAskAIWithSummary(summaryText);
+    } else {
+      onBackToChat();
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-[#FBF7F2] text-[#2B2B2B] flex flex-col justify-between">
+      {/* HEADER */}
+      <header className="bg-white/90 backdrop-blur-md border-b border-slate-200 sticky top-0 z-40 px-4 py-3.5 shadow-sm">
+        <div className="container mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <button
+              onClick={onBackToChat}
+              className="p-2 rounded-full bg-slate-100 hover:bg-slate-200 text-[#2B2B2B] transition-colors flex items-center gap-1 text-xs font-bold"
+              title="Return to Workspace"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              <span className="hidden sm:inline">Back</span>
+            </button>
+
+            <div className="flex items-center gap-2">
+              <div className="icon-badge icon-badge-teal !w-9 !h-9 !min-w-[36px]">
+                <Sliders className="w-5 h-5 stroke-[2.2]" />
+              </div>
+              <div>
+                <h1 className="font-extrabold text-base text-[#2B2B2B] tracking-tight">
+                  Savings & SIP Simulator
+                </h1>
+                <p className="text-[11px] text-[#6B6B6B]">
+                  Interactive Growth Calculator • <span className="text-[#0F7173] font-bold">{currentLangObj.flag} {currentLangObj.nativeName}</span>
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Language Selector */}
+          <div className="flex items-center gap-2">
+            <div className="relative">
+              <select
+                value={currentLang}
+                onChange={(e) => onSelectLang(e.target.value as LanguageCode)}
+                className="px-3 py-1.5 rounded-full bg-white border border-slate-200 text-xs font-bold text-[#0F7173] focus:outline-none focus:border-[#0F7173] cursor-pointer shadow-sm"
+              >
+                {LANGUAGES.map((lang) => (
+                  <option key={lang.code} value={lang.code}>
+                    {lang.flag} {lang.nativeName}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* MAIN CONTENT AREA */}
+      <main className="container mx-auto px-4 py-8 flex-1 max-w-6xl">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          {/* LEFT COLUMN: LARGE HORIZONTAL SLIDERS & CONTROLS */}
+          <div className="lg:col-span-5 space-y-6">
+            <div className="card-surface p-6 sm:p-8 bg-white border border-slate-200 shadow-md space-y-6">
+              <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+                <div>
+                  <h2 className="text-lg font-extrabold text-[#2B2B2B]">Simulate Scenarios</h2>
+                  <p className="text-xs text-[#6B6B6B]">Drag sliders to see live compounding growth</p>
+                </div>
+                <div className="icon-badge icon-badge-teal !w-10 !h-10">
+                  <Sparkles className="w-5 h-5 text-[#0F7173]" />
+                </div>
+              </div>
+
+              {/* SLIDER 1: MONTHLY AMOUNT */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-bold uppercase tracking-wider text-[#6B6B6B]">
+                    Monthly Investment
+                  </label>
+                  <span className="text-xl sm:text-2xl font-black text-[#0F7173] font-mono">
+                    ₹{monthlyAmount.toLocaleString('en-IN')}
+                    <span className="text-xs text-[#6B6B6B] font-normal">/mo</span>
+                  </span>
+                </div>
+
+                <input
+                  type="range"
+                  min="500"
+                  max="50000"
+                  step="500"
+                  value={monthlyAmount}
+                  onChange={(e) => setMonthlyAmount(Number(e.target.value))}
+                />
+
+                <div className="flex justify-between text-[11px] font-mono text-slate-400">
+                  <span>₹500</span>
+                  <span>₹25,000</span>
+                  <span>₹50,000</span>
+                </div>
+              </div>
+
+              {/* SLIDER 2: DURATION */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-bold uppercase tracking-wider text-[#6B6B6B]">
+                    Duration (Horizon)
+                  </label>
+                  <span className="text-xl sm:text-2xl font-black text-[#0F7173] font-mono">
+                    {durationYears} {durationYears === 1 ? 'Year' : 'Years'}
+                    <span className="text-xs text-[#6B6B6B] font-normal"> ({durationYears * 12} Mos)</span>
+                  </span>
+                </div>
+
+                <input
+                  type="range"
+                  min="1"
+                  max="15"
+                  step="1"
+                  value={durationYears}
+                  onChange={(e) => setDurationYears(Number(e.target.value))}
+                />
+
+                <div className="flex justify-between text-[11px] font-mono text-slate-400">
+                  <span>1 Year</span>
+                  <span>7 Years</span>
+                  <span>15 Years</span>
+                </div>
+              </div>
+
+              {/* TOGGLE: COMPARE WITH FIXED DEPOSIT (FD) */}
+              <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
+                <div>
+                  <div className="text-sm font-bold text-[#2B2B2B]">Compare with Fixed Deposit</div>
+                  <div className="text-[11px] text-[#6B6B6B]">Compare SIP (12%) vs FD (6.5%)</div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setCompareFD(!compareFD)}
+                  className={`w-12 h-7 rounded-full p-1 transition-colors duration-200 flex items-center ${
+                    compareFD ? 'bg-[#0F7173] justify-end' : 'bg-slate-300 justify-start'
+                  }`}
+                >
+                  <div className="w-5 h-5 rounded-full bg-white shadow-md" />
+                </button>
+              </div>
+            </div>
+
+            {/* Quick Preset Buttons */}
+            <div className="card-surface p-5 bg-white border border-slate-200 shadow-sm space-y-3">
+              <div className="text-xs font-bold uppercase tracking-wider text-[#6B6B6B]">
+                Quick Scenario Shortcuts
+              </div>
+              <div className="grid grid-cols-3 gap-2">
+                {[
+                  { label: '₹1,000 / 3 Yrs', amt: 1000, yrs: 3 },
+                  { label: '₹2,500 / 5 Yrs', amt: 2500, yrs: 5 },
+                  { label: '₹5,000 / 10 Yrs', amt: 5000, yrs: 10 },
+                ].map((item, i) => (
+                  <button
+                    key={i}
+                    onClick={() => {
+                      setMonthlyAmount(item.amt);
+                      setDurationYears(item.yrs);
+                    }}
+                    className="py-2 px-2 rounded-xl bg-slate-50 hover:bg-[#0F7173]/10 border border-slate-200 text-xs font-bold text-[#0F7173] text-center transition-all"
+                  >
+                    {item.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* RIGHT COLUMN: LIVE ANIMATED SVG AREA CHART & DYNAMIC SUMMARY */}
+          <div className="lg:col-span-7 space-y-6">
+            <div className="card-surface p-6 sm:p-8 bg-white border border-slate-200 shadow-md space-y-6">
+              {/* Chart Legend Callouts */}
+              <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-4">
+                <div className="flex items-center gap-4 text-xs font-bold">
+                  <div className="flex items-center gap-1.5">
+                    <span className="w-3 h-3 rounded-full bg-[#0F7173]" />
+                    <span>SIP Growth (12% Expected)</span>
+                  </div>
+
+                  {compareFD && (
+                    <div className="flex items-center gap-1.5 text-slate-500">
+                      <span className="w-3 h-3 rounded-full bg-[#64748B]" />
+                      <span>Bank FD (6.5% Guaranteed)</span>
+                    </div>
+                  )}
+                </div>
+
+                <div className="text-xs font-mono text-[#0F7173] font-extrabold">
+                  Compounding Live
+                </div>
+              </div>
+
+              {/* LIVE ANIMATED SVG AREA & LINE CHART */}
+              <div className="relative w-full overflow-hidden pt-2">
+                <svg
+                  viewBox={`0 0 ${chartWidth} ${chartHeight}`}
+                  className="w-full h-auto overflow-visible transition-all duration-300 ease-out"
+                >
+                  <defs>
+                    <linearGradient id="sipGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#0F7173" stopOpacity="0.35" />
+                      <stop offset="100%" stopColor="#2ECC91" stopOpacity="0.05" />
+                    </linearGradient>
+                  </defs>
+
+                  {/* Grid Lines */}
+                  <line x1={padding} y1={padding} x2={chartWidth - padding} y2={padding} stroke="#F1F5F9" strokeWidth="1" />
+                  <line x1={padding} y1={chartHeight / 2} x2={chartWidth - padding} y2={chartHeight / 2} stroke="#F1F5F9" strokeWidth="1" />
+                  <line x1={padding} y1={chartHeight - padding} x2={chartWidth - padding} y2={chartHeight - padding} stroke="#E2E8F0" strokeWidth="1.5" />
+
+                  {/* SIP Area Fill */}
+                  <path d={sipAreaPath} fill="url(#sipGrad)" />
+
+                  {/* FD Line Overlay (if enabled) */}
+                  {compareFD && (
+                    <path
+                      d={fdLinePath}
+                      fill="none"
+                      stroke="#64748B"
+                      strokeWidth="2.5"
+                      strokeDasharray="4 4"
+                      className="transition-all duration-300"
+                    />
+                  )}
+
+                  {/* SIP Main Growth Line */}
+                  <path
+                    d={sipLinePath}
+                    fill="none"
+                    stroke="#0F7173"
+                    strokeWidth="3.5"
+                    strokeLinecap="round"
+                    className="transition-all duration-300"
+                  />
+
+                  {/* End Data Point Dots */}
+                  <circle
+                    cx={getSvgX(chartPoints.length - 1)}
+                    cy={getSvgY(sipResult.finalValue)}
+                    r="6"
+                    fill="#0F7173"
+                    stroke="#FFFFFF"
+                    strokeWidth="2"
+                    className="shadow-md"
+                  />
+
+                  {compareFD && (
+                    <circle
+                      cx={getSvgX(chartPoints.length - 1)}
+                      cy={getSvgY(fdResult.finalValue)}
+                      r="5"
+                      fill="#64748B"
+                      stroke="#FFFFFF"
+                      strokeWidth="2"
+                    />
+                  )}
+
+                  {/* Minimal Axis Labels */}
+                  <text x={padding} y={chartHeight - 10} fontSize="11" fill="#94A3B8" fontFamily="monospace">
+                    Year 0
+                  </text>
+                  <text x={chartWidth - padding - 40} y={chartHeight - 10} fontSize="11" fill="#0F7173" fontWeight="bold" fontFamily="monospace">
+                    Year {durationYears}
+                  </text>
+                </svg>
+              </div>
+
+              {/* DYNAMIC PLAIN-LANGUAGE VERNACULAR SUMMARY SENTENCE (18-20px) */}
+              <div className="p-5 rounded-2xl bg-[#0F7173]/10 border border-[#0F7173]/20 space-y-2">
+                <div className="text-[11px] font-bold uppercase tracking-wider text-[#0F7173] flex items-center gap-1.5">
+                  <TrendingUp className="w-4 h-4 text-[#0F7173]" />
+                  <span>Dynamic Summary</span>
+                </div>
+                <p className="text-lg sm:text-xl font-extrabold text-[#2B2B2B] leading-relaxed">
+                  {getDynamicSummary()}
+                </p>
+              </div>
+
+              {/* FD VS SIP COMPARATIVE NUMBERS CARD */}
+              {compareFD && (
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="p-4 rounded-2xl bg-[#0F7173]/10 border border-[#0F7173]/20 text-center space-y-1">
+                    <div className="text-[11px] font-bold text-[#0F7173] uppercase">SIP Projected Return</div>
+                    <div className="text-2xl font-black text-[#0F7173] font-mono">
+                      +₹{sipResult.wealthGain.toLocaleString('en-IN')}
+                    </div>
+                    <div className="text-[11px] text-[#6B6B6B]">Total: ₹{sipResult.finalValue.toLocaleString('en-IN')}</div>
+                  </div>
+
+                  <div className="p-4 rounded-2xl bg-slate-100 border border-slate-200 text-center space-y-1">
+                    <div className="text-[11px] font-bold text-[#64748B] uppercase">Bank FD Return</div>
+                    <div className="text-2xl font-black text-[#64748B] font-mono">
+                      +₹{fdResult.wealthGain.toLocaleString('en-IN')}
+                    </div>
+                    <div className="text-[11px] text-[#6B6B6B]">Total: ₹{fdResult.finalValue.toLocaleString('en-IN')}</div>
+                  </div>
+                </div>
+              )}
+
+              {/* PERSISTENT NEUTRAL LEGAL & TRUST DISCLAIMER BANNER */}
+              <div className="p-3.5 rounded-2xl bg-slate-100 border border-slate-200 text-xs text-[#64748B] flex items-center gap-2.5">
+                <Info className="w-4 h-4 text-[#0F7173] shrink-0" />
+                <span className="font-semibold">
+                  This is a simulation, not a real investment. Projected values assume market compounding rates.
+                </span>
+              </div>
+
+              {/* ACTION BUTTON */}
+              <div className="pt-2">
+                <button
+                  onClick={handleAskAI}
+                  className="w-full btn btn-primary py-4 text-base font-bold shadow-md shadow-[#0F7173]/20 flex items-center justify-center gap-2"
+                >
+                  <Send className="w-5 h-5" />
+                  <span>Ask FinLingo AI About This Calculation</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      {/* FOOTER */}
+      <footer className="bg-white border-t border-slate-200 py-4 text-xs text-center text-[#6B6B6B]">
+        <div className="container mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 px-4">
+          <span>FinLingo Simulator • Apni bhasha mein paison ki samajh</span>
+          <button onClick={onBackToChat} className="text-[#0F7173] hover:underline font-bold">
+            Return to Voice Assistant
+          </button>
+        </div>
+      </footer>
+    </div>
+  );
+};

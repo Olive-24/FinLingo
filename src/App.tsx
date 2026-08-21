@@ -12,11 +12,13 @@ import { PrivacyModal } from './components/PrivacyModal';
 import { AuthScreen } from './components/AuthScreen';
 import { OnboardingWizard } from './components/OnboardingWizard';
 import { VoiceChatInterface } from './components/VoiceChatInterface';
+import { SimulatorPage } from './components/SimulatorPage';
 
 export function App() {
-  const [currentView, setCurrentView] = useState<'landing' | 'auth' | 'onboarding' | 'main-app'>(
-    'landing'
-  );
+  const [currentView, setCurrentView] = useState<
+    'landing' | 'auth' | 'onboarding' | 'main-app' | 'simulator'
+  >('landing');
+  
   const [currentLang, setCurrentLang] = useState<LanguageCode>('en');
 
   // Modals on Landing Page
@@ -46,7 +48,34 @@ export function App() {
     setCurrentView('landing');
   };
 
-  // VIEW 1: MAIN VOICE CHAT INTERFACE POST-ONBOARDING
+  // VIEW 1: STANDALONE SAVINGS & SIP SIMULATOR PAGE
+  if (currentView === 'simulator') {
+    return (
+      <SimulatorPage
+        currentLang={currentLang}
+        onSelectLang={(lang) => setCurrentLang(lang)}
+        onBackToChat={() => {
+          if (userProfile && userProfile.isOnboardingCompleted) {
+            setCurrentView('main-app');
+          } else {
+            setCurrentView('landing');
+          }
+        }}
+        onAskAIWithSummary={(summary) => {
+          if (!userProfile || !userProfile.isOnboardingCompleted) {
+            setCurrentView('auth');
+          } else {
+            if (summary) {
+              // Post calculation summary
+              setCurrentView('main-app');
+            }
+          }
+        }}
+      />
+    );
+  }
+
+  // VIEW 2: MAIN VOICE CHAT INTERFACE POST-ONBOARDING
   if (currentView === 'main-app' && userProfile && userProfile.isOnboardingCompleted) {
     return (
       <VoiceChatInterface
@@ -61,7 +90,7 @@ export function App() {
     );
   }
 
-  // VIEW 2: ONBOARDING WIZARD (3 SCREENS)
+  // VIEW 3: ONBOARDING WIZARD (3 SCREENS)
   if (currentView === 'onboarding') {
     return (
       <OnboardingWizard
@@ -71,7 +100,7 @@ export function App() {
     );
   }
 
-  // VIEW 3: AUTH SCREEN (PHONE + OTP & GOOGLE OAUTH)
+  // VIEW 4: AUTH SCREEN (PHONE + OTP & GOOGLE OAUTH)
   if (currentView === 'auth') {
     return (
       <AuthScreen
@@ -82,9 +111,9 @@ export function App() {
     );
   }
 
-  // VIEW 4: PUBLIC LANDING PAGE
+  // VIEW 5: PUBLIC LANDING PAGE
   return (
-    <div className="min-h-screen bg-[#090D16] text-slate-100 selection:bg-emerald-500 selection:text-slate-950">
+    <div className="min-h-screen bg-[#FBF7F2] text-[#2B2B2B] selection:bg-[#0F7173] selection:text-white">
       {/* Sticky Top Header */}
       <Navbar
         currentLang={currentLang}
@@ -105,11 +134,29 @@ export function App() {
         {/* Animated Demo Strip (Voice -> AI -> Interactive Sandbox) */}
         <AnimatedDemoStrip currentLang={currentLang} />
 
-        {/* 3-Step Visual Guide (Speak, Understand, Simulate) */}
+        {/* 3-Step Visual Guide (Bolo, Samjho, Simulate Karo) */}
         <ThreeStepVisual
           currentLang={currentLang}
           onOpenOnboarding={() => setCurrentView('auth')}
         />
+
+        {/* Standalone Simulator Callout Banner */}
+        <section className="py-10 bg-white border-y border-slate-200 text-center">
+          <div className="container mx-auto px-4 space-y-4">
+            <h3 className="text-2xl font-extrabold text-[#2B2B2B]">
+              Want to calculate savings manually without talking to AI?
+            </h3>
+            <p className="text-xs text-[#6B6B6B]">
+              Open our standalone Growth & Fixed Deposit Simulator with live interactive charts.
+            </p>
+            <button
+              onClick={() => setCurrentView('simulator')}
+              className="btn btn-secondary px-8 py-3 text-sm font-bold"
+            >
+              Open Standalone Simulator Page
+            </button>
+          </div>
+        </section>
 
         {/* For Banks & NBFCs B2B Revenue & Trust Section */}
         <B2BSection
