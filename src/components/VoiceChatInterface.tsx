@@ -54,10 +54,7 @@ export const VoiceChatInterface: React.FC<VoiceChatInterfaceProps> = ({
         {
           id: 'msg_init',
           sender: 'ai',
-          text: `नमस्ते ${user.name}! I am FinLingo, your financial assistant. I see you are a ${user.occupation.replace(
-            '_',
-            ' '
-          )} and prefer ${currentLangObj.name}. Ask me any question about personal loans, EMIs, or savings in your mother tongue!`,
+          text: `नमस्ते ${user.name}! I am FinLingo, your financial assistant. Ask me any question about personal loans, EMIs, or savings in ${currentLangObj.nativeName}!`,
           timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         },
       ],
@@ -69,7 +66,7 @@ export const VoiceChatInterface: React.FC<VoiceChatInterfaceProps> = ({
   // Currently active thread
   const currentThread = threads.find((t) => t.id === activeThreadId) || threads[0];
 
-  // Voice recording & live transcription states (Google Assistant style)
+  // Voice recording & live transcription states
   const [isRecording, setIsRecording] = useState<boolean>(false);
   const [liveTranscription, setLiveTranscription] = useState<string>('');
   const [recordingSeconds, setRecordingSeconds] = useState<number>(0);
@@ -80,7 +77,6 @@ export const VoiceChatInterface: React.FC<VoiceChatInterfaceProps> = ({
   // TTS Audio Player States
   const [playingAudioId, setPlayingAudioId] = useState<string | null>(null);
   const [audioSpeed, setAudioSpeed] = useState<number>(1.0);
-  const [audioProgress, setAudioProgress] = useState<number>(0);
 
   // Active Goal Simulator Modal State
   const [simGoal, setSimGoal] = useState<DetectedGoal | null>(null);
@@ -98,24 +94,6 @@ export const VoiceChatInterface: React.FC<VoiceChatInterfaceProps> = ({
     return () => clearInterval(interval);
   }, [isRecording]);
 
-  // Audio progress animation simulation
-  useEffect(() => {
-    if (!playingAudioId) {
-      setAudioProgress(0);
-      return;
-    }
-    const interval = setInterval(() => {
-      setAudioProgress((prev) => {
-        if (prev >= 100) {
-          setPlayingAudioId(null);
-          return 0;
-        }
-        return prev + 5;
-      });
-    }, 150);
-    return () => clearInterval(interval);
-  }, [playingAudioId]);
-
   // Handle New Thread Creation
   const handleNewThread = () => {
     const newThreadId = `thread_${Date.now()}`;
@@ -129,7 +107,7 @@ export const VoiceChatInterface: React.FC<VoiceChatInterfaceProps> = ({
         {
           id: `msg_${Date.now()}`,
           sender: 'ai',
-          text: `Hello ${user.name}! Ask me any financial question in ${currentLangObj.name} using voice or text.`,
+          text: `Hello ${user.name}! Speak or type your financial question in ${currentLangObj.nativeName}.`,
           timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         },
       ],
@@ -150,7 +128,7 @@ export const VoiceChatInterface: React.FC<VoiceChatInterfaceProps> = ({
         targetAmount: 500000,
         timeframeYears: 5,
         suggestedMonthlySavings: 6500,
-        description: 'Build a disciplined savings fund for wedding expenses over 5 years.',
+        description: 'Build an inflation-protected savings fund for marriage expenses over 5 years.',
       };
     }
     if (lower.includes('education') || lower.includes('college') || lower.includes('school') || lower.includes('पढ़ाई')) {
@@ -172,7 +150,7 @@ export const VoiceChatInterface: React.FC<VoiceChatInterfaceProps> = ({
         targetAmount: 350000,
         timeframeYears: 3,
         suggestedMonthlySavings: 9200,
-        description: 'Simulate Kisan Credit Card subvention & monthly equipment EMI.',
+        description: 'Simulate Kisan Credit Card subvention & monthly tractor EMI.',
       };
     }
     if (lower.includes('shop') || lower.includes('kirana') || lower.includes('business') || lower.includes('दुकान')) {
@@ -189,12 +167,12 @@ export const VoiceChatInterface: React.FC<VoiceChatInterfaceProps> = ({
     return undefined;
   };
 
-  // Start Voice Recording (Google Assistant style tap-to-speak)
+  // Start Voice Recording (Elevated Marigold Button Tap-to-Speak)
   const startRecording = () => {
     setIsRecording(true);
     setLiveTranscription('Transcribing speech...');
 
-    // Simulate real-time live typing transcription
+    // Simulate word-by-word live transcription
     const samplePhrases = [
       '“मुझे अपनी बेटी की शादी के लिए ₹5 लाख जोड़ने हैं, 5 साल में कितना बचाना होगा?”',
       '“ I need to save for my daughter’s wedding in 5 years”',
@@ -210,7 +188,7 @@ export const VoiceChatInterface: React.FC<VoiceChatInterfaceProps> = ({
       if (charIdx >= targetPhrase.length) {
         clearInterval(interval);
       }
-    }, 70);
+    }, 60);
   };
 
   // Stop Recording & Send Message
@@ -235,7 +213,6 @@ export const VoiceChatInterface: React.FC<VoiceChatInterfaceProps> = ({
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     };
 
-    // Update active thread
     const updatedMessages = [...currentThread.messages, userMsg];
     const detectedGoal = detectGoalInPrompt(textToSend);
 
@@ -248,14 +225,14 @@ export const VoiceChatInterface: React.FC<VoiceChatInterfaceProps> = ({
 
       if (detectedGoal) {
         aiText = `I noticed you are planning for **${detectedGoal.title}**!
-To achieve your goal of ₹${detectedGoal.targetAmount.toLocaleString('en-IN')} in ${detectedGoal.timeframeYears} years, saving disciplined monthly SIPs of ~₹${detectedGoal.suggestedMonthlySavings}/month in a balanced fund can help you beat inflation.
+To reach ₹${detectedGoal.targetAmount.toLocaleString('en-IN')} in ${detectedGoal.timeframeYears} years, saving a disciplined ~₹${detectedGoal.suggestedMonthlySavings}/month in a balanced SIP can help beat inflation.
 
-Click **"Simulate this goal"** below to adjust monthly savings, view inflation impact, and see exact return scenarios!`;
+Tap **"Simulate this goal"** below to adjust timeframe & return parameters live!`;
       } else if (textToSend.includes('₹50,000') || textToSend.includes('EMI')) {
         aiText = `For a Personal Loan of ₹50,000 at 14% p.a. over 24 months:
 • Monthly EMI: ₹2,401/month.
 • Total Interest Paid: ₹7,624.
-• Zero processing penalty if prepaid via UPI.`;
+• Zero prepayment penalty if paid early via UPI.`;
         loanCalc = {
           principal: 50000,
           interestRate: 14,
@@ -264,7 +241,7 @@ Click **"Simulate this goal"** below to adjust monthly savings, view inflation i
           totalInterest: 7624,
         };
       } else {
-        aiText = `I have processed your query in ${currentLangObj.name}. FinLingo provides zero-jargon financial explanations tailored to your profile as a ${user.occupation}. You can ask about loan EMIs, goal savings, or SIP math anytime!`;
+        aiText = `I have processed your query in ${currentLangObj.name}. FinLingo provides zero-jargon explanations tailored to your profile as a ${user.occupation}. Ask about EMIs, goal savings, or SIP returns anytime!`;
       }
 
       const aiMsg: VoiceChatMessage = {
@@ -290,20 +267,17 @@ Click **"Simulate this goal"** below to adjust monthly savings, view inflation i
       );
 
       setThreads(updatedThreads);
-
-      // Auto-trigger TTS voice audio playback for AI response
       setPlayingAudioId(aiMsg.id);
-    }, 900);
+    }, 800);
   };
 
-  // Open Goal Simulator for a given goal
   const handleOpenGoalSimulator = (goal: DetectedGoal) => {
     setSimGoal(goal);
     setIsGoalModalOpen(true);
   };
 
   return (
-    <div className="min-h-screen bg-[#090D16] text-slate-100 flex flex-col lg:flex-row">
+    <div className="min-h-screen bg-[#FBF7F2] text-[#2B2B2B] flex flex-col lg:flex-row">
       {/* SIDEBAR COMPONENT */}
       <Sidebar
         user={user}
@@ -318,45 +292,45 @@ Click **"Simulate this goal"** below to adjust monthly savings, view inflation i
         onCloseMobile={() => setIsMobileSidebarOpen(false)}
       />
 
-      {/* MAIN WORKSPACE AREA */}
-      <div className="flex-1 flex flex-col justify-between h-screen overflow-hidden relative">
+      {/* MAIN WORKSPACE CANVAS */}
+      <div className="flex-1 flex flex-col justify-between h-screen overflow-hidden relative bg-[#FBF7F2]">
         {/* HEADER BAR */}
-        <header className="bg-[#0F172A]/90 backdrop-blur-md border-b border-slate-800 px-4 py-3 sticky top-0 z-20 flex items-center justify-between">
+        <header className="bg-white/90 backdrop-blur-md border-b border-slate-200 px-4 py-3 sticky top-0 z-20 flex items-center justify-between shadow-sm">
           <div className="flex items-center gap-3">
-            {/* Mobile Hamburger Menu */}
+            {/* Mobile Hamburger Menu Toggle */}
             <button
               onClick={() => setIsMobileSidebarOpen(true)}
-              className="lg:hidden p-2 rounded-xl bg-slate-800 border border-slate-700 text-slate-300 hover:text-white"
+              className="lg:hidden p-2 rounded-xl bg-slate-100 text-[#2B2B2B] hover:bg-slate-200"
             >
               <Menu className="w-5 h-5" />
             </button>
 
             {/* Title & Active Language */}
             <div>
-              <h2 className="font-extrabold text-base text-white tracking-tight flex items-center gap-2">
+              <h2 className="font-extrabold text-base text-[#2B2B2B] tracking-tight flex items-center gap-2">
                 <span>{currentThread.title}</span>
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="w-2 h-2 rounded-full bg-[#0F7173] animate-pulse" />
               </h2>
-              <p className="text-[11px] text-slate-400">
-                AI Voice Assistant • <span className="text-emerald-400 font-bold">{currentLangObj.flag} {currentLangObj.nativeName}</span>
+              <p className="text-[11px] text-[#6B6B6B]">
+                FinLingo AI Assistant • <span className="text-[#0F7173] font-bold">{currentLangObj.flag} {currentLangObj.nativeName}</span>
               </p>
             </div>
           </div>
 
-          {/* Controls */}
+          {/* Action Buttons */}
           <div className="flex items-center gap-2">
             <button
               onClick={onReOnboard}
-              className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 text-xs flex items-center gap-1"
+              className="p-2 rounded-full bg-slate-100 hover:bg-slate-200 text-[#0F7173] text-xs flex items-center gap-1 font-bold"
               title="Change Language or Profile"
             >
-              <RotateCcw className="w-4 h-4 text-emerald-400" />
+              <RotateCcw className="w-4 h-4" />
               <span className="hidden sm:inline text-[11px]">Re-Setup</span>
             </button>
 
             <button
               onClick={onLogout}
-              className="p-2 rounded-xl bg-slate-800 hover:bg-red-950/40 text-slate-400 hover:text-red-400 border border-slate-700 text-xs"
+              className="p-2 rounded-full bg-slate-100 hover:bg-red-50 text-slate-500 hover:text-red-500 text-xs"
               title="Log Out"
             >
               <LogOut className="w-4 h-4" />
@@ -371,183 +345,161 @@ Click **"Simulate this goal"** below to adjust monthly savings, view inflation i
             const isPlaying = playingAudioId === msg.id;
 
             return (
-              <div
-                key={msg.id}
-                className={`flex gap-3 sm:gap-4 ${isAI ? 'justify-start' : 'justify-end'} animate-fade-in`}
-              >
-                {isAI && (
-                  <div className="w-9 h-9 rounded-2xl bg-gradient-to-br from-emerald-400 to-teal-600 flex items-center justify-center text-slate-950 font-bold shrink-0 shadow-lg shadow-emerald-500/20 mt-1">
-                    <Sparkles className="w-5 h-5 stroke-[2.5]" />
-                  </div>
-                )}
-
+              <div key={msg.id} className="space-y-3">
                 <div
-                  className={`max-w-xl p-4 sm:p-5 rounded-3xl space-y-3 shadow-xl ${
-                    isAI
-                      ? 'bg-slate-900/90 border border-slate-800 text-slate-100'
-                      : 'bg-gradient-to-br from-emerald-500 to-teal-500 text-slate-950 font-medium'
-                  }`}
+                  className={`flex gap-3 sm:gap-4 ${isAI ? 'justify-start' : 'justify-end'} animate-fade-in`}
                 >
-                  <p className="text-sm sm:text-base leading-relaxed whitespace-pre-line">
-                    {msg.text}
-                  </p>
+                  {/* AI Brand Avatar Badge (Top-Left of AI Bubble) */}
+                  {isAI && (
+                    <div className="icon-badge icon-badge-teal !w-9 !h-9 !min-w-[36px] shadow-sm mt-1">
+                      <Sparkles className="w-5 h-5 stroke-[2.2]" />
+                    </div>
+                  )}
 
-                  {/* INLINE GOAL DETECTION CARD ("Simulate this goal") */}
-                  {msg.detectedGoal && (
-                    <div className="p-4 rounded-2xl bg-slate-950/80 border border-emerald-500/40 text-xs space-y-3 shadow-lg animate-fade-in">
-                      <div className="flex items-center justify-between">
+                  {/* CHAT BUBBLE WITH ASYMMETRIC SPEECH TAIL */}
+                  <div
+                    onClick={() => isAI && setPlayingAudioId(isPlaying ? null : msg.id)}
+                    className={`max-w-xl p-4 sm:p-5 shadow-sm transition-all ${
+                      isAI
+                        ? 'bg-[#0F7173]/10 border border-[#0F7173]/20 text-[#2B2B2B] rounded-3xl rounded-tl-sm cursor-pointer hover:bg-[#0F7173]/15'
+                        : 'bg-[#0F7173] text-white font-medium rounded-3xl rounded-tr-sm shadow-md shadow-[#0F7173]/20'
+                    }`}
+                  >
+                    <p className="text-sm sm:text-base leading-relaxed whitespace-pre-line">
+                      {msg.text}
+                    </p>
+
+                    {/* EMI Calculation Summary inside AI message */}
+                    {msg.loanCalculation && (
+                      <div className="mt-3 p-3.5 rounded-2xl bg-white border border-[#0F7173]/30 text-xs space-y-1.5 shadow-sm">
+                        <div className="flex items-center justify-between text-[#0F7173] font-bold">
+                          <span>EMI Summary</span>
+                          <span>₹{msg.loanCalculation.monthlyEMI}/mo</span>
+                        </div>
+                        <div className="grid grid-cols-2 gap-2 text-[11px] text-[#6B6B6B]">
+                          <div>Principal: ₹{msg.loanCalculation.principal.toLocaleString('en-IN')}</div>
+                          <div>Total Interest: ₹{msg.loanCalculation.totalInterest.toLocaleString('en-IN')}</div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* DUAL-MODE AUDIO PLAYER CONTROL (TTS) */}
+                    {isAI && (
+                      <div className="pt-2 mt-2 border-t border-[#0F7173]/15 flex items-center justify-between text-xs">
                         <div className="flex items-center gap-2">
-                          <div className="w-7 h-7 rounded-lg bg-emerald-500/20 flex items-center justify-center text-emerald-400">
-                            <Sparkle className="w-4 h-4" />
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setPlayingAudioId(isPlaying ? null : msg.id);
+                            }}
+                            className={`p-1.5 px-2.5 rounded-full flex items-center gap-1.5 font-bold transition-all ${
+                              isPlaying
+                                ? 'bg-[#F5A623] text-slate-950 shadow-sm animate-pulse'
+                                : 'bg-white text-[#0F7173] border border-[#0F7173]/30'
+                            }`}
+                          >
+                            {isPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
+                            <span className="text-[11px]">
+                              {isPlaying ? 'Playing Audio...' : 'Listen'}
+                            </span>
+                          </button>
+
+                          {/* Speed Controller */}
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setAudioSpeed((prev) => (prev === 1.0 ? 1.25 : prev === 1.25 ? 1.5 : 1.0));
+                            }}
+                            className="px-2 py-0.5 rounded-full bg-white text-[10px] font-mono text-[#6B6B6B] border border-slate-200"
+                          >
+                            {audioSpeed}x
+                          </button>
+                        </div>
+
+                        <span className="text-[10px] text-[#6B6B6B] font-mono">{msg.timestamp}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* ACTIONABLE INLINE GOAL DETECTION CARD (Full-Width White Card Surface + Pill Marigold Button) */}
+                {msg.detectedGoal && (
+                  <div className="w-full card-surface bg-white border border-slate-200 p-5 space-y-3.5 shadow-md rounded-2xl animate-fade-in my-2">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="icon-badge icon-badge-teal !w-10 !h-10 !min-w-[40px]">
+                          <Sparkle className="w-5 h-5 text-[#0F7173]" />
+                        </div>
+                        <div>
+                          <div className="font-extrabold text-[#2B2B2B] text-base">
+                            {msg.detectedGoal.title}
                           </div>
-                          <div>
-                            <div className="font-bold text-white text-sm">{msg.detectedGoal.title}</div>
-                            <div className="text-[10px] text-slate-400">Detected Financial Goal</div>
+                          <div className="text-xs text-[#6B6B6B]">
+                            {msg.detectedGoal.description}
                           </div>
                         </div>
-                        <span className="text-emerald-400 font-mono font-bold text-xs">
-                          Target: ₹{msg.detectedGoal.targetAmount.toLocaleString('en-IN')}
-                        </span>
                       </div>
 
-                      <div className="flex items-center justify-between text-[11px] text-slate-300 bg-slate-900 p-2.5 rounded-xl">
-                        <span>Horizon: {msg.detectedGoal.timeframeYears} Years</span>
-                        <span className="text-indigo-300 font-semibold">
-                          ~₹{msg.detectedGoal.suggestedMonthlySavings.toLocaleString('en-IN')}/mo SIP
-                        </span>
-                      </div>
+                      <span className="text-[#0F7173] font-mono font-extrabold text-sm shrink-0">
+                        Target: ₹{msg.detectedGoal.targetAmount.toLocaleString('en-IN')}
+                      </span>
+                    </div>
 
-                      {/* Prominent "Simulate this goal" CTA */}
+                    {/* Prominent Pill-Shaped Marigold Button: "Simulate this goal" */}
+                    <div className="pt-2 flex justify-end">
                       <button
                         onClick={() => handleOpenGoalSimulator(msg.detectedGoal!)}
-                        className="w-full btn btn-primary py-2.5 text-xs font-bold shadow-md shadow-emerald-500/20 flex items-center justify-center gap-2 group"
+                        className="btn btn-marigold py-3 px-6 text-sm font-bold shadow-md flex items-center gap-2 group"
                       >
                         <Sliders className="w-4 h-4" />
-                        <span>Simulate this Goal</span>
-                        <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                        <span>Simulate this goal</span>
+                        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                       </button>
                     </div>
-                  )}
-
-                  {/* EMI Loan Calculation Breakdown Card */}
-                  {msg.loanCalculation && (
-                    <div className="p-3.5 rounded-xl bg-slate-950/60 border border-emerald-500/30 text-xs space-y-2">
-                      <div className="flex items-center justify-between text-emerald-400 font-bold">
-                        <span>EMI Summary</span>
-                        <span>₹{msg.loanCalculation.monthlyEMI}/mo</span>
-                      </div>
-                      <div className="grid grid-cols-2 gap-2 text-[11px] text-slate-300">
-                        <div>Principal: ₹{msg.loanCalculation.principal.toLocaleString('en-IN')}</div>
-                        <div>Total Interest: ₹{msg.loanCalculation.totalInterest.toLocaleString('en-IN')}</div>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* DUAL-MODE AUDIO PLAYER (Text-to-Speech TTS) */}
-                  {isAI && (
-                    <div className="pt-2 border-t border-white/10 flex items-center justify-between text-xs">
-                      <div className="flex items-center gap-2">
-                        <button
-                          onClick={() => {
-                            if (isPlaying) setPlayingAudioId(null);
-                            else setPlayingAudioId(msg.id);
-                          }}
-                          className={`p-2 rounded-xl flex items-center gap-1.5 font-bold transition-all ${
-                            isPlaying
-                              ? 'bg-emerald-500 text-slate-950 shadow-md shadow-emerald-500/20 animate-pulse'
-                              : 'bg-white/5 hover:bg-white/10 text-slate-300'
-                          }`}
-                        >
-                          {isPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
-                          <span className="text-[11px]">
-                            {isPlaying ? 'Playing Audio' : 'Listen in Native Voice'}
-                          </span>
-                        </button>
-
-                        {/* Speed Toggle */}
-                        <button
-                          onClick={() => setAudioSpeed((prev) => (prev === 1.0 ? 1.25 : prev === 1.25 ? 1.5 : 1.0))}
-                          className="px-2 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-[10px] font-mono text-slate-400"
-                        >
-                          {audioSpeed}x
-                        </button>
-                      </div>
-
-                      <span className="text-[10px] text-slate-500 font-mono">{msg.timestamp}</span>
-                    </div>
-                  )}
-
-                  {/* Audio Progress Scrubber */}
-                  {isAI && isPlaying && (
-                    <div className="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
-                      <div
-                        className="bg-emerald-400 h-full transition-all duration-150"
-                        style={{ width: `${audioProgress}%` }}
-                      />
-                    </div>
-                  )}
-                </div>
+                  </div>
+                )}
               </div>
             );
           })}
         </div>
 
-        {/* REAL-TIME SPEECH TRANSCRIPTION OVERLAY (Google Assistant Style) */}
-        {isRecording && (
-          <div className="mx-4 mb-2 p-4 rounded-2xl bg-gradient-to-r from-emerald-950/90 to-slate-900 border border-emerald-500/50 shadow-2xl animate-fade-in max-w-4xl mx-auto w-full">
-            <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full bg-red-500 animate-ping" />
-                <span className="text-xs font-bold text-emerald-400 uppercase tracking-wider">
-                  Listening in {currentLangObj.nativeName} ({recordingSeconds}s)
-                </span>
-              </div>
-              <button
-                onClick={stopRecordingAndSend}
-                className="btn btn-primary py-1 px-3 text-[11px] font-bold shadow-sm"
-              >
-                Done & Send
-              </button>
-            </div>
-
-            <p className="text-base sm:text-lg font-medium text-slate-100 italic min-h-[40px]">
-              "{liveTranscription || 'Speak your financial question...'}"
-            </p>
-          </div>
-        )}
-
-        {/* BOTTOM INPUT BAR */}
-        <div className="bg-[#0F172A]/90 backdrop-blur-md border-t border-slate-800 p-4 sticky bottom-0 z-20">
-          <div className="max-w-4xl mx-auto flex items-center gap-3">
-            {/* WhatsApp-style Tap-to-Speak Mic Button */}
+        {/* BOTTOM INPUT BAR WITH ELEVATED MARIGOLD MIC BUTTON */}
+        <div className="bg-white border-t border-slate-200 p-4 sticky bottom-0 z-20 shadow-lg">
+          <div className="max-w-4xl mx-auto flex items-center gap-3 relative">
+            {/* Elevated Marigold Mic Button (#F5A623) */}
             <button
               onClick={() => {
                 if (isRecording) stopRecordingAndSend();
                 else startRecording();
               }}
-              className={`p-3.5 rounded-2xl transition-all flex items-center justify-center shrink-0 ${
-                isRecording
-                  ? 'bg-red-500 text-white animate-pulse shadow-lg shadow-red-500/40 scale-110'
-                  : 'bg-emerald-500 hover:bg-emerald-400 text-slate-950 shadow-lg shadow-emerald-500/25 hover:scale-105'
+              className={`-mt-6 w-14 h-14 rounded-full bg-[#F5A623] hover:bg-[#D98D15] text-[#1F1900] shadow-lg shadow-[#F5A623]/35 flex items-center justify-center shrink-0 transition-all ${
+                isRecording ? 'mic-pulse-active scale-110' : 'hover:scale-105'
               }`}
               title="Tap to speak in native language (WhatsApp style)"
             >
-              {isRecording ? <MicOff className="w-5 h-5 stroke-[2.5]" /> : <Mic className="w-5 h-5 stroke-[2.5]" />}
+              {isRecording ? <MicOff className="w-7 h-7 stroke-[2.5]" /> : <Mic className="w-7 h-7 stroke-[2.5]" />}
             </button>
 
-            {/* Text Input */}
+            {/* Input Box with Italicized Live Transcription while Recording */}
             <div className="relative flex-1">
               <input
                 type="text"
-                placeholder={`Type or tap mic for ${currentLangObj.name} voice input...`}
-                value={inputQuery}
-                onChange={(e) => setInputQuery(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleUserSend()}
-                className="w-full pl-4 pr-12 py-3.5 rounded-2xl bg-slate-800/90 border border-slate-700 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 font-medium"
+                placeholder={
+                  isRecording
+                    ? liveTranscription || `Transcribing ${currentLangObj.nativeName} speech (${recordingSeconds}s)...`
+                    : `Type or speak in ${currentLangObj.name}...`
+                }
+                value={isRecording ? liveTranscription : inputQuery}
+                onChange={(e) => !isRecording && setInputQuery(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && !isRecording && handleUserSend()}
+                className={`w-full pl-4 pr-12 py-3.5 rounded-2xl border-2 border-slate-200 text-base font-medium shadow-sm ${
+                  isRecording ? 'italic text-[#0F7173] bg-[#0F7173]/10 border-[#0F7173]' : 'bg-white text-[#2B2B2B]'
+                }`}
               />
+
               <button
-                onClick={() => handleUserSend()}
-                className="absolute right-2 top-2 p-2 rounded-xl bg-emerald-500/20 hover:bg-emerald-500 text-emerald-400 hover:text-slate-950 transition-colors"
+                onClick={() => isRecording ? stopRecordingAndSend() : handleUserSend()}
+                className="absolute right-2 top-2 p-2 rounded-xl bg-[#0F7173] hover:bg-[#0A5354] text-white transition-colors shadow-sm"
               >
                 <Send className="w-4 h-4" />
               </button>

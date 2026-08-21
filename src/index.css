@@ -9,7 +9,8 @@
   --surface-white: #FFFFFF;
   --teal-primary: #0F7173;
   --teal-dark: #0A5354;
-  --teal-tint: rgba(15, 113, 115, 0.15);
+  --teal-tint: rgba(15, 113, 115, 0.10);
+  --teal-tint-hover: rgba(15, 113, 115, 0.18);
   
   --marigold-accent: #F5A623;
   --marigold-dark: #D98D15;
@@ -37,7 +38,7 @@
   --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.06);
   --shadow-hover: 0 8px 24px rgba(15, 113, 115, 0.12);
   --shadow-primary: 0 4px 16px rgba(15, 113, 115, 0.25);
-  --shadow-marigold: 0 4px 16px rgba(245, 166, 35, 0.3);
+  --shadow-marigold: 0 4px 16px rgba(245, 166, 35, 0.35);
 }
 
 * {
@@ -52,7 +53,7 @@ html {
   background-color: var(--bg-warm);
   color: var(--charcoal-text);
   line-height: 1.5;
-  font-size: 16px; /* Minimum 16px for readability */
+  font-size: 16px;
 }
 
 body {
@@ -71,23 +72,23 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Page Titles & Headers */
 .page-title {
-  font-size: 2rem; /* 32px */
+  font-size: 2rem;
   font-weight: 800;
 }
 
 .section-header {
-  font-size: 1.375rem; /* 22px */
+  font-size: 1.375rem;
   font-weight: 700;
 }
 
 .body-text {
-  font-size: 1rem; /* 16px */
+  font-size: 1rem;
   line-height: 1.5;
   color: var(--charcoal-text);
 }
 
 .muted-text {
-  font-size: 0.875rem; /* 14px */
+  font-size: 0.875rem;
   color: var(--muted-text);
 }
 
@@ -118,7 +119,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .icon-badge-teal {
-  background-color: var(--teal-tint);
+  background-color: rgba(15, 113, 115, 0.15);
   color: var(--teal-primary);
 }
 
@@ -143,7 +144,7 @@ h1, h2, h3, h4, h5, h6 {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  min-height: 48px; /* 48px minimum touch target */
+  min-height: 48px;
   padding: 0.75rem 1.75rem;
   font-family: var(--font-heading);
   font-weight: 700;
@@ -169,6 +170,18 @@ h1, h2, h3, h4, h5, h6 {
   box-shadow: var(--shadow-marigold);
 }
 
+.btn-marigold {
+  background-color: var(--marigold-accent);
+  color: #1F1900;
+  box-shadow: var(--shadow-marigold);
+}
+
+.btn-marigold:hover {
+  background-color: var(--marigold-dark);
+  color: #FFFFFF;
+  transform: translateY(-2px);
+}
+
 .btn-secondary {
   background-color: transparent;
   color: var(--teal-primary);
@@ -176,7 +189,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .btn-secondary:hover {
-  background-color: var(--teal-tint);
+  background-color: rgba(15, 113, 115, 0.10);
   transform: translateY(-2px);
 }
 
@@ -190,6 +203,23 @@ h1, h2, h3, h4, h5, h6 {
 .btn-b2b-white:hover {
   background-color: rgba(255, 255, 255, 0.15);
   border-color: #FFFFFF;
+}
+
+/* Elevated Mic Button Pulse Ring Animation */
+@keyframes micPulseRing {
+  0% {
+    box-shadow: 0 0 0 0 rgba(245, 166, 35, 0.6);
+  }
+  70% {
+    box-shadow: 0 0 0 16px rgba(245, 166, 35, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(245, 166, 35, 0);
+  }
+}
+
+.mic-pulse-active {
+  animation: micPulseRing 1.5s infinite;
 }
 
 /* Form Inputs */
@@ -213,7 +243,7 @@ textarea {
 
 input:focus, select:focus, textarea:focus {
   border-color: var(--teal-primary);
-  box-shadow: 0 0 0 3px var(--teal-tint);
+  box-shadow: 0 0 0 3px rgba(15, 113, 115, 0.15);
 }
 
 /* Range Sliders */
@@ -245,7 +275,7 @@ input[type="range"]::-webkit-slider-thumb:hover {
   background: var(--marigold-accent);
 }
 
-/* Animations */
+/* Wavebar Equalizer */
 @keyframes waveBar {
   0%, 100% { height: 6px; }
   50% { height: 26px; }
