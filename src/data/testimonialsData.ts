@@ -1,0 +1,48 @@
+import type { Testimonial } from '../types';
+
+export const TESTIMONIALS: Testimonial[] = [
+  {
+    id: '1',
+    name: 'Sunita Devi',
+    role: 'Micro-Entrepreneur & Dairy Owner',
+    location: 'Gorakhpur, UP',
+    avatar: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&q=80&w=200',
+    quote: 'Before FinLingo, I signed loan papers without knowing what floating APR meant. Hearing the exact monthly EMI in Hindi gave me the confidence to expand my cattle feed business.',
+    rating: 5,
+    language: 'Hindi',
+    badge: 'Verified Borrower',
+  },
+  {
+    id: '2',
+    name: 'Rajesh Subramanian',
+    role: 'Small Retailer',
+    location: 'Coimbatore, Tamil Nadu',
+    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=200',
+    quote: 'The interactive sandbox let me test what happens if sales drop in monsoon. Seeing interest vs principal clearly in Tamil saved me from over-borrowing.',
+    rating: 5,
+    language: 'Tamil',
+    badge: 'Verified Borrower',
+  },
+  {
+    id: '3',
+    name: 'Anil Kulkarni',
+    role: 'Lead Agricultural Officer',
+    location: 'Gramin Vikash Sahakari Bank',
+    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=200',
+    quote: 'FinLingo has reduced our branch customer orientation time by 60%. Farmers come to our counters already knowing their EMI numbers.',
+    rating: 5,
+    language: 'Marathi',
+    badge: 'Bank Partner',
+  },
+  {
+    id: '4',
+    name: 'Priyanka Banerjee',
+    role: 'Handicraft Artisan',
+    location: 'Bolpur, West Bengal',
+    avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=200',
+    quote: 'I used the voice feature in Bengali. It explained pre-closure charges so simply that I renegotiated terms with my lender!',
+    rating: 5,
+    language: 'Bengali',
+    badge: 'Verified Borrower',
+  },
+];
