@@ -48,9 +48,9 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onSuccess, onClose, curr
     newOtp[index] = value;
     setOtp(newOtp);
 
-    // Auto-advance to next input
+    // Auto-advance focus to next digit box (UPI app convention)
     if (value && index < 5) {
-      const nextInput = document.getElementById(`otp-input-${index + 1}`);
+      const nextInput = document.getElementById(`otp-box-${index + 1}`);
       if (nextInput) nextInput.focus();
     }
   };
@@ -59,7 +59,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onSuccess, onClose, curr
     if (e) e.preventDefault();
     const enteredOtp = otp.join('');
     if (enteredOtp.length < 6) {
-      setErrorMsg('Please enter the 6-digit OTP code sent to your phone.');
+      setErrorMsg('Please enter all 6 digits of the OTP code.');
       return;
     }
     setErrorMsg('');
@@ -72,7 +72,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onSuccess, onClose, curr
         authProvider: 'phone',
         preferredLanguage: currentLang,
       });
-    }, 900);
+    }, 800);
   };
 
   const handleGoogleAuth = () => {
@@ -86,7 +86,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onSuccess, onClose, curr
         authProvider: 'google',
         preferredLanguage: currentLang,
       });
-    }, 1000);
+    }, 900);
   };
 
   const handleQuickDemoLogin = () => {
@@ -99,48 +99,50 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onSuccess, onClose, curr
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-lg animate-fade-in">
-      <div className="relative w-full max-w-md glass-panel p-6 sm:p-8 bg-slate-900 border-slate-700 shadow-2xl rounded-3xl overflow-hidden">
-        {/* Close Button if modal */}
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#090D16]/80 backdrop-blur-md animate-fade-in">
+      <div className="relative w-full max-w-md card-surface p-8 sm:p-10 bg-white border border-slate-200 shadow-2xl rounded-3xl overflow-hidden text-[#2B2B2B]">
+        {/* Close Button */}
         {onClose && (
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 p-2 rounded-full bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-colors"
+            className="absolute top-5 right-5 p-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-[#2B2B2B] transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
         )}
 
-        {/* Header Icon */}
-        <div className="text-center mb-6">
-          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-400 to-teal-600 flex items-center justify-center mx-auto mb-3 shadow-lg shadow-emerald-500/25">
-            <Sparkles className="w-7 h-7 text-slate-950 stroke-[2.5]" />
+        {/* Centered FinLingo Wordmark / Logo Near Top */}
+        <div className="text-center mb-8">
+          <div className="icon-badge icon-badge-teal mx-auto mb-3 shadow-sm !w-14 !h-14">
+            <Sparkles className="w-7 h-7 stroke-[2.2]" />
           </div>
-          <h2 className="text-2xl font-extrabold text-white">Welcome to FinLingo</h2>
-          <p className="text-xs text-slate-400 mt-1">
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-[#2B2B2B] tracking-tight">
+            FinLingo
+          </h2>
+          <p className="text-xs text-[#6B6B6B] mt-1 font-medium">
             Financial understanding in your own language
           </p>
         </div>
 
         {/* Error Alert */}
         {errorMsg && (
-          <div className="mb-4 p-3 rounded-xl bg-red-950/50 border border-red-500/30 text-red-300 text-xs text-center font-medium">
+          <div className="mb-5 p-3.5 rounded-2xl bg-red-50 border border-red-200 text-[#E85D5D] text-xs text-center font-bold">
             {errorMsg}
           </div>
         )}
 
         {/* STEP 1: PHONE NUMBER INPUT */}
         {step === 'phone' ? (
-          <form onSubmit={handleSendOTP} className="space-y-4">
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-2 flex items-center justify-between">
-                <span>Enter Mobile Number</span>
-                <span className="text-[10px] text-emerald-400 font-normal">Fastest for Tier 2/3 Users</span>
+          <form onSubmit={handleSendOTP} className="space-y-6">
+            <div className="space-y-2">
+              <label className="block text-xs font-bold uppercase tracking-wider text-[#6B6B6B]">
+                Enter Mobile Number
               </label>
 
-              <div className="flex gap-2">
-                <div className="px-3.5 py-3 rounded-xl bg-slate-800 border border-slate-700 text-sm font-bold text-slate-200 flex items-center gap-1.5 shrink-0">
-                  <span className="text-base">🇮🇳</span>
+              {/* Large Keypad-Friendly Input Field */}
+              <div className="flex gap-2.5">
+                <div className="px-4 py-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-base font-extrabold text-[#2B2B2B] flex items-center gap-1.5 shrink-0 shadow-inner">
+                  <span className="text-lg">🇮🇳</span>
                   <span>+91</span>
                 </div>
 
@@ -152,24 +154,25 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onSuccess, onClose, curr
                     placeholder="98765 43210"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-800 border border-slate-700 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 font-mono tracking-wider"
+                    className="w-full pl-11 pr-4 py-3.5 rounded-2xl bg-white border-2 border-slate-200 text-lg font-bold font-mono text-[#2B2B2B] placeholder-slate-400 focus:border-[#0F7173] focus:ring-2 focus:ring-[#0F7173]/20 shadow-sm"
                   />
-                  <Phone className="w-4 h-4 text-slate-500 absolute left-3.5 top-3.5" />
+                  <Phone className="w-5 h-5 text-slate-400 absolute left-4 top-4" />
                 </div>
               </div>
             </div>
 
+            {/* Single Primary Button: Get OTP */}
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full btn btn-primary py-3.5 text-sm font-bold shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2 group"
+              className="w-full btn btn-primary py-4 text-base font-bold shadow-md shadow-[#0F7173]/20 group"
             >
               {isSubmitting ? (
                 <span>Sending OTP...</span>
               ) : (
                 <>
-                  <span>Send OTP Code</span>
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  <span>Get OTP</span>
+                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </>
               )}
             </button>
@@ -177,18 +180,18 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onSuccess, onClose, curr
             {/* Divider */}
             <div className="relative my-4 text-center">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-slate-800" />
+                <div className="w-full border-t border-slate-200" />
               </div>
-              <span className="relative px-3 bg-slate-900 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
-                Or Continue With
+              <span className="relative px-3 bg-white text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                Or
               </span>
             </div>
 
-            {/* Google OAuth Backup */}
+            {/* Bordered Google OAuth Backup Button */}
             <button
               type="button"
               onClick={handleGoogleAuth}
-              className="w-full py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs font-bold flex items-center justify-center gap-3 transition-colors"
+              className="w-full py-3.5 px-4 rounded-2xl bg-white hover:bg-slate-50 border-2 border-slate-200 text-[#2B2B2B] text-xs font-bold flex items-center justify-center gap-3 transition-all shadow-sm"
             >
               <svg className="w-4 h-4" viewBox="0 0 24 24">
                 <path
@@ -211,46 +214,46 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onSuccess, onClose, curr
               <span>Continue with Google Account</span>
             </button>
 
-            {/* Quick Demo Login */}
+            {/* Quick Demo Login Link */}
             <button
               type="button"
               onClick={handleQuickDemoLogin}
-              className="w-full py-2 text-[11px] font-semibold text-emerald-400 hover:underline text-center block"
+              className="w-full py-2 text-xs font-bold text-[#0F7173] hover:underline text-center block"
             >
-              ⚡ Instant Quick Demo Login (Skip SMS typing)
+              ⚡ Instant Demo Login (Skip SMS typing)
             </button>
           </form>
         ) : (
-          /* STEP 2: OTP VERIFICATION INPUT */
-          <form onSubmit={handleVerifyOTP} className="space-y-5 animate-fade-in">
-            <div className="text-center">
-              <div className="inline-flex items-center gap-1.5 text-xs text-slate-300 bg-slate-800 px-3 py-1 rounded-full mb-2">
-                <Lock className="w-3.5 h-3.5 text-emerald-400" />
-                <span>OTP sent to <span className="text-emerald-400 font-mono">+91 {phone}</span></span>
+          /* STEP 2: DEDICATED 6 BOXED DIGIT OTP ENTRY SCREEN (UPI App Convention) */
+          <form onSubmit={handleVerifyOTP} className="space-y-6 animate-fade-in">
+            <div className="text-center space-y-2">
+              <div className="inline-flex items-center gap-1.5 text-xs font-bold text-[#0F7173] bg-[#0F7173]/10 px-3 py-1.5 rounded-full">
+                <Lock className="w-3.5 h-3.5" />
+                <span>OTP sent to +91 {phone}</span>
                 <button
                   type="button"
                   onClick={() => setStep('phone')}
-                  className="text-[10px] text-slate-400 hover:text-white underline ml-1"
+                  className="text-[10px] text-slate-500 hover:text-[#2B2B2B] underline ml-1"
                 >
                   Edit
                 </button>
               </div>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-[#6B6B6B]">
                 Enter the 6-digit verification code below:
               </p>
             </div>
 
-            {/* 6 Digit Input Boxes */}
-            <div className="flex justify-between gap-2 my-4">
+            {/* 6 Individual Boxed Digit Inputs (UPI Style) */}
+            <div className="flex justify-between gap-2 my-6">
               {otp.map((digit, idx) => (
                 <input
                   key={idx}
-                  id={`otp-input-${idx}`}
+                  id={`otp-box-${idx}`}
                   type="text"
                   maxLength={1}
                   value={digit}
                   onChange={(e) => handleOtpChange(idx, e.target.value)}
-                  className="w-11 h-13 text-center text-xl font-bold font-mono rounded-xl bg-slate-800 border border-slate-700 text-emerald-400 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
+                  className="w-12 h-14 text-center text-2xl font-black font-mono rounded-2xl bg-slate-50 border-2 border-slate-200 text-[#0F7173] focus:outline-none focus:border-[#0F7173] focus:ring-2 focus:ring-[#0F7173]/20 shadow-sm"
                 />
               ))}
             </div>
@@ -258,18 +261,18 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onSuccess, onClose, curr
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full btn btn-primary py-3.5 text-sm font-bold shadow-lg shadow-emerald-500/20"
+              className="w-full btn btn-primary py-4 text-base font-bold shadow-md shadow-[#0F7173]/20"
             >
-              {isSubmitting ? 'Verifying OTP...' : 'Verify OTP & Continue'}
+              {isSubmitting ? 'Verifying...' : 'Verify OTP & Continue'}
             </button>
 
-            <div className="flex items-center justify-between text-xs text-slate-400 pt-2">
+            <div className="flex items-center justify-between text-xs text-[#6B6B6B] pt-2">
               <button
                 type="button"
                 disabled={timer > 0}
                 onClick={() => setTimer(30)}
-                className={`flex items-center gap-1 ${
-                  timer > 0 ? 'text-slate-600 cursor-not-allowed' : 'text-emerald-400 hover:underline font-semibold'
+                className={`flex items-center gap-1 font-bold ${
+                  timer > 0 ? 'text-slate-400 cursor-not-allowed' : 'text-[#0F7173] hover:underline'
                 }`}
               >
                 <RefreshCw className="w-3.5 h-3.5" />
@@ -283,8 +286,8 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ onSuccess, onClose, curr
         )}
 
         {/* Security Footer Note */}
-        <div className="mt-6 pt-4 border-t border-slate-800/80 flex items-center justify-center gap-1.5 text-[11px] text-slate-500">
-          <ShieldCheck className="w-3.5 h-3.5 text-emerald-500/70" />
+        <div className="mt-8 pt-4 border-t border-slate-100 flex items-center justify-center gap-1.5 text-[11px] text-[#6B6B6B]">
+          <ShieldCheck className="w-3.5 h-3.5 text-[#0F7173]" />
           <span>Encrypted phone verification • Zero spam guaranteed</span>
         </div>
       </div>

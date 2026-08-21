@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Volume2, ArrowRight, CheckCircle2, User, Briefcase, HelpCircle, Sparkles, Languages, Check } from 'lucide-react';
+import { Volume2, ArrowRight, Check, User, Briefcase, Sparkles } from 'lucide-react';
 import type { UserProfile, LanguageCode, AgeBracket, OccupationType, FinancialComfortLevel } from '../types';
 import { LANGUAGES } from '../data/languages';
 
@@ -17,15 +17,14 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
 
   // Profile Form States
   const [selectedLang, setSelectedLang] = useState<LanguageCode>(
-    initialUser.preferredLanguage || 'en'
+    initialUser.preferredLanguage || 'hi'
   );
   const [name, setName] = useState<string>(initialUser.name || '');
-  const [ageBracket, setAgeBracket] = useState<AgeBracket>('25-34');
+  const [ageBracket] = useState<AgeBracket>('25-34');
   const [occupation, setOccupation] = useState<OccupationType>('shopkeeper');
-  const [financialComfort, setFinancialComfort] =
-    useState<FinancialComfortLevel>('beginner');
+  const [financialComfort, setFinancialComfort] = useState<FinancialComfortLevel>('beginner');
 
-  // Simulated audio sample player
+  // Audio sample playback simulation
   const playSampleAudio = (code: LanguageCode) => {
     setPlayingAudioLang(code);
     setTimeout(() => {
@@ -51,50 +50,51 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
     onComplete(fullProfile);
   };
 
+  const handleSkip = () => {
+    handleFinishOnboarding();
+  };
+
   const currentLangObj = LANGUAGES.find((l) => l.code === selectedLang) || LANGUAGES[0];
 
   return (
-    <div className="min-h-screen bg-[#090D16] flex items-center justify-center p-4 py-12 relative overflow-hidden">
-      {/* Mesh Background */}
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[400px] bg-emerald-500/10 blur-[140px] rounded-full pointer-events-none" />
+    <div className="min-h-screen bg-[#FBF7F2] text-[#2B2B2B] flex items-center justify-center p-4 py-12 relative overflow-hidden">
+      {/* Background Glow */}
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-[#0F7173]/10 blur-[140px] rounded-full pointer-events-none" />
 
-      <div className="w-full max-w-2xl glass-panel p-6 sm:p-10 bg-slate-900 border-slate-700 shadow-2xl rounded-3xl relative z-10">
-        {/* Top Progress Bar */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between text-xs font-bold mb-2">
-            <span className="text-emerald-400 uppercase tracking-wider flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>Step {step} of 3</span>
-            </span>
-            <span className="text-slate-400">
-              {step === 1 && 'Language Selection'}
-              {step === 2 && 'Basic Profile'}
-              {step === 3 && 'Financial Comfort Level'}
+      <div className="w-full max-w-2xl card-surface p-8 sm:p-12 bg-white border border-slate-200 shadow-2xl rounded-3xl relative z-10 space-y-8">
+        {/* SLIM PROGRESS INDICATOR (3 Small Dots / Thin Progress Bar - No Fractions) */}
+        <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+          <div className="flex items-center gap-2">
+            <div className="icon-badge icon-badge-teal !w-8 !h-8 !min-w-[32px]">
+              <Sparkles className="w-4 h-4" />
+            </div>
+            <span className="text-xs font-extrabold text-[#0F7173] uppercase tracking-wider">
+              FinLingo Setup
             </span>
           </div>
 
-          <div className="w-full h-2 rounded-full bg-slate-800 overflow-hidden">
-            <div
-              className="h-full bg-gradient-to-r from-emerald-400 to-teal-400 transition-all duration-500"
-              style={{ width: `${(step / 3) * 100}%` }}
-            />
+          {/* 3 Slim Dots */}
+          <div className="flex items-center gap-2">
+            <div className={`h-2 rounded-full transition-all duration-300 ${step >= 1 ? 'w-8 bg-[#0F7173]' : 'w-2 bg-slate-200'}`} />
+            <div className={`h-2 rounded-full transition-all duration-300 ${step >= 2 ? 'w-8 bg-[#0F7173]' : 'w-2 bg-slate-200'}`} />
+            <div className={`h-2 rounded-full transition-all duration-300 ${step >= 3 ? 'w-8 bg-[#0F7173]' : 'w-2 bg-slate-200'}`} />
           </div>
         </div>
 
-        {/* SCREEN 1: LANGUAGE SELECTION */}
+        {/* SCREEN 1: LANGUAGE SELECTION (Large Native Script Cards) */}
         {step === 1 && (
           <div className="space-y-6 animate-fade-in">
-            <div className="text-center max-w-md mx-auto">
-              <div className="w-12 h-12 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 flex items-center justify-center mx-auto mb-3">
-                <Languages className="w-6 h-6" />
-              </div>
-              <h2 className="text-2xl font-extrabold text-white">Choose Your Language</h2>
-              <p className="text-xs text-slate-300 mt-1">
-                FinLingo will speak and simplify financial concepts in your chosen mother tongue.
+            <div className="text-center max-w-md mx-auto space-y-2">
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-[#2B2B2B]">
+                Choose your preferred language
+              </h2>
+              <p className="text-xs text-[#6B6B6B]">
+                FinLingo will speak and explain financial concepts in your mother tongue.
               </p>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
+            {/* Grid of Large Tappable Native Script Cards */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5 pt-2">
               {LANGUAGES.map((lang) => {
                 const isSelected = selectedLang === lang.code;
                 const isPlaying = playingAudioLang === lang.code;
@@ -103,22 +103,28 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
                   <div
                     key={lang.code}
                     onClick={() => setSelectedLang(lang.code)}
-                    className={`p-4 rounded-2xl border cursor-pointer relative transition-all text-center flex flex-col justify-between ${
+                    className={`p-4 rounded-2xl border-2 cursor-pointer relative transition-all text-center flex flex-col justify-between ${
                       isSelected
-                        ? 'bg-emerald-500/20 border-emerald-500 shadow-lg shadow-emerald-500/15 scale-102'
-                        : 'bg-slate-800/60 border-slate-700 hover:border-slate-500 hover:bg-slate-800'
+                        ? 'bg-[#0F7173]/10 border-[#0F7173] shadow-md scale-102'
+                        : 'bg-white border-slate-200 hover:border-slate-300 hover:bg-slate-50'
                     }`}
                   >
                     {isSelected && (
-                      <div className="absolute top-2 right-2 w-5 h-5 rounded-full bg-emerald-400 text-slate-950 flex items-center justify-center">
+                      <div className="absolute top-2 right-2 w-5 h-5 rounded-full bg-[#0F7173] text-white flex items-center justify-center">
                         <Check className="w-3.5 h-3.5 stroke-[3]" />
                       </div>
                     )}
 
                     <div className="text-2xl mb-1">{lang.flag}</div>
+                    
+                    {/* Large Native Script Text */}
                     <div>
-                      <div className="text-sm font-bold text-slate-100">{lang.nativeName}</div>
-                      <div className="text-[10px] text-slate-400">{lang.name}</div>
+                      <div className="text-xl font-extrabold text-[#2B2B2B] leading-snug">
+                        {lang.nativeName}
+                      </div>
+                      <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mt-0.5">
+                        {lang.name}
+                      </div>
                     </div>
 
                     {/* Audio Sample Button */}
@@ -128,181 +134,161 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
                         e.stopPropagation();
                         playSampleAudio(lang.code);
                       }}
-                      className={`mt-3 py-1 px-2 rounded-lg text-[10px] font-bold flex items-center justify-center gap-1 transition-colors ${
+                      className={`mt-3 py-1 px-2.5 rounded-full text-[10px] font-bold flex items-center justify-center gap-1 transition-colors ${
                         isPlaying
-                          ? 'bg-emerald-400 text-slate-950 animate-pulse'
-                          : 'bg-white/5 hover:bg-white/10 text-slate-300'
+                          ? 'bg-[#F5A623] text-slate-950 animate-pulse'
+                          : 'bg-slate-100 hover:bg-slate-200 text-[#0F7173]'
                       }`}
                     >
                       <Volume2 className="w-3 h-3" />
-                      <span>{isPlaying ? 'Playing...' : 'Audio Sample'}</span>
+                      <span>{isPlaying ? 'Playing...' : 'Audio'}</span>
                     </button>
                   </div>
                 );
               })}
             </div>
 
-            <div className="pt-4 flex justify-end">
+            {/* Bottom Primary Button + Skip link */}
+            <div className="pt-6 flex flex-col items-center gap-3">
               <button
                 type="button"
                 onClick={() => setStep(2)}
-                className="btn btn-primary py-3 px-8 text-sm font-bold shadow-lg shadow-emerald-500/20 flex items-center gap-2 group"
+                className="w-full btn btn-primary py-4 text-base font-bold shadow-md shadow-[#0F7173]/20 flex items-center justify-center gap-2 group"
               >
-                <span>Next: Profile Info</span>
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                <span>Continue in {currentLangObj.nativeName}</span>
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </button>
+
+              <button
+                type="button"
+                onClick={handleSkip}
+                className="text-xs font-semibold text-[#6B6B6B] hover:text-[#0F7173] underline py-1"
+              >
+                Skip for now
               </button>
             </div>
           </div>
         )}
 
-        {/* SCREEN 2: BASIC PROFILE INFO */}
+        {/* SCREEN 2: PROFILE INFO (Tappable Occupation Icon Chips) */}
         {step === 2 && (
           <div className="space-y-6 animate-fade-in">
-            <div className="text-center max-w-md mx-auto">
-              <div className="w-12 h-12 rounded-2xl bg-indigo-500/20 border border-indigo-500/40 text-indigo-400 flex items-center justify-center mx-auto mb-3">
-                <User className="w-6 h-6" />
-              </div>
-              <h2 className="text-2xl font-extrabold text-white">Basic Profile Info</h2>
-              <p className="text-xs text-slate-300 mt-1">
-                Help us personalize loan & savings advice for your lifestyle.
+            <div className="text-center max-w-md mx-auto space-y-2">
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-[#2B2B2B]">
+                Tell us a bit about yourself
+              </h2>
+              <p className="text-xs text-[#6B6B6B]">
+                This helps FinLingo customize examples specifically for your work.
               </p>
             </div>
 
-            <div className="space-y-5 pt-2">
-              {/* Name Input */}
+            <div className="space-y-6 pt-2">
+              {/* Single Name Field */}
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1.5 flex items-center gap-1.5">
-                  <User className="w-3.5 h-3.5 text-indigo-400" />
-                  <span>Your Name *</span>
+                <label className="block text-xs font-bold uppercase tracking-wider text-[#6B6B6B] mb-2 flex items-center gap-1.5">
+                  <User className="w-3.5 h-3.5 text-[#0F7173]" />
+                  <span>Your Name</span>
                 </label>
                 <input
                   type="text"
-                  required
                   placeholder="e.g. Sunita Devi or Ramesh Kumar"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl bg-slate-800 border border-slate-700 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 font-medium"
+                  className="w-full px-4 py-3.5 rounded-2xl bg-white border-2 border-slate-200 text-base font-semibold text-[#2B2B2B] placeholder-slate-400 focus:border-[#0F7173] focus:ring-2 focus:ring-[#0F7173]/20 shadow-sm"
                 />
               </div>
 
-              {/* Age Bracket */}
+              {/* Tappable Occupation Icon Chips (No Dropdown Select Menu) */}
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-2">
-                  Select Age Bracket
-                </label>
-                <div className="flex flex-wrap gap-2">
-                  {(['18-24', '25-34', '35-44', '45-59', '60+'] as AgeBracket[]).map((bracket) => (
-                    <button
-                      key={bracket}
-                      type="button"
-                      onClick={() => setAgeBracket(bracket)}
-                      className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
-                        ageBracket === bracket
-                          ? 'bg-indigo-500 text-white shadow-md shadow-indigo-500/25'
-                          : 'bg-slate-800 text-slate-400 hover:text-slate-200 border border-slate-700'
-                      }`}
-                    >
-                      {bracket} yrs
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Occupation Type */}
-              <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-2 flex items-center gap-1.5">
-                  <Briefcase className="w-3.5 h-3.5 text-indigo-400" />
-                  <span>Occupation Type</span>
+                <label className="block text-xs font-bold uppercase tracking-wider text-[#6B6B6B] mb-3 flex items-center gap-1.5">
+                  <Briefcase className="w-3.5 h-3.5 text-[#0F7173]" />
+                  <span>Select Occupation</span>
                 </label>
 
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                   {[
                     { id: 'shopkeeper', label: 'Shopkeeper / Kirana', emoji: '🏪' },
                     { id: 'gig_worker', label: 'Gig Worker / Driver', emoji: '🚗' },
                     { id: 'student', label: 'Student', emoji: '🎓' },
                     { id: 'salaried', label: 'Salaried Employee', emoji: '💼' },
-                    { id: 'farmer', label: 'Farmer / Agriculture', emoji: '🌾' },
-                    { id: 'micro_entrepreneur', label: 'Micro-Entrepreneur', emoji: '🛠️' },
                     { id: 'homemaker', label: 'Homemaker', emoji: '🏡' },
                     { id: 'other', label: 'Other', emoji: '✨' },
-                  ].map((item) => (
-                    <button
-                      key={item.id}
-                      type="button"
-                      onClick={() => setOccupation(item.id as OccupationType)}
-                      className={`p-3 rounded-xl border text-left text-xs font-semibold flex items-center gap-2 transition-all ${
-                        occupation === item.id
-                          ? 'bg-indigo-500/20 border-indigo-500 text-indigo-300 font-bold'
-                          : 'bg-slate-800/60 border-slate-700 text-slate-300 hover:border-slate-500'
-                      }`}
-                    >
-                      <span className="text-base">{item.emoji}</span>
-                      <span className="leading-tight">{item.label}</span>
-                    </button>
-                  ))}
+                  ].map((item) => {
+                    const isSelected = occupation === item.id;
+                    return (
+                      <button
+                        key={item.id}
+                        type="button"
+                        onClick={() => setOccupation(item.id as OccupationType)}
+                        className={`p-3.5 rounded-2xl border-2 text-left text-xs font-bold flex items-center gap-2.5 transition-all ${
+                          isSelected
+                            ? 'bg-[#0F7173]/10 border-[#0F7173] text-[#0F7173] shadow-sm'
+                            : 'bg-white border-slate-200 text-[#2B2B2B] hover:border-slate-300 hover:bg-slate-50'
+                        }`}
+                      >
+                        <span className="text-xl">{item.emoji}</span>
+                        <span className="leading-tight">{item.label}</span>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
             </div>
 
-            <div className="pt-4 flex items-center justify-between">
+            {/* Bottom Action Controls */}
+            <div className="pt-6 flex flex-col items-center gap-3">
               <button
                 type="button"
-                onClick={() => setStep(1)}
-                className="btn btn-secondary py-2.5 px-5 text-xs font-bold"
+                onClick={() => setStep(3)}
+                className="w-full btn btn-primary py-4 text-base font-bold shadow-md shadow-[#0F7173]/20 flex items-center justify-center gap-2 group"
               >
-                Back
+                <span>Continue</span>
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </button>
 
               <button
                 type="button"
-                onClick={() => setStep(3)}
-                className="btn btn-primary py-3 px-8 text-sm font-bold shadow-lg shadow-emerald-500/20 flex items-center gap-2 group"
+                onClick={handleSkip}
+                className="text-xs font-semibold text-[#6B6B6B] hover:text-[#0F7173] underline py-1"
               >
-                <span>Next: Financial Comfort</span>
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                Skip for now
               </button>
             </div>
           </div>
         )}
 
-        {/* SCREEN 3: FINANCIAL COMFORT LEVEL */}
+        {/* SCREEN 3: FINANCIAL COMFORT LEVEL (First-Person Option Cards) */}
         {step === 3 && (
           <div className="space-y-6 animate-fade-in">
-            <div className="text-center max-w-md mx-auto">
-              <div className="w-12 h-12 rounded-2xl bg-teal-500/20 border border-teal-500/40 text-teal-400 flex items-center justify-center mx-auto mb-3">
-                <HelpCircle className="w-6 h-6" />
-              </div>
-              <h2 className="text-2xl font-extrabold text-white">Financial Comfort Assessment</h2>
-              <p className="text-xs text-slate-300 mt-1">
-                "Have you heard of SIPs or mutual funds before?"
+            <div className="text-center max-w-md mx-auto space-y-2">
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-[#2B2B2B]">
+                How comfortable are you with financial terms?
+              </h2>
+              <p className="text-xs text-[#6B6B6B]">
+                Select the option that best describes you:
               </p>
             </div>
 
-            <div className="space-y-3 pt-2">
+            {/* Large First-Person Option Cards */}
+            <div className="space-y-3.5 pt-2">
               {[
                 {
                   id: 'beginner',
-                  title: 'No, I am completely new',
-                  desc: 'Explain banking terms like I am 10 years old, using simple everyday real-life examples.',
+                  title: "I'm completely new to this",
+                  desc: 'Explain banking & loan terms simply, using zero jargon and clear everyday examples.',
                   badge: 'Zero Jargon Mode',
                 },
                 {
                   id: 'basic',
-                  title: 'I have heard the name, but don\'t know details',
-                  desc: 'I know basic savings & bank accounts, but want easy breakdown of SIPs & loans.',
-                  badge: 'Guided Learning Mode',
+                  title: "I've heard some terms, but I'm not confident",
+                  desc: 'I know basic savings & bank accounts, but want guided explanations before deciding.',
+                  badge: 'Guided Mode',
                 },
                 {
                   id: 'moderate',
-                  title: 'Yes, I know FDs & savings, want exact SIP math',
-                  desc: 'Give me clear interest calculations, monthly returns, and tenure breakdowns.',
-                  badge: 'Standard Simulator Mode',
-                },
-                {
-                  id: 'advanced',
-                  title: 'Yes, I understand mutual funds, APR & stocks',
-                  desc: 'Provide comprehensive financial metrics, comparisons, and risk profiles.',
-                  badge: 'Pro Mode',
+                  title: "I understand the basics & want exact numbers",
+                  desc: 'Give me clear interest rate calculations, EMI breakdowns, and return math.',
+                  badge: 'Standard Mode',
                 },
               ].map((opt) => {
                 const isSelected = financialComfort === opt.id;
@@ -310,58 +296,51 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
                   <div
                     key={opt.id}
                     onClick={() => setFinancialComfort(opt.id as FinancialComfortLevel)}
-                    className={`p-4 rounded-2xl border cursor-pointer transition-all flex items-start gap-3.5 ${
+                    className={`p-5 rounded-2xl border-2 cursor-pointer transition-all flex items-start gap-4 ${
                       isSelected
-                        ? 'bg-emerald-500/20 border-emerald-500 text-white shadow-lg shadow-emerald-500/10'
-                        : 'bg-slate-800/60 border-slate-700 text-slate-300 hover:border-slate-500'
+                        ? 'bg-[#0F7173]/10 border-[#0F7173] shadow-md'
+                        : 'bg-white border-slate-200 text-[#2B2B2B] hover:border-slate-300'
                     }`}
                   >
                     <div
-                      className={`w-5 h-5 rounded-full border mt-0.5 flex items-center justify-center shrink-0 ${
-                        isSelected ? 'border-emerald-400 bg-emerald-400' : 'border-slate-500'
+                      className={`w-6 h-6 rounded-full border-2 mt-0.5 flex items-center justify-center shrink-0 ${
+                        isSelected ? 'border-[#0F7173] bg-[#0F7173]' : 'border-slate-300'
                       }`}
                     >
-                      {isSelected && <div className="w-2 h-2 rounded-full bg-slate-950" />}
+                      {isSelected && <div className="w-2.5 h-2.5 rounded-full bg-white" />}
                     </div>
 
                     <div className="space-y-1 flex-1">
                       <div className="flex items-center justify-between">
-                        <h4 className="text-sm font-bold text-slate-100">{opt.title}</h4>
-                        <span className="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+                        <h4 className="text-base font-extrabold text-[#2B2B2B]">{opt.title}</h4>
+                        <span className="text-[10px] font-bold text-[#0F7173] bg-[#0F7173]/10 px-2.5 py-0.5 rounded-full">
                           {opt.badge}
                         </span>
                       </div>
-                      <p className="text-xs text-slate-400 font-normal leading-relaxed">{opt.desc}</p>
+                      <p className="text-xs text-[#6B6B6B] font-medium leading-relaxed">{opt.desc}</p>
                     </div>
                   </div>
                 );
               })}
             </div>
 
-            {/* Profile Summary Pill */}
-            <div className="p-3.5 rounded-xl bg-slate-800/50 border border-slate-700/60 text-xs flex items-center justify-between text-slate-300">
-              <div>
-                Selected Language: <span className="text-emerald-400 font-bold">{currentLangObj.nativeName}</span> • Profile:{' '}
-                <span className="text-indigo-300 font-bold">{name || 'User'} ({occupation})</span>
-              </div>
-            </div>
-
-            <div className="pt-2 flex items-center justify-between">
+            {/* Bottom Action Controls */}
+            <div className="pt-6 flex flex-col items-center gap-3">
               <button
                 type="button"
-                onClick={() => setStep(2)}
-                className="btn btn-secondary py-2.5 px-5 text-xs font-bold"
+                onClick={handleFinishOnboarding}
+                className="w-full btn btn-primary py-4 text-base font-bold shadow-lg shadow-[#0F7173]/20 flex items-center justify-center gap-2 group"
               >
-                Back
+                <span>Continue & Start Voice Assistant</span>
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </button>
 
               <button
                 type="button"
-                onClick={handleFinishOnboarding}
-                className="btn btn-primary py-3.5 px-8 text-sm font-bold shadow-xl shadow-emerald-500/25 flex items-center gap-2 group"
+                onClick={handleSkip}
+                className="text-xs font-semibold text-[#6B6B6B] hover:text-[#0F7173] underline py-1"
               >
-                <CheckCircle2 className="w-4 h-4" />
-                <span>Launch Main Voice Assistant</span>
+                Skip for now
               </button>
             </div>
           </div>
