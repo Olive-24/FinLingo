@@ -8,7 +8,11 @@ import {
   RotateCcw,
   Sliders,
   Volume2,
+  ArrowLeft,
+  ShieldCheck,
+  CheckCircle2,
 } from 'lucide-react';
+import { motion } from 'framer-motion';
 import type { LanguageCode } from '../types';
 import { LANGUAGES } from '../data/languages';
 import { MYTHS_DATA, type MythItem } from '../data/mythsData';
@@ -48,116 +52,104 @@ export const MythBustingSection: React.FC<MythBustingSectionProps> = ({
     : MYTHS_DATA.filter((m) => m.category === activeCategory);
 
   const handleChipTap = (myth: MythItem) => {
-    // 1. Brief solid teal fill micro-feedback
     setTappedMythId(myth.id);
+    setSelectedMyth(myth);
     setIsPlayingAudio(false);
 
-    // 2. 150ms micro-delay for smooth tap visual before answer streams below
     setTimeout(() => {
-      setSelectedMyth(myth);
       setTappedMythId(null);
-    }, 150);
+    }, 250);
   };
 
-  const getMythQuestionLabel = (myth: MythItem): string => {
-    return myth.chipLabelVernacular[currentLang] || myth.chipLabelVernacular.hi || myth.chipLabel;
+  const toggleAudio = () => {
+    setIsPlayingAudio(!isPlayingAudio);
   };
 
-  const getMythAnswerText = (myth: MythItem): string => {
-    return myth.answerVernacular[currentLang] || myth.answerVernacular.hi || myth.answer;
+  const getVernacularQuestion = (myth: MythItem) => {
+    switch (currentLang) {
+      case 'hi': return myth.questionHindi;
+      case 'ta': return myth.questionTamil;
+      case 'te': return myth.questionTelugu;
+      case 'mr': return myth.questionMarathi;
+      default: return myth.question;
+    }
   };
 
-  const handleAskAI = () => {
-    const q = getMythQuestionLabel(selectedMyth);
-    const a = getMythAnswerText(selectedMyth);
-    if (onAskAIWithQuestion) {
-      onAskAIWithQuestion(q, a);
+  const getVernacularAnswer = (myth: MythItem) => {
+    switch (currentLang) {
+      case 'hi': return myth.answerHindi;
+      case 'ta': return myth.answerTamil;
+      case 'te': return myth.answerTelugu;
+      case 'mr': return myth.answerMarathi;
+      default: return myth.answer;
     }
   };
 
   return (
-    <div className={`w-full ${standalonePage ? 'min-h-screen bg-[#FBF7F2] text-[#2B2B2B] flex flex-col justify-between' : 'space-y-6'}`}>
-      {/* STANDALONE PAGE HEADER (if rendered as full page) */}
-      {standalonePage && (
-        <header className="bg-white/90 backdrop-blur-md border-b border-slate-200 sticky top-0 z-40 px-4 py-3.5 shadow-sm">
-          <div className="container mx-auto flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              {onBack && (
-                <button
-                  onClick={onBack}
-                  className="p-2 rounded-full bg-slate-100 hover:bg-slate-200 text-[#2B2B2B] transition-colors text-xs font-bold"
-                >
-                  <RotateCcw className="w-4 h-4" />
-                </button>
-              )}
-              <div className="flex items-center gap-2.5">
-                <div className="icon-badge icon-badge-teal !w-9 !h-9 !min-w-[36px]">
-                  <HelpCircle className="w-5 h-5 stroke-[2.2]" />
-                </div>
-                <div>
-                  <h1 className="font-extrabold text-base text-[#2B2B2B] tracking-tight flex items-center gap-2">
-                    <span>Myth-Busting & Financial Doubts</span>
-                    <span className="w-2 h-2 rounded-full bg-[#0F7173] animate-pulse" />
-                  </h1>
-                  <p className="text-[11px] text-[#6B6B6B]">
-                    Instant Honest Answers • <span className="text-[#0F7173] font-bold">{currentLangObj.flag} {currentLangObj.nativeName}</span>
-                  </p>
-                </div>
-              </div>
-            </div>
+    <section className={`${standalonePage ? 'min-h-screen bg-[#0A0A0F] py-10' : 'py-20 bg-[#0A0A0F]'} text-white relative overflow-hidden`}>
+      {/* AMBIENT GLOW ORB */}
+      <div className="orb-teal top-1/3 left-10 opacity-20" />
+
+      <div className="container mx-auto px-4 relative z-20 max-w-5xl">
+        {/* STANDALONE PAGE HEADER BAR */}
+        {standalonePage && (
+          <div className="flex items-center justify-between mb-8 pb-4 border-b border-white/10">
+            <button
+              onClick={onBack}
+              className="px-4 py-2 rounded-full bg-white/5 hover:bg-white/10 text-white font-bold text-xs flex items-center gap-2 border border-white/10"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              <span>Back to Workspace</span>
+            </button>
 
             {onSelectLang && (
               <select
                 value={currentLang}
                 onChange={(e) => onSelectLang(e.target.value as LanguageCode)}
-                className="px-3.5 py-1.5 rounded-full bg-white border border-slate-200 text-xs font-bold text-[#0F7173] focus:outline-none cursor-pointer shadow-sm"
+                className="px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-bold text-[#14B8A6] focus:outline-none cursor-pointer"
               >
                 {LANGUAGES.map((lang) => (
-                  <option key={lang.code} value={lang.code}>
+                  <option key={lang.code} value={lang.code} className="bg-[#0A0A0F] text-white">
                     {lang.flag} {lang.nativeName}
                   </option>
                 ))}
               </select>
             )}
           </div>
-        </header>
-      )}
+        )}
 
-      {/* SECTION CONTENT CONTAINER */}
-      <div className={`${standalonePage ? 'container mx-auto px-4 py-8 max-w-4xl flex-1 space-y-8' : 'space-y-6'}`}>
-        {/* HEADER BADGE & TITLE */}
-        <div className="space-y-2">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#0F7173]/10 border border-[#0F7173]/20 text-[#0F7173] text-xs font-extrabold">
+        {/* Section Header */}
+        <div className="text-center max-w-3xl mx-auto mb-10 space-y-3">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-300 text-xs font-extrabold backdrop-blur-md">
             <HelpCircle className="w-3.5 h-3.5" />
-            <span>Myth-Busting & Trust Builder</span>
+            <span>Myth-Buster & Instant Vernacular Doubts</span>
           </div>
 
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-[#2B2B2B] tracking-tight">
-            Common Financial Doubts & Honest Answers
+          <h2 className="text-3xl sm:text-5xl font-black tracking-tight">
+            Financial Myths <span className="gradient-text-amber">Busted in Plain Words</span>
           </h2>
-
-          <p className="text-xs sm:text-sm text-[#6B6B6B]">
-            Tap any question chip below to see FinLingo's instant jargon-free breakdown in your language.
+          <p className="text-slate-400 text-sm sm:text-base">
+            Tap any common doubt below for zero-jargon answers in {currentLangObj.nativeName} with audio playback.
           </p>
         </div>
 
-        {/* CATEGORY FILTER PILLS */}
-        <div className="flex flex-wrap gap-2 text-xs font-bold">
+        {/* Category Filters */}
+        <div className="flex items-center justify-center gap-2 overflow-x-auto pb-4 mb-6 scrollbar-none">
           {[
             { id: 'all', label: 'All Doubts' },
             { id: 'safety', label: 'Safety & Risk' },
-            { id: 'returns', label: 'SIP vs RD / FDs' },
-            { id: 'legal', label: 'Legal & Privacy' },
-            { id: 'budgeting', label: 'Savings Rules' },
-            { id: 'credit', label: 'Loan & CIBIL' },
+            { id: 'returns', label: 'SIP vs RD' },
+            { id: 'legal', label: 'Legal & Safety' },
+            { id: 'budgeting', label: 'Low Income' },
+            { id: 'credit', label: 'CIBIL Score' },
           ].map((cat) => (
             <button
               key={cat.id}
               onClick={() => setActiveCategory(cat.id as any)}
-              className={`px-3 py-1.5 rounded-full text-xs transition-all ${
+              className={`px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-all ${
                 activeCategory === cat.id
-                  ? 'bg-[#0F7173] text-white shadow-sm font-bold'
-                  : 'bg-white text-slate-600 border border-slate-200 hover:border-[#0F7173]'
+                  ? 'bg-gradient-to-r from-[#14B8A6] to-[#8B5CF6] text-white shadow-lg shadow-[#14B8A6]/20'
+                  : 'bg-white/5 text-slate-400 hover:text-white border border-white/10'
               }`}
             >
               {cat.label}
@@ -165,132 +157,139 @@ export const MythBustingSection: React.FC<MythBustingSectionProps> = ({
           ))}
         </div>
 
-        {/* HORIZONTALLY SCROLLABLE ROW OF ROUNDED CHIP BUTTONS */}
-        <div className="space-y-2">
-          <div className="text-[11px] font-extrabold uppercase tracking-wider text-[#6B6B6B] flex items-center justify-between">
-            <span>Tap a question chip to stream answer:</span>
-            <span className="text-[#0F7173] text-[10px] font-mono">Scroll horizontal →</span>
-          </div>
-
-          <div className="flex items-center gap-2.5 overflow-x-auto pb-3 pt-1 px-1 scrollbar-none snap-x">
+        {/* HORIZONTALLY SCROLLABLE QUESTION CHIPS AS GLASS PILLS WITH GRADIENT HOVER BORDER */}
+        <div className="relative mb-10">
+          <div className="flex items-center gap-3 overflow-x-auto pb-4 pt-1 scrollbar-none snap-x px-1">
             {filteredMyths.map((myth) => {
               const isSelected = selectedMyth.id === myth.id;
               const isTapped = tappedMythId === myth.id;
-              const chipText = getMythQuestionLabel(myth);
+              const vernacularQ = getVernacularQuestion(myth);
 
               return (
                 <button
                   key={myth.id}
                   onClick={() => handleChipTap(myth)}
-                  className={`snap-start shrink-0 px-4 py-2.5 rounded-full text-xs sm:text-sm font-bold transition-all duration-150 select-none cursor-pointer flex items-center gap-2 shadow-sm ${
-                    isTapped || isSelected
-                      ? 'bg-[#0F7173] text-white border-2 border-[#0F7173] shadow-md shadow-[#0F7173]/25 scale-95'
-                      : 'bg-white text-[#0F7173] border-2 border-[#0F7173]/30 hover:border-[#0F7173] hover:bg-[#0F7173]/5 active:scale-95'
+                  className={`snap-start shrink-0 px-5 py-3 rounded-full text-xs font-bold transition-all duration-200 flex items-center gap-2.5 backdrop-blur-md shadow-md ${
+                    isTapped
+                      ? 'bg-gradient-to-r from-[#14B8A6] to-[#8B5CF6] text-white scale-95'
+                      : isSelected
+                      ? 'bg-gradient-to-r from-[#14B8A6] to-[#8B5CF6] text-white shadow-lg shadow-[#14B8A6]/25 border border-[#14B8A6]'
+                      : 'bg-white/5 border border-white/10 text-slate-200 hover:border-[#14B8A6]/50 hover:bg-white/10'
                   }`}
                 >
-                  <Sparkles className={`w-3.5 h-3.5 ${isSelected || isTapped ? 'text-amber-300' : 'text-[#0F7173]'}`} />
-                  <span>{chipText}</span>
+                  <Sparkles className={`w-3.5 h-3.5 ${isSelected ? 'text-white' : 'text-[#14B8A6]'}`} />
+                  <span>{vernacularQ}</span>
                 </button>
               );
             })}
           </div>
         </div>
 
-        {/* ANSWER CONTAINER (USING EXACT AI CHAT BUBBLE STYLING) */}
-        <div className="space-y-4 animate-fade-in">
-          <div className="flex gap-3 sm:gap-4 items-start">
-            {/* AI Brand Avatar Badge (Top-Left of AI Bubble) */}
-            <div className="icon-badge icon-badge-teal !w-10 !h-10 !min-w-[40px] shadow-sm mt-1 shrink-0">
-              <Sparkles className="w-5 h-5 stroke-[2.2]" />
-            </div>
-
-            {/* CHAT BUBBLE WITH ASYMMETRIC SPEECH TAIL (Exact Main App Styling) */}
-            <div className="flex-1 bg-[#0F7173]/10 border border-[#0F7173]/20 text-[#2B2B2B] rounded-3xl rounded-tl-sm p-5 sm:p-6 shadow-sm space-y-4">
-              {/* Question Header Callout */}
-              <div className="pb-3 border-b border-[#0F7173]/15 flex items-center justify-between">
-                <h3 className="font-extrabold text-base sm:text-lg text-[#0F7173] flex items-center gap-2">
-                  <span>{selectedMyth.question}</span>
+        {/* STREAMED ANSWER DISPLAYED INSIDE A LARGER GLASS PANEL BELOW */}
+        <motion.div
+          key={selectedMyth.id}
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+          className="glass-card p-6 sm:p-9 bg-[#0A0A0F]/90 border border-white/15 rounded-3xl space-y-6 shadow-2xl relative"
+        >
+          {/* Answer Card Top Header */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-5">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-[#14B8A6] to-[#8B5CF6] text-white flex items-center justify-center font-bold shadow-lg shadow-[#14B8A6]/20">
+                <Sparkles className="w-6 h-6 fill-white/20" />
+              </div>
+              <div>
+                <h3 className="font-extrabold text-base sm:text-lg text-white">
+                  {getVernacularQuestion(selectedMyth)}
                 </h3>
-                <span className="px-2.5 py-0.5 rounded-full bg-white/80 border border-[#0F7173]/30 text-[#0F7173] font-mono text-[10px] font-bold shrink-0">
-                  {selectedMyth.trustTag}
-                </span>
+                <p className="text-xs text-slate-400">
+                  FinLingo Verified Explanation • <span className="text-[#14B8A6] font-bold">{selectedMyth.trustTag}</span>
+                </p>
               </div>
+            </div>
 
-              {/* Answer Content Stream */}
-              <p className="text-sm sm:text-base leading-relaxed whitespace-pre-line text-[#2B2B2B] font-medium">
-                {getMythAnswerText(selectedMyth)}
-              </p>
+            {/* MINIMAL WAVEFORM VISUALIZATION AUDIO PLAYBACK CONTROL */}
+            <div className="flex items-center gap-3 bg-white/5 border border-white/10 p-2 rounded-2xl shrink-0">
+              <button
+                onClick={toggleAudio}
+                className="w-10 h-10 rounded-full bg-[#14B8A6] hover:bg-[#0D9488] text-slate-950 flex items-center justify-center font-bold shadow-md transition-all"
+                title={isPlayingAudio ? 'Pause Audio' : 'Listen in Native Language'}
+              >
+                {isPlayingAudio ? <Pause className="w-5 h-5 fill-slate-950" /> : <Play className="w-5 h-5 fill-slate-950 ml-0.5" />}
+              </button>
 
-              {/* DUAL-MODE AUDIO PLAYER CONTROL (TTS - Exact Main App Styling) */}
-              <div className="pt-3 border-t border-[#0F7173]/15 flex flex-wrap items-center justify-between gap-3 text-xs">
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => setIsPlayingAudio(!isPlayingAudio)}
-                    className={`p-2 px-3.5 rounded-full flex items-center gap-2 font-bold transition-all ${
-                      isPlayingAudio
-                        ? 'bg-[#F5A623] text-slate-950 shadow-md animate-pulse'
-                        : 'bg-white text-[#0F7173] border border-[#0F7173]/30 hover:border-[#0F7173]'
+              {/* Animated Waveform Lines */}
+              <div className="flex items-center gap-1 h-6 px-1">
+                {[0.4, 0.9, 0.6, 1.0, 0.5, 0.8].map((h, i) => (
+                  <span
+                    key={i}
+                    className={`w-1 rounded-full bg-[#14B8A6] transition-all duration-300 ${
+                      isPlayingAudio ? 'animate-pulse' : 'opacity-40'
                     }`}
-                  >
-                    {isPlayingAudio ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
-                    <span>{isPlayingAudio ? 'Playing Vernacular Audio...' : 'Listen in Audio'}</span>
-                  </button>
-
-                  {/* Audio Speed Controller */}
-                  <button
-                    onClick={() => setAudioSpeed((prev) => (prev === 1.0 ? 1.25 : prev === 1.25 ? 1.5 : 1.0))}
-                    className="px-2.5 py-1 rounded-full bg-white text-[11px] font-mono text-[#6B6B6B] border border-slate-200 hover:border-[#0F7173]"
-                  >
-                    {audioSpeed}x Speed
-                  </button>
-                </div>
-
-                <div className="flex items-center gap-2 text-[11px] text-[#6B6B6B] font-mono">
-                  <Volume2 className="w-3.5 h-3.5 text-[#0F7173]" />
-                  <span>Duration: {selectedMyth.audioDuration}</span>
-                </div>
+                    style={{ height: isPlayingAudio ? `${h * 24}px` : '8px' }}
+                  />
+                ))}
               </div>
+
+              <select
+                value={audioSpeed}
+                onChange={(e) => setAudioSpeed(Number(e.target.value))}
+                className="bg-transparent text-slate-300 text-xs font-mono font-bold focus:outline-none cursor-pointer border-l border-white/10 pl-2"
+              >
+                <option value={1.0} className="bg-[#0A0A0F]">1.0x</option>
+                <option value={1.25} className="bg-[#0A0A0F]">1.25x</option>
+                <option value={1.5} className="bg-[#0A0A0F]">1.5x</option>
+              </select>
             </div>
           </div>
 
-          {/* ACTIONABLE FOLLOW-UP BUTTONS */}
-          <div className="pt-2 flex flex-wrap items-center justify-end gap-3">
-            {onOpenSimulator && (
-              <button
-                onClick={onOpenSimulator}
-                className="btn btn-secondary text-xs px-4 py-2.5 border-[#0F7173]/40"
-              >
-                <Sliders className="w-4 h-4" />
-                <span>Test in Interactive Simulator</span>
-              </button>
-            )}
+          {/* Vernacular Answer Text */}
+          <div className="space-y-4 text-slate-200">
+            <p className="text-base sm:text-lg leading-relaxed font-medium">
+              {getVernacularAnswer(selectedMyth)}
+            </p>
 
-            <button
-              onClick={handleAskAI}
-              className="btn btn-primary text-xs px-5 py-2.5 shadow-md flex items-center gap-2"
-            >
-              <Sparkles className="w-4 h-4" />
-              <span>Ask FinLingo AI About This Doubt</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </button>
+            {selectedMyth.subventionBreakdown && (
+              <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-200 text-xs leading-relaxed">
+                <span className="font-bold text-amber-300 block mb-1">Government Subsidy Benefit:</span>
+                {selectedMyth.subventionBreakdown}
+              </div>
+            )}
           </div>
-        </div>
+
+          {/* Action Footer Buttons */}
+          <div className="pt-4 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="text-xs text-slate-400 flex items-center gap-1.5">
+              <ShieldCheck className="w-4 h-4 text-[#14B8A6]" />
+              <span>SEBI & RBI Regulatory Transparency Compliant</span>
+            </div>
+
+            <div className="flex items-center gap-3 w-full sm:w-auto">
+              {onOpenSimulator && (
+                <button
+                  onClick={onOpenSimulator}
+                  className="px-5 py-2.5 rounded-full bg-white/5 hover:bg-white/10 text-white font-bold text-xs border border-white/10 transition-all flex items-center justify-center gap-1.5 flex-1 sm:flex-none"
+                >
+                  <Sliders className="w-4 h-4 text-[#14B8A6]" />
+                  <span>Simulate Growth</span>
+                </button>
+              )}
+
+              {onAskAIWithQuestion && (
+                <button
+                  onClick={() => onAskAIWithQuestion(getVernacularQuestion(selectedMyth), getVernacularAnswer(selectedMyth))}
+                  className="px-6 py-2.5 rounded-full btn-gradient text-white font-bold text-xs shadow-md flex items-center justify-center gap-1.5 flex-1 sm:flex-none"
+                >
+                  <span>Ask AI Follow-Up</span>
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+              )}
+            </div>
+          </div>
+        </motion.div>
       </div>
-
-      {/* STANDALONE PAGE FOOTER */}
-      {standalonePage && (
-        <footer className="bg-white border-t border-slate-200 py-4 text-xs text-center text-[#6B6B6B]">
-          <div className="container mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 px-4">
-            <span>FinLingo Trust & Myth-Buster • Apni bhasha mein paison ki samajh</span>
-            {onBack && (
-              <button onClick={onBack} className="text-[#0F7173] hover:underline font-bold">
-                Return to Main App
-              </button>
-            )}
-          </div>
-        </footer>
-      )}
-    </div>
+    </section>
   );
 };
 

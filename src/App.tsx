@@ -237,7 +237,7 @@ export function App() {
 
   // VIEW 7: PUBLIC LANDING PAGE
   return (
-    <div className="min-h-screen bg-[#FBF7F2] text-[#2B2B2B] selection:bg-[#0F7173] selection:text-white">
+    <div className="min-h-screen bg-[#0A0A0F] text-white selection:bg-[#14B8A6] selection:text-white relative overflow-x-hidden">
       {/* Sticky Top Header */}
       <Navbar
         currentLang={currentLang}

@@ -47,97 +47,92 @@ export const Navbar: React.FC<NavbarProps> = ({
   }, []);
 
   return (
-    <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled
-          ? 'bg-[#FBF7F2]/90 backdrop-blur-md border-b border-black/5 py-3 shadow-sm'
-          : 'bg-transparent py-4'
-      }`}
-    >
-      <div className="container mx-auto px-4 flex items-center justify-between">
-        {/* Brand Logo with 48px Circular Badge Motif */}
+    <header className="fixed top-0 left-0 right-0 z-50 px-4 py-3 transition-all duration-300">
+      {/* FLOATING PILL-SHAPED GLASS CONTAINER */}
+      <div
+        className={`max-w-6xl mx-auto rounded-full px-5 sm:px-7 py-3 transition-all duration-300 flex items-center justify-between ${
+          isScrolled
+            ? 'glass-nav shadow-[0_10px_40px_rgba(0,0,0,0.8),0_0_30px_rgba(20,184,166,0.15)] border border-white/15'
+            : 'bg-[#0A0A0F]/60 backdrop-blur-md border border-white/10'
+        }`}
+      >
+        {/* Brand Logo with Glowing Gradient Motif */}
         <a href="#" className="flex items-center gap-3 group text-decoration-none">
-          <div className="icon-badge icon-badge-teal shadow-sm group-hover:scale-105 transition-transform">
-            <Sparkles className="w-6 h-6 stroke-[2.2]" />
+          <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-[#14B8A6] to-[#8B5CF6] text-white flex items-center justify-center shadow-lg shadow-[#14B8A6]/25 group-hover:scale-105 transition-transform">
+            <Sparkles className="w-5 h-5 fill-white/20 stroke-[2.2]" />
           </div>
           <div className="flex flex-col">
-            <span className="font-extrabold text-xl tracking-tight text-[#2B2B2B] flex items-center gap-1.5">
-              FinLingo <span className="w-2 h-2 rounded-full bg-[#0F7173] animate-pulse"></span>
+            <span className="font-black text-xl tracking-tight text-white flex items-center gap-1.5 font-sans">
+              FinLingo <span className="w-2 h-2 rounded-full bg-[#14B8A6] animate-pulse"></span>
             </span>
-            <span className="text-[10px] font-bold tracking-widest text-[#0F7173] uppercase">
-              Vernacular AI Assistant
+            <span className="text-[9px] font-extrabold tracking-widest text-[#14B8A6] uppercase">
+              Vernacular AI Platform
             </span>
           </div>
         </a>
 
         {/* Desktop Nav Links */}
-        <nav className="hidden md:flex items-center gap-6 text-sm font-semibold text-[#2B2B2B]">
+        <nav className="hidden lg:flex items-center gap-5 text-xs font-bold text-slate-200">
           {onOpenPricing && (
             <button
               onClick={onOpenPricing}
-              className="hover:text-[#0F7173] transition-colors"
+              className="hover:text-[#14B8A6] transition-colors"
             >
               Pricing
             </button>
           )}
+
           {onOpenDashboard && (
             <button
               onClick={onOpenDashboard}
-              className="hover:text-emerald-700 font-bold text-emerald-800 bg-emerald-100/70 px-3 py-1.5 rounded-full transition-colors flex items-center gap-1.5 border border-emerald-300/60"
+              className="hover:text-emerald-400 font-bold text-emerald-300 bg-emerald-500/10 px-3.5 py-1.5 rounded-full transition-colors flex items-center gap-1.5 border border-emerald-500/20"
             >
-              <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
+              <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
               <span>Dashboard</span>
             </button>
           )}
+
           {onOpenMythBusting && (
             <button
               onClick={onOpenMythBusting}
-              className="hover:text-[#D98D15] font-bold text-[#D98D15] bg-[#F5A623]/15 px-3 py-1.5 rounded-full transition-colors flex items-center gap-1.5 border border-[#F5A623]/30"
+              className="hover:text-amber-400 font-bold text-amber-300 bg-amber-500/10 px-3.5 py-1.5 rounded-full transition-colors flex items-center gap-1.5 border border-amber-500/20"
             >
-              <Sparkles className="w-3.5 h-3.5" />
+              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
               <span>Myth-Buster</span>
             </button>
           )}
+
           {onOpenGoalPlanning && (
             <button
               onClick={onOpenGoalPlanning}
-              className="hover:text-[#0F7173] font-bold text-[#0F7173] bg-[#0F7173]/10 px-3 py-1.5 rounded-full transition-colors flex items-center gap-1.5"
+              className="hover:text-[#14B8A6] font-bold text-[#14B8A6] bg-[#14B8A6]/10 px-3.5 py-1.5 rounded-full transition-colors flex items-center gap-1.5 border border-[#14B8A6]/20"
             >
               <Sparkles className="w-3.5 h-3.5" />
               <span>Goal Cards</span>
             </button>
           )}
-          <a href="#how-it-works" className="hover:text-[#0F7173] transition-colors">
+
+          <a href="#how-it-works" className="hover:text-[#14B8A6] transition-colors">
             {t.features}
-          </a>
-          <a href="#demo" className="hover:text-[#0F7173] transition-colors">
-            {t.howItWorks}
-          </a>
-          <a href="#b2b-partners" className="hover:text-[#1E2761] transition-colors flex items-center gap-1.5">
-            <span className="px-2 py-0.5 text-[10px] font-bold bg-[#1E2761]/10 text-[#1E2761] rounded-md">B2B</span>
-            {t.forBanks}
-          </a>
-          <a href="#trust" className="hover:text-[#0F7173] transition-colors">
-            {t.testimonials}
           </a>
         </nav>
 
-        {/* Action Controls & Language Selector */}
-        <div className="hidden lg:flex items-center gap-4">
-          {/* Language Switcher Dropdown */}
+        {/* Right Action Bar */}
+        <div className="hidden lg:flex items-center gap-3">
+          {/* Vernacular Language Selector */}
           <div className="relative">
             <button
               onClick={() => setIsLangOpen(!isLangOpen)}
-              className="flex items-center gap-2 px-3.5 py-2 rounded-full bg-white border border-slate-200 text-xs font-semibold text-[#2B2B2B] hover:border-[#0F7173] shadow-sm transition-all"
+              className="px-3.5 py-1.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-bold text-slate-200 flex items-center gap-2 transition-all"
             >
-              <Globe className="w-4 h-4 text-[#0F7173]" />
+              <Globe className="w-3.5 h-3.5 text-[#14B8A6]" />
               <span>{currentLanguageObj.flag} {currentLanguageObj.nativeName}</span>
-              <ChevronDown className={`w-3.5 h-3.5 text-slate-500 transition-transform ${isLangOpen ? 'rotate-180' : ''}`} />
+              <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform ${isLangOpen ? 'rotate-180' : ''}`} />
             </button>
 
             {isLangOpen && (
-              <div className="absolute right-0 mt-2 w-52 py-2 bg-white border border-slate-200 rounded-2xl shadow-xl z-50">
-                <div className="px-3.5 py-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-100">
+              <div className="absolute right-0 mt-2 w-52 py-2 bg-[#0A0A0F]/95 backdrop-blur-2xl border border-white/15 rounded-2xl shadow-2xl z-50">
+                <div className="px-3.5 py-1.5 text-[10px] font-extrabold text-slate-400 uppercase tracking-wider border-b border-white/10">
                   Select Language
                 </div>
                 {LANGUAGES.map((lang) => (
@@ -147,8 +142,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                       onSelectLang(lang.code);
                       setIsLangOpen(false);
                     }}
-                    className={`w-full text-left px-3.5 py-2.5 text-xs flex items-center justify-between hover:bg-[#0F7173]/10 hover:text-[#0F7173] transition-colors ${
-                      currentLang === lang.code ? 'text-[#0F7173] font-bold bg-[#0F7173]/10' : 'text-[#2B2B2B]'
+                    className={`w-full text-left px-3.5 py-2.5 text-xs flex items-center justify-between hover:bg-[#14B8A6]/15 hover:text-[#14B8A6] transition-colors ${
+                      currentLang === lang.code ? 'text-[#14B8A6] font-bold bg-[#14B8A6]/15' : 'text-slate-300'
                     }`}
                   >
                     <span>{lang.flag} {lang.nativeName}</span>
@@ -168,77 +163,100 @@ export const Navbar: React.FC<NavbarProps> = ({
                 onOpenB2BModal();
               }
             }}
-            className="px-4 py-2.5 rounded-full bg-[#1E2761]/10 border border-[#1E2761]/20 text-[#1E2761] hover:bg-[#1E2761] hover:text-white text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm"
+            className="px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 text-slate-300 hover:bg-white/15 hover:text-white text-xs font-bold transition-all flex items-center gap-1.5"
           >
-            <Building2 className="w-3.5 h-3.5" />
-            {t.partnerBtn}
+            <Building2 className="w-3.5 h-3.5 text-amber-400" />
+            <span>B2B Console</span>
           </button>
 
-          {/* Single Unmistakable Primary CTA: Start Free */}
+          {/* Signature CTA: Start Free */}
           <button
             onClick={onOpenOnboarding}
-            className="btn btn-primary text-sm shadow-md"
+            className="px-5 py-2 rounded-full btn-gradient text-xs font-black flex items-center gap-2 group"
           >
             <span>{t.startFreeBtn}</span>
-            <ArrowRight className="w-4 h-4" />
+            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
           </button>
         </div>
 
         {/* Mobile Toggle */}
         <div className="lg:hidden flex items-center gap-2">
           <button
-            onClick={() => setIsLangOpen(!isLangOpen)}
-            className="p-2 rounded-full bg-white text-[#0F7173] border border-slate-200"
+            onClick={onOpenOnboarding}
+            className="px-3.5 py-1.5 rounded-full btn-gradient text-xs font-black flex items-center gap-1"
           >
-            <Globe className="w-5 h-5" />
+            <span>Start</span>
           </button>
 
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="p-2 rounded-xl bg-white text-[#2B2B2B] border border-slate-200"
+            className="p-2 rounded-full bg-white/10 text-white"
           >
-            {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
         </div>
       </div>
 
-      {/* Mobile Drawer */}
+      {/* Mobile Menu Drawer */}
       {isMobileMenuOpen && (
-        <div className="lg:hidden bg-white border-b border-slate-200 px-6 py-6 space-y-4 shadow-xl animate-fade-in">
-          <nav className="flex flex-col gap-3 font-semibold text-[#2B2B2B]">
-            <a href="#how-it-works" onClick={() => setIsMobileMenuOpen(false)} className="py-2 hover:text-[#0F7173]">
-              {t.features}
-            </a>
-            <a href="#demo" onClick={() => setIsMobileMenuOpen(false)} className="py-2 hover:text-[#0F7173]">
-              {t.howItWorks}
-            </a>
-            <a href="#b2b-partners" onClick={() => setIsMobileMenuOpen(false)} className="py-2 hover:text-[#1E2761]">
-              {t.forBanks}
-            </a>
-            <a href="#trust" onClick={() => setIsMobileMenuOpen(false)} className="py-2 hover:text-[#0F7173]">
-              {t.testimonials}
-            </a>
-          </nav>
+        <div className="lg:hidden fixed inset-x-4 top-20 bg-[#0A0A0F]/95 backdrop-blur-2xl border border-white/15 rounded-3xl p-5 shadow-2xl z-50 space-y-4">
+          <div className="space-y-2 text-sm font-bold text-slate-200">
+            {onOpenPricing && (
+              <button
+                onClick={() => {
+                  onOpenPricing();
+                  setIsMobileMenuOpen(false);
+                }}
+                className="w-full text-left p-2.5 rounded-xl hover:bg-white/5"
+              >
+                Pricing Plans
+              </button>
+            )}
+            {onOpenDashboard && (
+              <button
+                onClick={() => {
+                  onOpenDashboard();
+                  setIsMobileMenuOpen(false);
+                }}
+                className="w-full text-left p-2.5 rounded-xl hover:bg-white/5 text-emerald-400"
+              >
+                User Dashboard
+              </button>
+            )}
+            {onOpenMythBusting && (
+              <button
+                onClick={() => {
+                  onOpenMythBusting();
+                  setIsMobileMenuOpen(false);
+                }}
+                className="w-full text-left p-2.5 rounded-xl hover:bg-white/5 text-amber-400"
+              >
+                Myth-Busting & Doubts
+              </button>
+            )}
+            {onOpenGoalPlanning && (
+              <button
+                onClick={() => {
+                  onOpenGoalPlanning();
+                  setIsMobileMenuOpen(false);
+                }}
+                className="w-full text-left p-2.5 rounded-xl hover:bg-white/5 text-[#14B8A6]"
+              >
+                Goal Planning Cards
+              </button>
+            )}
+          </div>
 
-          <div className="pt-4 border-t border-slate-100 flex flex-col gap-3">
+          <div className="pt-3 border-t border-white/10 flex flex-col gap-2">
             <button
               onClick={() => {
+                if (onOpenB2BDashboard) onOpenB2BDashboard();
+                else onOpenB2BModal();
                 setIsMobileMenuOpen(false);
-                onOpenB2BModal();
               }}
-              className="w-full py-3 rounded-full bg-[#1E2761]/10 text-[#1E2761] font-bold text-sm flex items-center justify-center gap-2"
+              className="w-full p-2.5 rounded-xl bg-white/5 text-center font-bold text-xs text-amber-300 border border-white/10"
             >
-              <Building2 className="w-4 h-4" />
-              {t.partnerBtn}
-            </button>
-            <button
-              onClick={() => {
-                setIsMobileMenuOpen(false);
-                onOpenOnboarding();
-              }}
-              className="w-full btn btn-primary py-3 text-sm"
-            >
-              {t.startFreeBtn}
+              B2B Partner Console
             </button>
           </div>
         </div>
@@ -246,3 +264,5 @@ export const Navbar: React.FC<NavbarProps> = ({
     </header>
   );
 };
+
+export default Navbar;

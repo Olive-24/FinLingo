@@ -251,14 +251,14 @@ export const GoalPlanningCardsPage: React.FC<GoalPlanningCardsPageProps> = ({
   };
 
   return (
-    <div className="min-h-screen bg-[#FBF7F2] text-[#2B2B2B] flex flex-col justify-between selection:bg-[#0F7173] selection:text-white">
+    <div className="min-h-screen bg-[#0A0A0F] text-white flex flex-col justify-between selection:bg-[#14B8A6] selection:text-white">
       {/* HEADER BAR */}
-      <header className="bg-white/90 backdrop-blur-md border-b border-slate-200 sticky top-0 z-40 px-4 py-3.5 shadow-sm">
+      <header className="bg-[#0A0A0F]/90 backdrop-blur-md border-b border-white/10 sticky top-0 z-40 px-4 py-3.5 shadow-xl">
         <div className="container mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
             <button
               onClick={onBack}
-              className="p-2 rounded-full bg-slate-100 hover:bg-slate-200 text-[#2B2B2B] transition-colors flex items-center gap-1.5 text-xs font-bold"
+              className="p-2 rounded-full bg-white/5 hover:bg-white/10 text-white transition-colors flex items-center gap-1.5 text-xs font-bold border border-white/10"
               title="Return"
             >
               <ArrowLeft className="w-4 h-4" />
@@ -266,16 +266,16 @@ export const GoalPlanningCardsPage: React.FC<GoalPlanningCardsPageProps> = ({
             </button>
 
             <div className="flex items-center gap-2.5">
-              <div className="icon-badge icon-badge-teal !w-9 !h-9 !min-w-[36px]">
-                <Sparkles className="w-5 h-5 stroke-[2.2]" />
+              <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-[#14B8A6] to-[#8B5CF6] text-white font-black flex items-center justify-center shadow-lg shadow-[#14B8A6]/20">
+                <Sparkles className="w-5 h-5 fill-white/20 stroke-[2.2]" />
               </div>
               <div>
-                <h1 className="font-extrabold text-base text-[#2B2B2B] tracking-tight flex items-center gap-2">
+                <h1 className="font-extrabold text-base text-white tracking-tight flex items-center gap-2">
                   <span>Goal-Based Financial Planning</span>
-                  <span className="w-2 h-2 rounded-full bg-[#0F7173] animate-pulse" />
+                  <span className="w-2 h-2 rounded-full bg-[#14B8A6] animate-pulse" />
                 </h1>
-                <p className="text-[11px] text-[#6B6B6B]">
-                  Pre-built Templates • Tailored for <span className="font-bold text-[#0F7173] capitalize">{userOccupation.replace('_', ' ')}</span> ({currentLangObj.flag} {currentLangObj.nativeName})
+                <p className="text-[11px] text-slate-400">
+                  Pre-built Templates • Tailored for <span className="font-bold text-[#14B8A6] capitalize">{userOccupation.replace('_', ' ')}</span> ({currentLangObj.flag} {currentLangObj.nativeName})
                 </p>
               </div>
             </div>
@@ -286,10 +286,10 @@ export const GoalPlanningCardsPage: React.FC<GoalPlanningCardsPageProps> = ({
             <select
               value={currentLang}
               onChange={(e) => onSelectLang(e.target.value as LanguageCode)}
-              className="px-3.5 py-1.5 rounded-full bg-white border border-slate-200 text-xs font-bold text-[#0F7173] focus:outline-none focus:border-[#0F7173] cursor-pointer shadow-sm"
+              className="px-3.5 py-1.5 rounded-full bg-white/5 border border-white/15 text-xs font-bold text-[#14B8A6] focus:outline-none cursor-pointer"
             >
               {LANGUAGES.map((lang) => (
-                <option key={lang.code} value={lang.code}>
+                <option key={lang.code} value={lang.code} className="bg-[#0A0A0F] text-white">
                   {lang.flag} {lang.nativeName}
                 </option>
               ))}
@@ -338,23 +338,23 @@ export const GoalPlanningCardsPage: React.FC<GoalPlanningCardsPageProps> = ({
               <div
                 key={template.id}
                 onClick={() => handleCardClick(template)}
-                className={`group relative rounded-3xl p-6 sm:p-7 transition-all duration-100 ease-out cursor-pointer flex flex-col justify-between select-none shadow-sm ${
+                className={`group relative rounded-3xl p-6 sm:p-7 transition-all duration-200 ease-out cursor-pointer flex flex-col justify-between select-none glass-card ${
                   template.isCustom
-                    ? 'border-2 border-dashed border-slate-300 hover:border-[#0F7173] bg-slate-50/70 hover:bg-white'
-                    : `bg-white border ${template.accentColor.cardBorder} ${template.accentColor.hoverBorder} hover:shadow-xl`
+                    ? 'border-2 border-dashed border-white/20 hover:border-[#14B8A6] bg-white/5'
+                    : 'bg-[#0A0A0F]/90 border border-white/15 hover:border-[#14B8A6]/60 shadow-2xl'
                 } ${isTapped ? 'scale-[0.98]' : 'scale-100 hover:-translate-y-1'}`}
               >
                 {/* Visual Distinction Tag for Custom vs Template */}
                 {template.isCustom ? (
-                  <div className="absolute top-4 right-4 px-2.5 py-0.5 rounded-full bg-slate-200 text-slate-700 font-mono text-[10px] font-bold">
+                  <div className="absolute top-4 right-4 px-2.5 py-0.5 rounded-full bg-white/10 text-slate-300 font-mono text-[10px] font-bold border border-white/15">
                     Start Scratch
                   </div>
                 ) : template.id === 'g_emergency' ? (
-                  <div className="absolute top-4 right-4 px-2.5 py-0.5 rounded-full bg-[#0F7173]/15 text-[#0F7173] font-mono text-[10px] font-bold border border-[#0F7173]/30">
+                  <div className="absolute top-4 right-4 px-2.5 py-0.5 rounded-full bg-[#14B8A6]/20 text-[#14B8A6] font-mono text-[10px] font-bold border border-[#14B8A6]/30">
                     6-Mo Safety
                   </div>
                 ) : (
-                  <div className="absolute top-4 right-4 px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600 font-mono text-[10px] font-bold">
+                  <div className="absolute top-4 right-4 px-2.5 py-0.5 rounded-full bg-white/10 text-slate-300 font-mono text-[10px] font-bold border border-white/10">
                     {template.defaultTimeframeYears} Yrs Horizon
                   </div>
                 )}
@@ -362,57 +362,55 @@ export const GoalPlanningCardsPage: React.FC<GoalPlanningCardsPageProps> = ({
                 <div className="space-y-4">
                   {/* Circular Badge Motif at Top of Card */}
                   <div
-                    className={`w-14 h-14 rounded-full flex items-center justify-center shadow-sm transition-transform group-hover:scale-110 ${template.accentColor.badgeBg}`}
+                    className={`w-14 h-14 rounded-2xl flex items-center justify-center shadow-md transition-transform group-hover:scale-110 ${template.accentColor.badgeBg}`}
                   >
                     {template.badgeIcon}
                   </div>
 
                   {/* Goal Name in Bold */}
                   <div>
-                    <h3 className="text-xl font-extrabold text-[#2B2B2B] tracking-tight group-hover:text-[#0F7173] transition-colors">
+                    <h3 className="text-xl font-extrabold text-white tracking-tight group-hover:text-[#14B8A6] transition-colors">
                       {template.title}
                     </h3>
 
                     {/* Short One-line Description in Muted Text */}
-                    <p className="text-xs sm:text-sm text-[#6B6B6B] mt-1 line-clamp-2 leading-relaxed">
+                    <p className="text-xs sm:text-sm text-slate-400 mt-1 line-clamp-2 leading-relaxed">
                       {template.oneLiner}
                     </p>
                   </div>
 
                   {/* Realistic Default Values Summary Callout Box */}
                   {!template.isCustom ? (
-                    <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-100 space-y-1.5">
+                    <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10 space-y-1.5">
                       <div className="flex items-center justify-between text-xs">
-                        <span className="text-slate-500 font-medium">Suggested Target</span>
-                        <span className="font-extrabold font-mono text-[#2B2B2B] text-sm">
+                        <span className="text-slate-400 font-medium">Suggested Target</span>
+                        <span className="font-extrabold font-mono text-white text-sm">
                           ₹{targetAmt.toLocaleString('en-IN')}
                         </span>
                       </div>
-                      <div className="flex items-center justify-between text-[11px] text-slate-500">
+                      <div className="flex items-center justify-between text-[11px] text-slate-400">
                         <span>Horizon: {template.defaultTimeframeYears} Years</span>
-                        <span className="font-extrabold text-[#0F7173] font-mono">
+                        <span className="font-extrabold text-[#14B8A6] font-mono">
                           ~₹{monthlySip.toLocaleString('en-IN')}/mo
                         </span>
                       </div>
                     </div>
                   ) : (
-                    <div className="p-3.5 rounded-2xl bg-white border border-slate-200/80 space-y-1 text-center">
-                      <div className="text-xs font-bold text-slate-700">Flexible Goal Builder</div>
-                      <div className="text-[11px] text-slate-500">Customize target amount, ROI & duration</div>
+                    <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10 space-y-1 text-center">
+                      <div className="text-xs font-bold text-slate-200">Flexible Goal Builder</div>
+                      <div className="text-[11px] text-slate-400">Customize target amount, ROI & duration</div>
                     </div>
                   )}
                 </div>
 
                 {/* Card Action Footer with Micro-feedback transition arrow */}
-                <div className="pt-6 mt-4 border-t border-slate-100 flex items-center justify-between text-xs font-bold">
-                  <span className={`${template.accentColor.tagText} flex items-center gap-1`}>
+                <div className="pt-6 mt-4 border-t border-white/10 flex items-center justify-between text-xs font-bold">
+                  <span className="text-[#14B8A6] flex items-center gap-1">
                     <TrendingUp className="w-3.5 h-3.5" />
                     <span>{template.isCustom ? 'Create Custom Goal' : 'Simulate Goal'}</span>
                   </span>
 
-                  <div
-                    className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${template.accentColor.buttonHoverBg} bg-slate-100 text-slate-600`}
-                  >
+                  <div className="w-8 h-8 rounded-full flex items-center justify-center transition-all bg-white/10 text-white group-hover:bg-[#14B8A6] group-hover:text-slate-950">
                     <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
                   </div>
                 </div>

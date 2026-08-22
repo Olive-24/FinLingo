@@ -1,5 +1,6 @@
 import React from 'react';
-import { Star, Quote, CheckCircle, Users, Languages, ShieldCheck } from 'lucide-react';
+import { Star, Quote, Users, Languages, ShieldCheck, Sparkles } from 'lucide-react';
+import { motion } from 'framer-motion';
 import type { LanguageCode } from '../types';
 import { TRANSLATIONS } from '../data/translations';
 import { TESTIMONIALS } from '../data/testimonialsData';
@@ -12,99 +13,115 @@ export const Testimonials: React.FC<TestimonialsProps> = ({ currentLang }) => {
   const t = TRANSLATIONS[currentLang].testimonials;
 
   return (
-    <section id="trust" className="py-20 bg-[#FBF7F2] relative">
-      <div className="container mx-auto px-4">
+    <section id="trust" className="py-24 bg-[#0A0A0F] text-white relative overflow-hidden">
+      {/* AMBIENT GLOW ORB */}
+      <div className="orb-teal bottom-10 left-1/3 opacity-20" />
+
+      <div className="container mx-auto px-4 relative z-20 max-w-6xl">
         {/* Header */}
-        <div className="text-center max-w-2xl mx-auto mb-14">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#0F7173]/10 border border-[#0F7173]/20 text-[#0F7173] text-xs font-bold mb-3">
+        <div className="text-center max-w-2xl mx-auto mb-16 space-y-3">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-[#14B8A6] text-xs font-extrabold backdrop-blur-md">
             <Quote className="w-3.5 h-3.5" />
             <span>{t.badge}</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-[#2B2B2B] tracking-tight mb-3">
-            {t.title}
+          <h2 className="text-3xl sm:text-5xl font-black tracking-tight">
+            Trusted by <span className="gradient-text">Families Across India</span>
           </h2>
-          <p className="text-[#6B6B6B] text-base">
+          <p className="text-slate-400 text-base">
             {t.subtitle}
           </p>
         </div>
 
-        {/* Stat Callouts Strip */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-4xl mx-auto mb-14">
-          <div className="card-surface p-6 text-center space-y-2 bg-white">
-            <div className="icon-badge icon-badge-teal mx-auto mb-2">
-              <Users className="w-6 h-6" />
+        {/* STAT TRIO STRIP (AMBER ACCENT HIGHLIGHT NUMBERS) */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-4xl mx-auto mb-16">
+          <motion.div
+            whileHover={{ scale: 1.02 }}
+            className="glass-card p-6 text-center space-y-2 bg-white/5 border border-white/10 rounded-2xl"
+          >
+            <div className="w-10 h-10 rounded-full bg-[#14B8A6]/15 border border-[#14B8A6]/30 text-[#14B8A6] mx-auto flex items-center justify-center">
+              <Users className="w-5 h-5" />
             </div>
-            <div className="text-3xl sm:text-4xl font-black text-[#2B2B2B] font-mono">190M+</div>
-            <div className="text-xs font-semibold text-[#6B6B6B]">Underserved Indian Borrowers</div>
-          </div>
+            <div className="text-4xl font-black text-amber-400 font-mono">190M+</div>
+            <div className="text-xs font-bold text-slate-300">Underserved Indian Borrowers</div>
+          </motion.div>
 
-          <div className="card-surface p-6 text-center space-y-2 bg-white">
-            <div className="icon-badge icon-badge-marigold mx-auto mb-2">
-              <Languages className="w-6 h-6" />
+          <motion.div
+            whileHover={{ scale: 1.02 }}
+            className="glass-card p-6 text-center space-y-2 bg-white/5 border border-white/10 rounded-2xl"
+          >
+            <div className="w-10 h-10 rounded-full bg-[#8B5CF6]/15 border border-[#8B5CF6]/30 text-[#8B5CF6] mx-auto flex items-center justify-center">
+              <Languages className="w-5 h-5" />
             </div>
-            <div className="text-3xl sm:text-4xl font-black text-[#2B2B2B] font-mono">10+</div>
-            <div className="text-xs font-semibold text-[#6B6B6B]">Vernacular Languages & Dialects</div>
-          </div>
+            <div className="text-4xl font-black text-[#14B8A6] font-mono">10+</div>
+            <div className="text-xs font-bold text-slate-300">Vernacular Languages & Dialects</div>
+          </motion.div>
 
-          <div className="card-surface p-6 text-center space-y-2 bg-white">
-            <div className="icon-badge icon-badge-mint mx-auto mb-2">
-              <ShieldCheck className="w-6 h-6 text-emerald-700" />
+          <motion.div
+            whileHover={{ scale: 1.02 }}
+            className="glass-card p-6 text-center space-y-2 bg-white/5 border border-white/10 rounded-2xl"
+          >
+            <div className="w-10 h-10 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 mx-auto flex items-center justify-center">
+              <ShieldCheck className="w-5 h-5" />
             </div>
-            <div className="text-3xl sm:text-4xl font-black text-[#2B2B2B] font-mono">₹0</div>
-            <div className="text-xs font-semibold text-[#6B6B6B]">Cost Financial Literacy</div>
-          </div>
+            <div className="text-4xl font-black text-emerald-400 font-mono">₹0</div>
+            <div className="text-xs font-semibold text-slate-300">Cost Financial Literacy</div>
+          </motion.div>
         </div>
 
-        {/* Testimonial Quote Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-          {TESTIMONIALS.map((item) => (
-            <div
-              key={item.id}
-              className="card-surface p-8 relative flex flex-col justify-between bg-white border border-slate-100"
-            >
-              <div className="space-y-4">
-                {/* Rating & Language Badge */}
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1">
-                    {[...Array(item.rating)].map((_, i) => (
-                      <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
-                    ))}
+        {/* BENTO-GRID TESTIMONIAL QUOTE CARDS (1 HERO LARGER TILE + 3 SUPPORTING TILES) */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 max-w-5xl mx-auto">
+          {TESTIMONIALS.map((item, idx) => {
+            const isHeroCard = idx === 0;
+
+            return (
+              <motion.div
+                key={item.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: idx * 0.1 }}
+                className={`glass-card p-7 bg-[#0A0A0F]/80 border border-white/15 rounded-3xl space-y-4 hover:border-[#14B8A6]/50 transition-all flex flex-col justify-between ${
+                  isHeroCard ? 'md:col-span-12 lg:col-span-7 bg-gradient-to-br from-white/10 to-white/5 border-[#14B8A6]/40' : 'md:col-span-6 lg:col-span-5'
+                }`}
+              >
+                <div className="space-y-4">
+                  {/* Language Tag Badge & Rating */}
+                  <div className="flex items-center justify-between">
+                    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-[#14B8A6]/20 to-[#8B5CF6]/20 border border-[#14B8A6]/30 text-[#14B8A6] text-xs font-bold">
+                      <Sparkles className="w-3 h-3" />
+                      <span>{item.language}</span>
+                    </div>
+
+                    <div className="flex items-center gap-1 text-amber-400">
+                      {[...Array(item.rating)].map((_, i) => (
+                        <Star key={i} className="w-4 h-4 fill-amber-400 stroke-none" />
+                      ))}
+                    </div>
                   </div>
-                  <span className="px-2.5 py-1 rounded-full bg-[#0F7173]/10 border border-[#0F7173]/20 text-[11px] font-bold text-[#0F7173]">
-                    {item.language}
-                  </span>
+
+                  {/* Quote Text */}
+                  <p className={`text-slate-200 leading-relaxed font-medium ${isHeroCard ? 'text-base sm:text-lg font-semibold text-white' : 'text-xs sm:text-sm'}`}>
+                    "{item.quote}"
+                  </p>
                 </div>
 
-                {/* Native Language Quote & Subtext */}
-                <p className="text-[#2B2B2B] text-base italic leading-relaxed">
-                  "{item.quote}"
-                </p>
-              </div>
-
-              {/* Author Footer */}
-              <div className="flex items-center gap-4 pt-4 border-t border-slate-100 mt-6">
-                <img
-                  src={item.avatar}
-                  alt={item.name}
-                  className="w-12 h-12 rounded-full object-cover ring-2 ring-[#0F7173]/30"
-                />
-                <div>
-                  <div className="flex items-center gap-2">
-                    <h4 className="text-sm font-bold text-[#2B2B2B]">{item.name}</h4>
-                    {item.badge && (
-                      <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded-full">
-                        <CheckCircle className="w-3 h-3" />
-                        {item.badge}
-                      </span>
-                    )}
+                {/* Author Info */}
+                <div className="flex items-center gap-3 pt-3 border-t border-white/10">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-[#14B8A6] to-[#8B5CF6] text-white font-extrabold flex items-center justify-center text-sm shadow-md">
+                    {item.name.charAt(0)}
                   </div>
-                  <p className="text-xs text-[#6B6B6B]">{item.role} • {item.location}</p>
+                  <div>
+                    <div className="font-extrabold text-sm text-white">{item.name}</div>
+                    <div className="text-xs text-slate-400 capitalize">{item.role} • {item.location}</div>
+                  </div>
                 </div>
-              </div>
-            </div>
-          ))}
+              </motion.div>
+            );
+          })}
         </div>
       </div>
     </section>
   );
 };
+
+export default Testimonials;
