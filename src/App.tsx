@@ -13,10 +13,13 @@ import { AuthScreen } from './components/AuthScreen';
 import { OnboardingWizard } from './components/OnboardingWizard';
 import { VoiceChatInterface } from './components/VoiceChatInterface';
 import { SimulatorPage } from './components/SimulatorPage';
+import { GoalPlanningCardsPage } from './components/GoalPlanningCardsPage';
+import { MythBustingSection } from './components/MythBustingSection';
+import { UserProfileDashboard } from './components/UserProfileDashboard';
 
 export function App() {
   const [currentView, setCurrentView] = useState<
-    'landing' | 'auth' | 'onboarding' | 'main-app' | 'simulator'
+    'landing' | 'auth' | 'onboarding' | 'main-app' | 'simulator' | 'goals' | 'myths' | 'dashboard'
   >('landing');
   
   const [currentLang, setCurrentLang] = useState<LanguageCode>('en');
@@ -48,12 +51,99 @@ export function App() {
     setCurrentView('landing');
   };
 
-  // VIEW 1: STANDALONE SAVINGS & SIP SIMULATOR PAGE
+  // VIEW 1: USER PROFILE & PROGRESS DASHBOARD
+  if (currentView === 'dashboard') {
+    return (
+      <UserProfileDashboard
+        userProfile={userProfile}
+        currentLang={currentLang}
+        onSelectLang={(lang) => {
+          setCurrentLang(lang);
+          if (userProfile) {
+            setUserProfile({ ...userProfile, preferredLanguage: lang });
+          }
+        }}
+        onBack={() => {
+          if (userProfile && userProfile.isOnboardingCompleted) {
+            setCurrentView('main-app');
+          } else {
+            setCurrentView('landing');
+          }
+        }}
+        onLogout={handleLogout}
+        onReOnboard={() => setCurrentView('onboarding')}
+        onOpenGoalPlanning={() => setCurrentView('goals')}
+        onOpenSimulatorWithGoal={() => {
+          if (userProfile && userProfile.isOnboardingCompleted) {
+            setCurrentView('main-app');
+          } else {
+            setCurrentView('simulator');
+          }
+        }}
+      />
+    );
+  }
+
+  // VIEW 2: STANDALONE MYTH-BUSTING & FINANCIAL FAQ SECTION
+  if (currentView === 'myths') {
+    return (
+      <MythBustingSection
+        standalonePage={true}
+        currentLang={currentLang}
+        onSelectLang={(lang) => setCurrentLang(lang)}
+        onBack={() => {
+          if (userProfile && userProfile.isOnboardingCompleted) {
+            setCurrentView('main-app');
+          } else {
+            setCurrentView('landing');
+          }
+        }}
+        onOpenSimulator={() => setCurrentView('simulator')}
+        onAskAIWithQuestion={() => {
+          if (!userProfile || !userProfile.isOnboardingCompleted) {
+            setCurrentView('auth');
+          } else {
+            setCurrentView('main-app');
+          }
+        }}
+      />
+    );
+  }
+
+  // VIEW 2: STANDALONE GOAL PLANNING CARDS PAGE
+  if (currentView === 'goals') {
+    return (
+      <GoalPlanningCardsPage
+        userProfile={userProfile}
+        currentLang={currentLang}
+        onSelectLang={(lang) => setCurrentLang(lang)}
+        onBack={() => {
+          if (userProfile && userProfile.isOnboardingCompleted) {
+            setCurrentView('main-app');
+          } else {
+            setCurrentView('landing');
+          }
+        }}
+        onOpenSimulatorWithGoal={() => {
+          if (userProfile && userProfile.isOnboardingCompleted) {
+            setCurrentView('main-app');
+          } else {
+            setCurrentView('simulator');
+          }
+        }}
+      />
+    );
+  }
+
+  // VIEW 3: STANDALONE SAVINGS & SIP SIMULATOR PAGE
   if (currentView === 'simulator') {
     return (
       <SimulatorPage
         currentLang={currentLang}
         onSelectLang={(lang) => setCurrentLang(lang)}
+        onOpenGoalPlanning={() => setCurrentView('goals')}
+        onOpenMythBusting={() => setCurrentView('myths')}
+        onOpenDashboard={() => setCurrentView('dashboard')}
         onBackToChat={() => {
           if (userProfile && userProfile.isOnboardingCompleted) {
             setCurrentView('main-app');
@@ -75,13 +165,16 @@ export function App() {
     );
   }
 
-  // VIEW 2: MAIN VOICE CHAT INTERFACE POST-ONBOARDING
+  // VIEW 4: MAIN VOICE CHAT INTERFACE POST-ONBOARDING
   if (currentView === 'main-app' && userProfile && userProfile.isOnboardingCompleted) {
     return (
       <VoiceChatInterface
         user={userProfile as UserProfile}
         onLogout={handleLogout}
         onReOnboard={() => setCurrentView('onboarding')}
+        onOpenGoalPlanning={() => setCurrentView('goals')}
+        onOpenMythBusting={() => setCurrentView('myths')}
+        onOpenDashboard={() => setCurrentView('dashboard')}
         onSelectLang={(lang) => {
           setCurrentLang(lang);
           setUserProfile({ ...userProfile, preferredLanguage: lang });
@@ -90,7 +183,7 @@ export function App() {
     );
   }
 
-  // VIEW 3: ONBOARDING WIZARD (3 SCREENS)
+  // VIEW 5: ONBOARDING WIZARD (3 SCREENS)
   if (currentView === 'onboarding') {
     return (
       <OnboardingWizard
@@ -100,7 +193,7 @@ export function App() {
     );
   }
 
-  // VIEW 4: AUTH SCREEN (PHONE + OTP & GOOGLE OAUTH)
+  // VIEW 6: AUTH SCREEN (PHONE + OTP & GOOGLE OAUTH)
   if (currentView === 'auth') {
     return (
       <AuthScreen
@@ -111,7 +204,7 @@ export function App() {
     );
   }
 
-  // VIEW 5: PUBLIC LANDING PAGE
+  // VIEW 7: PUBLIC LANDING PAGE
   return (
     <div className="min-h-screen bg-[#FBF7F2] text-[#2B2B2B] selection:bg-[#0F7173] selection:text-white">
       {/* Sticky Top Header */}
@@ -120,6 +213,9 @@ export function App() {
         onSelectLang={(lang) => setCurrentLang(lang)}
         onOpenB2BModal={() => setIsB2BModalOpen(true)}
         onOpenOnboarding={() => setCurrentView('auth')}
+        onOpenGoalPlanning={() => setCurrentView('goals')}
+        onOpenMythBusting={() => setCurrentView('myths')}
+        onOpenDashboard={() => setCurrentView('dashboard')}
       />
 
       {/* Main Landing Page Content */}
@@ -140,21 +236,45 @@ export function App() {
           onOpenOnboarding={() => setCurrentView('auth')}
         />
 
-        {/* Standalone Simulator Callout Banner */}
-        <section className="py-10 bg-white border-y border-slate-200 text-center">
-          <div className="container mx-auto px-4 space-y-4">
-            <h3 className="text-2xl font-extrabold text-[#2B2B2B]">
-              Want to calculate savings manually without talking to AI?
-            </h3>
-            <p className="text-xs text-[#6B6B6B]">
-              Open our standalone Growth & Fixed Deposit Simulator with live interactive charts.
-            </p>
-            <button
-              onClick={() => setCurrentView('simulator')}
-              className="btn btn-secondary px-8 py-3 text-sm font-bold"
-            >
-              Open Standalone Simulator Page
-            </button>
+        {/* MYTH-BUSTING & FINANCIAL FAQ SECTION ON LANDING PAGE */}
+        <section className="py-14 bg-white border-y border-slate-200">
+          <div className="container mx-auto px-4">
+            <MythBustingSection
+              currentLang={currentLang}
+              onSelectLang={(lang) => setCurrentLang(lang)}
+              onOpenSimulator={() => setCurrentView('simulator')}
+              onAskAIWithQuestion={() => setCurrentView('auth')}
+            />
+          </div>
+        </section>
+
+        {/* Standalone Simulator & Goal Cards Callout Banners */}
+        <section className="py-12 bg-[#FBF7F2] border-b border-slate-200 text-center">
+          <div className="container mx-auto px-4 max-w-4xl space-y-6">
+            <div className="space-y-2">
+              <h3 className="text-2xl sm:text-3xl font-extrabold text-[#2B2B2B]">
+                Explore Pre-Built Financial Goal Templates
+              </h3>
+              <p className="text-sm text-[#6B6B6B]">
+                Child's Education, Wedding, Emergency Fund, Home Down Payment, Retirement & Custom Goals.
+              </p>
+            </div>
+
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <button
+                onClick={() => setCurrentView('goals')}
+                className="btn btn-primary px-8 py-3.5 text-sm font-bold shadow-md w-full sm:w-auto"
+              >
+                Browse Goal Planning Cards Grid
+              </button>
+
+              <button
+                onClick={() => setCurrentView('simulator')}
+                className="btn btn-[#0F7173] btn-secondary px-8 py-3.5 text-sm font-bold w-full sm:w-auto"
+              >
+                Open Standalone Simulator Page
+              </button>
+            </div>
           </div>
         </section>
 

@@ -23,12 +23,16 @@ import type {
 import { LANGUAGES } from '../data/languages';
 import { Sidebar } from './Sidebar';
 import { GoalSimulatorModal } from './GoalSimulatorModal';
+import { MYTHS_DATA } from '../data/mythsData';
 
 interface VoiceChatInterfaceProps {
   user: UserProfile;
   onLogout: () => void;
   onReOnboard: () => void;
   onSelectLang: (lang: LanguageCode) => void;
+  onOpenGoalPlanning?: () => void;
+  onOpenMythBusting?: () => void;
+  onOpenDashboard?: () => void;
 }
 
 export const VoiceChatInterface: React.FC<VoiceChatInterfaceProps> = ({
@@ -36,7 +40,11 @@ export const VoiceChatInterface: React.FC<VoiceChatInterfaceProps> = ({
   onLogout,
   onReOnboard,
   onSelectLang,
+  onOpenGoalPlanning,
+  onOpenMythBusting,
+  onOpenDashboard,
 }) => {
+  const [tappedChipId, setTappedChipId] = useState<string | null>(null);
   const currentLangObj = LANGUAGES.find((l) => l.code === user.preferredLanguage) || LANGUAGES[0];
 
   // Mobile sidebar drawer state
@@ -223,7 +231,17 @@ export const VoiceChatInterface: React.FC<VoiceChatInterfaceProps> = ({
       let aiText = '';
       let loanCalc = undefined;
 
-      if (detectedGoal) {
+      const lowerSend = textToSend.toLowerCase();
+      const matchedMyth = MYTHS_DATA.find((m) => {
+        const qEng = m.question.toLowerCase();
+        const qChip = m.chipLabel.toLowerCase();
+        const qVern = (m.chipLabelVernacular[user.preferredLanguage] || m.chipLabelVernacular.hi || '').toLowerCase();
+        return lowerSend.includes(qEng) || lowerSend.includes(qChip) || (qVern && lowerSend.includes(qVern)) || (qVern && qVern.includes(lowerSend));
+      });
+
+      if (matchedMyth) {
+        aiText = matchedMyth.answerVernacular[user.preferredLanguage] || matchedMyth.answerVernacular.hi || matchedMyth.answer;
+      } else if (detectedGoal) {
         aiText = `I noticed you are planning for **${detectedGoal.title}**!
 To reach ₹${detectedGoal.targetAmount.toLocaleString('en-IN')} in ${detectedGoal.timeframeYears} years, saving a disciplined ~₹${detectedGoal.suggestedMonthlySavings}/month in a balanced SIP can help beat inflation.
 
@@ -288,6 +306,9 @@ Tap **"Simulate this goal"** below to adjust timeframe & return parameters live!
         onSelectGoalShortcut={(goal) => handleOpenGoalSimulator(goal)}
         onSelectLang={onSelectLang}
         onReOnboard={onReOnboard}
+        onOpenGoalPlanning={onOpenGoalPlanning}
+        onOpenMythBusting={onOpenMythBusting}
+        onOpenDashboard={onOpenDashboard}
         isOpenMobile={isMobileSidebarOpen}
         onCloseMobile={() => setIsMobileSidebarOpen(false)}
       />
@@ -319,6 +340,39 @@ Tap **"Simulate this goal"** below to adjust timeframe & return parameters live!
 
           {/* Action Buttons */}
           <div className="flex items-center gap-2">
+            {onOpenDashboard && (
+              <button
+                onClick={onOpenDashboard}
+                className="px-3 py-1.5 rounded-full bg-emerald-50 hover:bg-emerald-100/80 text-emerald-800 text-xs font-bold flex items-center gap-1.5 transition-all border border-emerald-300/60"
+                title="Profile & Progress Dashboard"
+              >
+                <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
+                <span className="hidden sm:inline">Dashboard</span>
+              </button>
+            )}
+
+            {onOpenMythBusting && (
+              <button
+                onClick={onOpenMythBusting}
+                className="px-3 py-1.5 rounded-full bg-amber-500/10 hover:bg-amber-500/20 text-[#D98D15] text-xs font-bold flex items-center gap-1.5 transition-all border border-[#F5A623]/30"
+                title="Myth-Busting & Doubts"
+              >
+                <Sparkles className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">Myth-Buster</span>
+              </button>
+            )}
+
+            {onOpenGoalPlanning && (
+              <button
+                onClick={onOpenGoalPlanning}
+                className="px-3 py-1.5 rounded-full bg-[#0F7173]/10 hover:bg-[#0F7173]/20 text-[#0F7173] text-xs font-bold flex items-center gap-1.5 transition-all border border-[#0F7173]/20"
+                title="Open Goal Cards Grid"
+              >
+                <Sparkles className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">Goal Cards</span>
+              </button>
+            )}
+
             <button
               onClick={onReOnboard}
               className="p-2 rounded-full bg-slate-100 hover:bg-slate-200 text-[#0F7173] text-xs flex items-center gap-1 font-bold"
@@ -340,6 +394,43 @@ Tap **"Simulate this goal"** below to adjust timeframe & return parameters live!
 
         {/* CHAT MESSAGES STREAM CONTAINER */}
         <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6 scrollbar-thin max-w-4xl mx-auto w-full">
+          {/* HORIZONTALLY SCROLLABLE ROW OF ROUNDED CHIP BUTTONS (Myth-Busting Chips) */}
+          <div className="bg-white p-3.5 sm:p-4 rounded-3xl border border-slate-200 shadow-sm space-y-2.5 mb-2">
+            <div className="flex items-center justify-between text-[11px] font-extrabold uppercase tracking-wider text-[#6B6B6B]">
+              <span className="flex items-center gap-1 text-[#0F7173]">
+                <Sparkles className="w-3.5 h-3.5 text-[#0F7173]" />
+                <span>Myth-Busting & Common Doubts</span>
+              </span>
+              <span className="text-[#0F7173] text-[10px] font-mono font-bold">Tap chip to ask →</span>
+            </div>
+
+            <div className="flex items-center gap-2 overflow-x-auto pb-1 pt-0.5 scrollbar-none snap-x">
+              {MYTHS_DATA.map((myth) => {
+                const chipText = myth.chipLabelVernacular[user.preferredLanguage] || myth.chipLabelVernacular.hi || myth.chipLabel;
+                const isTapped = tappedChipId === myth.id;
+
+                return (
+                  <button
+                    key={myth.id}
+                    onClick={() => {
+                      setTappedChipId(myth.id);
+                      setTimeout(() => {
+                        setTappedChipId(null);
+                        handleUserSend(chipText);
+                      }, 150);
+                    }}
+                    className={`snap-start shrink-0 px-4 py-2.5 rounded-full text-xs font-bold transition-all duration-150 cursor-pointer whitespace-nowrap border-2 shadow-sm ${
+                      isTapped
+                        ? 'bg-[#0F7173] text-white border-[#0F7173] scale-95 shadow-md'
+                        : 'bg-white text-[#0F7173] border-[#0F7173]/30 hover:border-[#0F7173] hover:bg-[#0F7173]/5 active:scale-95'
+                    }`}
+                  >
+                    {chipText}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
           {currentThread.messages.map((msg) => {
             const isAI = msg.sender === 'ai';
             const isPlaying = playingAudioId === msg.id;
@@ -510,6 +601,7 @@ Tap **"Simulate this goal"** below to adjust timeframe & return parameters live!
 
       {/* GOAL SIMULATOR OVERLAY MODAL */}
       <GoalSimulatorModal
+        key={simGoal?.id}
         goal={simGoal}
         isOpen={isGoalModalOpen}
         onClose={() => setIsGoalModalOpen(false)}

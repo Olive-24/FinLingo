@@ -9,6 +9,9 @@ interface NavbarProps {
   onSelectLang: (code: LanguageCode) => void;
   onOpenB2BModal: () => void;
   onOpenOnboarding: () => void;
+  onOpenGoalPlanning?: () => void;
+  onOpenMythBusting?: () => void;
+  onOpenDashboard?: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -16,6 +19,9 @@ export const Navbar: React.FC<NavbarProps> = ({
   onSelectLang,
   onOpenB2BModal,
   onOpenOnboarding,
+  onOpenGoalPlanning,
+  onOpenMythBusting,
+  onOpenDashboard,
 }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isLangOpen, setIsLangOpen] = useState(false);
@@ -61,7 +67,34 @@ export const Navbar: React.FC<NavbarProps> = ({
         </a>
 
         {/* Desktop Nav Links */}
-        <nav className="hidden md:flex items-center gap-8 text-sm font-semibold text-[#2B2B2B]">
+        <nav className="hidden md:flex items-center gap-6 text-sm font-semibold text-[#2B2B2B]">
+          {onOpenDashboard && (
+            <button
+              onClick={onOpenDashboard}
+              className="hover:text-emerald-700 font-bold text-emerald-800 bg-emerald-100/70 px-3 py-1.5 rounded-full transition-colors flex items-center gap-1.5 border border-emerald-300/60"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
+              <span>Dashboard</span>
+            </button>
+          )}
+          {onOpenMythBusting && (
+            <button
+              onClick={onOpenMythBusting}
+              className="hover:text-[#D98D15] font-bold text-[#D98D15] bg-[#F5A623]/15 px-3 py-1.5 rounded-full transition-colors flex items-center gap-1.5 border border-[#F5A623]/30"
+            >
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>Myth-Buster</span>
+            </button>
+          )}
+          {onOpenGoalPlanning && (
+            <button
+              onClick={onOpenGoalPlanning}
+              className="hover:text-[#0F7173] font-bold text-[#0F7173] bg-[#0F7173]/10 px-3 py-1.5 rounded-full transition-colors flex items-center gap-1.5"
+            >
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>Goal Cards</span>
+            </button>
+          )}
           <a href="#how-it-works" className="hover:text-[#0F7173] transition-colors">
             {t.features}
           </a>

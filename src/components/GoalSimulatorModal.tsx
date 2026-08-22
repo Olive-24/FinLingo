@@ -16,12 +16,12 @@ export const GoalSimulatorModal: React.FC<GoalSimulatorModalProps> = ({
   onClose,
   onPostSimulationToChat,
 }) => {
-  if (!isOpen || !goal) return null;
-
-  const [targetAmount, setTargetAmount] = useState<number>(goal.targetAmount);
-  const [timeframeYears, setTimeframeYears] = useState<number>(goal.timeframeYears);
+  const [targetAmount, setTargetAmount] = useState<number>(goal?.targetAmount || 500000);
+  const [timeframeYears, setTimeframeYears] = useState<number>(goal?.timeframeYears || 5);
   const [returnRate, setReturnRate] = useState<number>(12); // Default 12% SIP return rate
   const inflationRate = 5.5;
+
+  if (!isOpen || !goal) return null;
 
   // SIP Compound Returns Calculation Formula
   // M = P × ({[1 + i]^n - 1} / i) × (1 + i)

@@ -25,6 +25,9 @@ interface SidebarProps {
   onSelectGoalShortcut: (goal: DetectedGoal) => void;
   onSelectLang: (lang: LanguageCode) => void;
   onReOnboard: () => void;
+  onOpenGoalPlanning?: () => void;
+  onOpenMythBusting?: () => void;
+  onOpenDashboard?: () => void;
   isOpenMobile: boolean;
   onCloseMobile: () => void;
 }
@@ -38,6 +41,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onSelectGoalShortcut,
   onSelectLang,
   onReOnboard,
+  onOpenGoalPlanning,
+  onOpenMythBusting,
+  onOpenDashboard,
   isOpenMobile,
   onCloseMobile,
 }) => {
@@ -196,8 +202,56 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </div>
         </div>
 
-        {/* PINNED QUICK-ACCESS GOAL SHORTCUTS */}
+        {/* PINNED QUICK-ACCESS GOAL & MYTH SHORTCUTS */}
         <div className="space-y-2 pt-3 border-t border-slate-100">
+          {onOpenDashboard && (
+            <button
+              onClick={() => {
+                onOpenDashboard();
+                onCloseMobile();
+              }}
+              className="w-full mb-1 p-2.5 rounded-xl bg-emerald-50 border border-emerald-200/80 hover:bg-emerald-100/60 text-emerald-800 font-bold text-xs flex items-center justify-between transition-all"
+            >
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-emerald-600" />
+                <span>Profile & Dashboard</span>
+              </div>
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          )}
+
+          {onOpenMythBusting && (
+            <button
+              onClick={() => {
+                onOpenMythBusting();
+                onCloseMobile();
+              }}
+              className="w-full mb-1 p-2.5 rounded-xl bg-amber-500/10 border border-[#F5A623]/30 hover:bg-amber-500/20 text-[#D98D15] font-bold text-xs flex items-center justify-between transition-all"
+            >
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-[#D98D15]" />
+                <span>Myth-Busting & Doubts</span>
+              </div>
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          )}
+
+          {onOpenGoalPlanning && (
+            <button
+              onClick={() => {
+                onOpenGoalPlanning();
+                onCloseMobile();
+              }}
+              className="w-full mb-2 p-2.5 rounded-xl bg-[#0F7173]/10 border border-[#0F7173]/20 hover:bg-[#0F7173]/20 text-[#0F7173] font-bold text-xs flex items-center justify-between transition-all"
+            >
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-[#0F7173]" />
+                <span>Browse Goal Cards Grid</span>
+              </div>
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          )}
+
           <div className="text-[10px] font-bold uppercase tracking-wider text-[#6B6B6B] flex items-center justify-between">
             <span>Quick Goal Shortcuts</span>
             <span className="text-[#0F7173] font-mono text-[9px]">Simulate</span>
@@ -234,12 +288,18 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
       {/* User Profile Footer */}
       <div className="pt-3 mt-3 border-t border-slate-100 flex items-center justify-between text-xs">
-        <div className="flex items-center gap-2.5 truncate">
+        <div
+          onClick={() => {
+            if (onOpenDashboard) onOpenDashboard();
+            onCloseMobile();
+          }}
+          className="flex items-center gap-2.5 truncate cursor-pointer hover:opacity-80 transition-opacity"
+        >
           <div className="w-8 h-8 rounded-full bg-[#0F7173]/15 border border-[#0F7173]/30 flex items-center justify-center text-[#0F7173] font-extrabold shrink-0">
             {user.name.charAt(0)}
           </div>
           <div className="truncate">
-            <div className="font-bold text-[#2B2B2B] truncate">{user.name}</div>
+            <div className="font-bold text-[#2B2B2B] truncate group-hover:text-[#0F7173]">{user.name}</div>
             <div className="text-[10px] text-[#6B6B6B] capitalize font-medium">{user.occupation.replace('_', ' ')}</div>
           </div>
         </div>

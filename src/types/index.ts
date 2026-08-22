@@ -58,6 +58,18 @@ export interface DetectedGoal {
   description: string;
 }
 
+export interface SavedGoalProgress {
+  id: string;
+  title: string;
+  category: GoalCategory;
+  targetAmount: number;
+  currentSavedAmount: number;
+  timeframeYears: number;
+  suggestedMonthlySavings: number;
+  description: string;
+  lastUpdated: string;
+}
+
 export interface VoiceChatMessage {
   id: string;
   sender: 'user' | 'ai';

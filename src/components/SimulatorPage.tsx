@@ -15,6 +15,9 @@ interface SimulatorPageProps {
   onSelectLang: (lang: LanguageCode) => void;
   onBackToChat: () => void;
   onAskAIWithSummary?: (summaryText: string) => void;
+  onOpenGoalPlanning?: () => void;
+  onOpenMythBusting?: () => void;
+  onOpenDashboard?: () => void;
 }
 
 export const SimulatorPage: React.FC<SimulatorPageProps> = ({
@@ -22,6 +25,9 @@ export const SimulatorPage: React.FC<SimulatorPageProps> = ({
   onSelectLang,
   onBackToChat,
   onAskAIWithSummary,
+  onOpenGoalPlanning,
+  onOpenMythBusting,
+  onOpenDashboard,
 }) => {
   // Input Controls State
   const [monthlyAmount, setMonthlyAmount] = useState<number>(1500);
@@ -176,8 +182,38 @@ Can you explain the risk difference between SIP and FD for my profile?`;
             </div>
           </div>
 
-          {/* Language Selector */}
-          <div className="flex items-center gap-2">
+          {/* Language Selector & Action Cards */}
+          <div className="flex items-center gap-2 sm:gap-3">
+            {onOpenDashboard && (
+              <button
+                onClick={onOpenDashboard}
+                className="px-3.5 py-1.5 rounded-full bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs font-bold flex items-center gap-1.5 transition-all border border-emerald-300/60"
+              >
+                <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
+                <span className="hidden sm:inline">Dashboard</span>
+              </button>
+            )}
+
+            {onOpenMythBusting && (
+              <button
+                onClick={onOpenMythBusting}
+                className="px-3.5 py-1.5 rounded-full bg-amber-500/10 hover:bg-amber-500/20 text-[#D98D15] text-xs font-bold flex items-center gap-1.5 transition-all border border-[#F5A623]/30"
+              >
+                <Sparkles className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">Myth-Buster</span>
+              </button>
+            )}
+
+            {onOpenGoalPlanning && (
+              <button
+                onClick={onOpenGoalPlanning}
+                className="px-3.5 py-1.5 rounded-full bg-[#0F7173]/10 hover:bg-[#0F7173]/20 text-[#0F7173] text-xs font-bold flex items-center gap-1.5 transition-all border border-[#0F7173]/20"
+              >
+                <Sparkles className="w-3.5 h-3.5 text-[#0F7173]" />
+                <span className="hidden sm:inline">Goal Cards</span>
+              </button>
+            )}
+
             <div className="relative">
               <select
                 value={currentLang}
