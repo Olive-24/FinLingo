@@ -4,6 +4,22 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+  
+  html, body, #root {
+    width: 100%;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    background-color: #EEE9DF;
+    color: #1B2632;
+    overflow-x: hidden;
+  }
+}
+
 :root {
   --font-serif: 'Playfair Display', 'Fraunces', Georgia, serif;
   --font-sans: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -25,27 +41,11 @@
   --text-white: #FFFFFF;
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-html {
-  scroll-behavior: smooth;
-  font-family: var(--font-sans);
-  background-color: var(--bg-canvas);
-  color: var(--text-primary);
-  line-height: 1.5;
-  font-size: 16px;
-}
-
 body {
-  min-height: 100vh;
+  font-family: var(--font-sans);
   background-color: #EEE9DF;
   color: #1B2632;
   -webkit-font-smoothing: antialiased;
-  position: relative;
 }
 
 /* TYPOGRAPHY UTILITIES - REMOVE VERTICAL CLIPPING */
@@ -72,9 +72,9 @@ body {
 /* CARD PRIMITIVES */
 .editorial-card {
   background-color: #FFFFFF;
-  border: 1px solid rgba(201, 193, 177, 0.6);
-  border-radius: 1rem; /* rounded-2xl */
-  padding: 1.5rem;
+  border: 1px solid rgba(27, 38, 50, 0.12);
+  border-radius: 1.5rem; /* rounded-3xl */
+  padding: 2rem; /* p-8 */
   box-shadow: 0 1px 3px 0 rgba(27, 38, 50, 0.05);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }

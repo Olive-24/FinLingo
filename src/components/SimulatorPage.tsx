@@ -153,30 +153,30 @@ Can you explain the risk difference between SIP and FD for my profile?`;
   };
 
   return (
-    <div className="min-h-screen bg-[#FBF7F2] text-[#2B2B2B] flex flex-col justify-between">
+    <div className="w-full min-h-screen bg-[#EEE9DF] text-[#1B2632] flex flex-col items-center selection:bg-[#FFB162]/30">
       {/* HEADER */}
-      <header className="bg-white/90 backdrop-blur-md border-b border-slate-200 sticky top-0 z-40 px-4 py-3.5 shadow-sm">
-        <div className="container mx-auto flex items-center justify-between">
+      <header className="w-full border-b border-[#1B2632]/10 bg-[#EEE9DF]/90 backdrop-blur sticky top-0 z-50 py-4 px-6 md:px-12">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
             <button
               onClick={onBackToChat}
-              className="p-2 rounded-full bg-slate-100 hover:bg-slate-200 text-[#2B2B2B] transition-colors flex items-center gap-1 text-xs font-bold"
+              className="px-4 py-2 rounded-full bg-white border border-[#C9C1B1] text-xs font-bold text-[#1B2632] flex items-center gap-1.5 hover:bg-[#F4F0E8] transition cursor-pointer"
               title="Return to Workspace"
             >
               <ArrowLeft className="w-4 h-4" />
-              <span className="hidden sm:inline">Back</span>
+              <span className="hidden sm:inline">Back to Console</span>
             </button>
 
             <div className="flex items-center gap-2">
-              <div className="icon-badge icon-badge-teal !w-9 !h-9 !min-w-[36px]">
-                <Sliders className="w-5 h-5 stroke-[2.2]" />
+              <div className="w-8 h-8 rounded-xl bg-[#1B2632] text-white flex items-center justify-center font-bold">
+                <Sliders className="w-4 h-4" />
               </div>
               <div>
-                <h1 className="font-extrabold text-base text-[#2B2B2B] tracking-tight">
+                <h1 className="font-serif font-bold text-lg text-[#1B2632]">
                   Savings & SIP Simulator
                 </h1>
-                <p className="text-[11px] text-[#6B6B6B]">
-                  Interactive Growth Calculator • <span className="text-[#0F7173] font-bold">{currentLangObj.flag} {currentLangObj.nativeName}</span>
+                <p className="text-[11px] text-[#5C6B7A]">
+                  Interactive Growth Calculator • <span className="text-[#A35139] font-bold">{currentLangObj.flag} {currentLangObj.nativeName}</span>
                 </p>
               </div>
             </div>
@@ -232,7 +232,7 @@ Can you explain the risk difference between SIP and FD for my profile?`;
       </header>
 
       {/* MAIN CONTENT AREA */}
-      <main className="container mx-auto px-4 py-8 flex-1 max-w-6xl">
+      <main className="w-full max-w-7xl mx-auto px-6 md:px-12 py-12 flex flex-col gap-12">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* LEFT COLUMN: LARGE HORIZONTAL SLIDERS & CONTROLS */}
           <div className="lg:col-span-5 space-y-6">
