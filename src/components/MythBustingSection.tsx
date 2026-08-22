@@ -5,12 +5,9 @@ import {
   Pause,
   HelpCircle,
   ArrowRight,
-  RotateCcw,
   Sliders,
-  Volume2,
   ArrowLeft,
   ShieldCheck,
-  CheckCircle2,
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import type { LanguageCode } from '../types';
@@ -66,21 +63,23 @@ export const MythBustingSection: React.FC<MythBustingSectionProps> = ({
   };
 
   const getVernacularQuestion = (myth: MythItem) => {
+    const item = myth as any;
     switch (currentLang) {
-      case 'hi': return myth.questionHindi;
-      case 'ta': return myth.questionTamil;
-      case 'te': return myth.questionTelugu;
-      case 'mr': return myth.questionMarathi;
+      case 'hi': return item.questionHindi || myth.question;
+      case 'ta': return item.questionTamil || myth.question;
+      case 'te': return item.questionTelugu || myth.question;
+      case 'mr': return item.questionMarathi || myth.question;
       default: return myth.question;
     }
   };
 
   const getVernacularAnswer = (myth: MythItem) => {
+    const item = myth as any;
     switch (currentLang) {
-      case 'hi': return myth.answerHindi;
-      case 'ta': return myth.answerTamil;
-      case 'te': return myth.answerTelugu;
-      case 'mr': return myth.answerMarathi;
+      case 'hi': return item.answerHindi || myth.answer;
+      case 'ta': return item.answerTamil || myth.answer;
+      case 'te': return item.answerTelugu || myth.answer;
+      case 'mr': return item.answerMarathi || myth.answer;
       default: return myth.answer;
     }
   };
@@ -250,10 +249,10 @@ export const MythBustingSection: React.FC<MythBustingSectionProps> = ({
               {getVernacularAnswer(selectedMyth)}
             </p>
 
-            {selectedMyth.subventionBreakdown && (
+            {(selectedMyth as any).subventionBreakdown && (
               <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-200 text-xs leading-relaxed">
                 <span className="font-bold text-amber-300 block mb-1">Government Subsidy Benefit:</span>
-                {selectedMyth.subventionBreakdown}
+                {(selectedMyth as any).subventionBreakdown}
               </div>
             )}
           </div>

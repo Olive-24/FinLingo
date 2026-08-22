@@ -116,7 +116,7 @@ export const Footer: React.FC<FooterProps> = ({
             <ul className="space-y-2 text-xs font-medium text-slate-400">
               <li>
                 <button onClick={onOpenPrivacy} className="hover:text-[#14B8A6] transition-colors">
-                  {t.privacyLink}
+                  {t.privacy}
                 </button>
               </li>
               <li>
@@ -131,7 +131,7 @@ export const Footer: React.FC<FooterProps> = ({
 
         {/* Bottom Strip */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
-          <p>{t.copyright}</p>
+          <p>{t.rights}</p>
 
           <button
             onClick={scrollToTop}

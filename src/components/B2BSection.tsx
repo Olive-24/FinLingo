@@ -1,6 +1,5 @@
 import React from 'react';
-import { Building2, TrendingUp, ShieldCheck, Zap, ArrowRight, Sparkles } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { Building2, TrendingUp, ShieldCheck, Zap, ArrowRight } from 'lucide-react';
 import type { LanguageCode } from '../types';
 
 interface B2BSectionProps {

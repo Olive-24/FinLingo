@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Mic, Sparkles, Sliders, Play, Volume2, Check, ArrowRight, AlertTriangle, CheckCircle2 } from 'lucide-react';
+import { Mic, Sparkles, Sliders, Check, AlertTriangle } from 'lucide-react';
 import { motion } from 'framer-motion';
 import type { LanguageCode } from '../types';
-import { TRANSLATIONS } from '../data/translations';
 
 interface AnimatedDemoStripProps {
   currentLang: LanguageCode;
 }
 
-export const AnimatedDemoStrip: React.FC<AnimatedDemoStripProps> = ({ currentLang }) => {
-  const t = TRANSLATIONS[currentLang].demo;
+export const AnimatedDemoStrip: React.FC<AnimatedDemoStripProps> = () => {
 
   // Active step state: 1 (Voice), 2 (AI Translation / Jargon Engine), 3 (Simulator)
   const [activeStep, setActiveStep] = useState<1 | 2 | 3>(2);
@@ -39,8 +37,6 @@ export const AnimatedDemoStrip: React.FC<AnimatedDemoStripProps> = ({ currentLan
   };
 
   const currentEMI = calculateEMI(loanAmount, interestRate, tenureMonths);
-  const totalPayment = currentEMI * tenureMonths;
-  const totalInterest = Math.max(0, totalPayment - loanAmount);
 
   // Traditional Jargon vs FinLingo Translation Items
   const jargonComparison = [
