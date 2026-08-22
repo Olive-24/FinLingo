@@ -28,19 +28,19 @@ export const Hero: React.FC<HeroProps> = ({ currentLang, onOpenOnboarding, onOpe
 
             {/* Editorial Serif Headline */}
             <div className="space-y-3">
-              <h1 className="font-serif-display text-4xl sm:text-6xl lg:text-7xl leading-[1.1] text-[#2A1A20]">
+              <h1 className="text-3xl md:text-5xl lg:text-6xl font-serif leading-[1.2] tracking-tight mb-4 text-[#2D1E25]">
                 Apni bhasha mein{' '}
-                <span className="text-[#3B2530] underline decoration-[#3B2530]/20 underline-offset-8">
+                <span className="text-[#3B232E] underline decoration-[#3B232E]/20 underline-offset-8">
                   paison ki samajh
                 </span>
               </h1>
-              <div className="font-indic text-xl sm:text-2xl font-bold text-[#8C7378] tracking-tight">
+              <div className="font-indic text-xl sm:text-2xl font-bold text-[#7A6870] tracking-tight">
                 अपनी भाषा में पैसों की समझ
               </div>
             </div>
 
             {/* Subtext */}
-            <p className="text-base sm:text-lg text-[#8C7378] max-w-2xl mx-auto lg:mx-0 leading-relaxed font-normal">
+            <p className="text-sm md:text-base leading-relaxed text-[#7A6870] mb-4 max-w-2xl mx-auto lg:mx-0 font-normal">
               {t.subTitle}
             </p>
 
