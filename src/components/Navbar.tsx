@@ -1,9 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { Globe, ChevronDown, Sparkles, Menu, X, ArrowRight, Building2 } from 'lucide-react';
+import React, { useState } from 'react';
+import { Globe, ChevronDown, Sparkles, Menu, X } from 'lucide-react';
 import type { LanguageCode } from '../types';
 import { LANGUAGES } from '../data/languages';
-import { TRANSLATIONS } from '../data/translations';
-import { Button } from './ui/Primitives';
 
 interface NavbarProps {
   currentLang: LanguageCode;
@@ -25,113 +23,86 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenGoalPlanning,
   onOpenMythBusting,
   onOpenDashboard,
-  onOpenB2BDashboard,
-  onOpenPricing,
 }) => {
-  const [isScrolled, setIsScrolled] = useState(false);
   const [isLangOpen, setIsLangOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const t = TRANSLATIONS[currentLang].nav;
   const currentLanguageObj = LANGUAGES.find((l) => l.code === currentLang) || LANGUAGES[0];
 
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 20) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
   return (
-    <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled
-          ? 'bg-[#F4E6DF]/95 backdrop-blur-md border-b border-[#E6D2C8] py-3.5 shadow-sm'
-          : 'bg-[#F4E6DF] py-4'
-      }`}
-    >
-      <div className="container mx-auto px-4 sm:px-6 flex items-center justify-between">
-        {/* Brand Logo with Rounded-Square Maroon Badge */}
+    <header className="h-20 border-b border-[#1B2632]/10 bg-[#EEE9DF]/80 backdrop-blur sticky top-0 z-50 transition-all">
+      <div className="max-w-6xl mx-auto px-6 h-full flex items-center justify-between">
+        
+        {/* Left: Brand logo wordmark + v1.0 Live badge */}
         <a href="#" className="flex items-center gap-3 group text-decoration-none">
-          <div className="w-9 h-9 rounded-xl bg-[#3B2530] text-white flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform">
-            <Sparkles className="w-5 h-5 fill-white/20 stroke-[2.2]" />
+          <div className="w-9 h-9 rounded-xl bg-[#1B2632] text-white flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform">
+            <Sparkles className="w-5 h-5 fill-white/20" />
           </div>
-          <div className="flex flex-col">
-            <span className="font-extrabold text-xl tracking-tight text-[#2A1A20] flex items-center gap-1.5 font-sans">
-              FinLingo <span className="w-2 h-2 rounded-full bg-[#3B2530] animate-pulse"></span>
+          <div className="flex items-center gap-2">
+            <span className="font-serif font-bold text-2xl tracking-tight text-[#1B2632]">
+              FinLingo
             </span>
-            <span className="text-[10px] font-bold tracking-widest text-[#8C7378] uppercase">
-              Vernacular AI Platform
+            <span className="px-2.5 py-0.5 rounded-full bg-[#FFB162]/20 text-[#A35139] text-[10px] font-mono font-bold border border-[#FFB162]/40">
+              v1.0 Live
             </span>
           </div>
         </a>
 
-        {/* Desktop Nav Links */}
-        <nav className="hidden lg:flex items-center gap-7 text-xs sm:text-sm font-bold text-[#8C7378]">
-          {onOpenPricing && (
-            <button
-              onClick={onOpenPricing}
-              className="hover:text-[#3B2530] transition-colors"
-            >
-              Pricing
-            </button>
-          )}
-
+        {/* Center Links */}
+        <nav className="hidden md:flex items-center gap-8 text-xs font-semibold text-[#5C6B7A]">
           {onOpenDashboard && (
             <button
               onClick={onOpenDashboard}
-              className="hover:text-[#3B2530] transition-colors flex items-center gap-1.5"
+              className="hover:text-[#1B2632] transition-colors"
             >
-              <span>Dashboard</span>
+              Dashboard
             </button>
           )}
 
           {onOpenMythBusting && (
             <button
               onClick={onOpenMythBusting}
-              className="hover:text-[#3B2530] transition-colors flex items-center gap-1.5"
+              className="hover:text-[#1B2632] transition-colors"
             >
-              <span>Myth-Buster</span>
+              Myth-Buster
             </button>
           )}
 
           {onOpenGoalPlanning && (
             <button
               onClick={onOpenGoalPlanning}
-              className="hover:text-[#3B2530] transition-colors flex items-center gap-1.5"
+              className="hover:text-[#1B2632] transition-colors"
             >
-              <span>Goal Cards</span>
+              Goal Cards
             </button>
           )}
 
-          <a href="#how-it-works" className="hover:text-[#3B2530] transition-colors">
-            {t.features}
+          <a href="#how-it-works" className="hover:text-[#1B2632] transition-colors">
+            How It Works
           </a>
+
+          <button onClick={onOpenB2BModal} className="hover:text-[#1B2632] transition-colors text-[#A35139] font-bold">
+            B2B Console
+          </button>
         </nav>
 
-        {/* Right Action Bar */}
-        <div className="hidden lg:flex items-center gap-4">
-          {/* Vernacular Language Selector Pill */}
+        {/* Right Actions: Language Selector + Primary Pill Button */}
+        <div className="hidden md:flex items-center gap-4">
+          {/* Language Selector Dropdown */}
           <div className="relative">
             <button
               onClick={() => setIsLangOpen(!isLangOpen)}
-              className="px-3.5 py-1.5 rounded-full bg-[#FBF2EC] border border-[#E6D2C8] text-xs font-bold text-[#3B2530] flex items-center gap-2 transition-all hover:border-[#3B2530]"
+              className="px-3 py-1.5 rounded-full bg-white border border-[#C9C1B1] text-xs font-bold text-[#1B2632] flex items-center gap-1.5 hover:bg-[#F4F0E8] transition-colors"
             >
-              <Globe className="w-3.5 h-3.5 text-[#3B2530]" />
-              <span>{currentLanguageObj.flag} {currentLanguageObj.nativeName}</span>
-              <ChevronDown className={`w-3.5 h-3.5 text-[#8C7378] transition-transform ${isLangOpen ? 'rotate-180' : ''}`} />
+              <Globe className="w-3.5 h-3.5 text-[#A35139]" />
+              <span>
+                {currentLanguageObj.flag} {currentLanguageObj.nativeName}
+              </span>
+              <ChevronDown className="w-3.5 h-3.5 text-[#5C6B7A]" />
             </button>
 
             {isLangOpen && (
-              <div className="absolute right-0 mt-2 w-52 py-2 bg-[#FBF2EC] border border-[#E6D2C8] rounded-2xl shadow-xl z-50">
-                <div className="px-3.5 py-1.5 text-[10px] font-bold text-[#8C7378] uppercase tracking-widest border-b border-[#E6D2C8]">
-                  Select Language
-                </div>
+              <div className="absolute right-0 mt-2 w-44 rounded-2xl bg-white border border-[#C9C1B1] shadow-xl py-2 z-50">
                 {LANGUAGES.map((lang) => (
                   <button
                     key={lang.code}
@@ -139,126 +110,85 @@ export const Navbar: React.FC<NavbarProps> = ({
                       onSelectLang(lang.code);
                       setIsLangOpen(false);
                     }}
-                    className={`w-full text-left px-3.5 py-2.5 text-xs flex items-center justify-between hover:bg-[#3B2530]/10 transition-colors ${
-                      currentLang === lang.code ? 'text-[#3B2530] font-bold bg-[#3B2530]/10' : 'text-[#2A1A20]'
+                    className={`w-full text-left px-4 py-2 text-xs flex items-center gap-2 hover:bg-[#F4F0E8] transition-colors ${
+                      currentLang === lang.code ? 'font-bold text-[#A35139] bg-[#FFB162]/10' : 'text-[#1B2632]'
                     }`}
                   >
-                    <span>{lang.flag} {lang.nativeName}</span>
-                    <span className="text-[10px] text-[#8C7378] font-mono">{lang.name}</span>
+                    <span>{lang.flag}</span>
+                    <span>{lang.nativeName}</span>
                   </button>
                 ))}
               </div>
             )}
           </div>
 
-          {/* B2B Console Button (Secondary Primitive) */}
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={() => {
-              if (onOpenB2BDashboard) {
-                onOpenB2BDashboard();
-              } else {
-                onOpenB2BModal();
-              }
-            }}
-          >
-            <Building2 className="w-3.5 h-3.5" />
-            <span>B2B Console</span>
-          </Button>
-
-          {/* Start Free CTA Button (Primary Primitive) */}
-          <Button
-            variant="primary"
-            size="sm"
-            onClick={onOpenOnboarding}
-          >
-            <span>{t.startFreeBtn}</span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </Button>
-        </div>
-
-        {/* Mobile Toggle */}
-        <div className="lg:hidden flex items-center gap-3">
-          <Button
-            variant="primary"
-            size="sm"
-            onClick={onOpenOnboarding}
-          >
-            <span>Start</span>
-          </Button>
-
+          {/* Primary CTA */}
           <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="p-2 rounded-full bg-[#FBF2EC] border border-[#E6D2C8] text-[#3B2530]"
+            onClick={onOpenOnboarding}
+            className="bg-[#1B2632] hover:bg-[#2C3B4D] text-white px-5 py-2.5 rounded-full text-sm font-semibold transition shadow-sm cursor-pointer"
           >
-            {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            Try FinLingo →
           </button>
         </div>
+
+        {/* Mobile Hamburger Toggle */}
+        <button
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          className="md:hidden p-2 rounded-xl bg-white border border-[#C9C1B1] text-[#1B2632]"
+        >
+          {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+        </button>
       </div>
 
       {/* Mobile Drawer */}
       {isMobileMenuOpen && (
-        <div className="lg:hidden fixed inset-x-4 top-20 bg-[#FBF2EC] border border-[#E6D2C8] rounded-3xl p-5 shadow-2xl z-50 space-y-4">
-          <div className="space-y-2 text-sm font-bold text-[#2A1A20]">
-            {onOpenPricing && (
-              <button
-                onClick={() => {
-                  onOpenPricing();
-                  setIsMobileMenuOpen(false);
-                }}
-                className="w-full text-left p-2.5 rounded-xl hover:bg-[#3B2530]/10"
-              >
-                Pricing Plans
-              </button>
-            )}
-            {onOpenDashboard && (
-              <button
-                onClick={() => {
-                  onOpenDashboard();
-                  setIsMobileMenuOpen(false);
-                }}
-                className="w-full text-left p-2.5 rounded-xl hover:bg-[#3B2530]/10 text-[#3B2530]"
-              >
-                User Dashboard
-              </button>
-            )}
-            {onOpenMythBusting && (
-              <button
-                onClick={() => {
-                  onOpenMythBusting();
-                  setIsMobileMenuOpen(false);
-                }}
-                className="w-full text-left p-2.5 rounded-xl hover:bg-[#3B2530]/10"
-              >
-                Myth-Busting & Doubts
-              </button>
-            )}
-            {onOpenGoalPlanning && (
-              <button
-                onClick={() => {
-                  onOpenGoalPlanning();
-                  setIsMobileMenuOpen(false);
-                }}
-                className="w-full text-left p-2.5 rounded-xl hover:bg-[#3B2530]/10"
-              >
-                Goal Planning Cards
-              </button>
-            )}
-          </div>
-
-          <div className="pt-3 border-t border-[#E6D2C8] flex flex-col gap-2">
-            <Button
-              variant="secondary"
-              size="sm"
+        <div className="md:hidden bg-[#EEE9DF] border-b border-[#C9C1B1] px-6 py-4 space-y-3">
+          {onOpenDashboard && (
+            <button
               onClick={() => {
-                if (onOpenB2BDashboard) onOpenB2BDashboard();
-                else onOpenB2BModal();
+                onOpenDashboard();
                 setIsMobileMenuOpen(false);
               }}
+              className="block w-full text-left text-sm font-bold text-[#1B2632] py-2"
             >
-              B2B Partner Console
-            </Button>
+              Dashboard
+            </button>
+          )}
+
+          {onOpenMythBusting && (
+            <button
+              onClick={() => {
+                onOpenMythBusting();
+                setIsMobileMenuOpen(false);
+              }}
+              className="block w-full text-left text-sm font-bold text-[#1B2632] py-2"
+            >
+              Myth-Buster
+            </button>
+          )}
+
+          {onOpenGoalPlanning && (
+            <button
+              onClick={() => {
+                onOpenGoalPlanning();
+                setIsMobileMenuOpen(false);
+              }}
+              className="block w-full text-left text-sm font-bold text-[#1B2632] py-2"
+            >
+              Goal Cards
+            </button>
+          )}
+
+          <div className="pt-2">
+            <button
+              onClick={() => {
+                onOpenOnboarding();
+                setIsMobileMenuOpen(false);
+              }}
+              className="w-full bg-[#1B2632] text-white py-3 rounded-full text-sm font-semibold"
+            >
+              Try FinLingo →
+            </button>
           </div>
         </div>
       )}

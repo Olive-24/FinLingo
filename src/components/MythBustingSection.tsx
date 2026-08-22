@@ -1,249 +1,162 @@
 import React, { useState } from 'react';
-import {
-  Sparkles,
-  Play,
-  Pause,
-  HelpCircle,
-  ArrowRight,
-  Sliders,
-  ArrowLeft,
-  ShieldCheck,
-} from 'lucide-react';
+import { Play, Pause, CheckCircle2, Volume2, ShieldCheck, ArrowLeft } from 'lucide-react';
 import type { LanguageCode } from '../types';
+import { MYTHS_DATA } from '../data/mythsData';
 import { LANGUAGES } from '../data/languages';
-import { MYTHS_DATA, type MythItem } from '../data/mythsData';
-import { Card, Badge, MicroLabel, Button } from './ui/Primitives';
 
 interface MythBustingSectionProps {
-  currentLang: LanguageCode;
-  onSelectLang?: (lang: LanguageCode) => void;
-  onAskAIWithQuestion?: (questionText: string, answerText: string) => void;
-  onOpenSimulator?: () => void;
   standalonePage?: boolean;
+  currentLang: LanguageCode;
+  onSelectLang: (lang: LanguageCode) => void;
   onBack?: () => void;
+  onOpenSimulator?: () => void;
+  onAskAIWithQuestion?: (questionText: string) => void;
 }
 
 export const MythBustingSection: React.FC<MythBustingSectionProps> = ({
+  standalonePage = false,
   currentLang,
   onSelectLang,
-  onAskAIWithQuestion,
-  onOpenSimulator,
-  standalonePage = false,
   onBack,
 }) => {
-  const currentLangObj = LANGUAGES.find((l) => l.code === currentLang) || LANGUAGES[0];
+  const [activeMythId, setActiveMythId] = useState<string>(MYTHS_DATA[0].id);
+  const [isPlaying, setIsPlaying] = useState<boolean>(false);
 
-  // Active selected myth item (Default to first myth)
-  const [selectedMyth, setSelectedMyth] = useState<MythItem>(MYTHS_DATA[0]);
-
-  // Audio Playback State (TTS)
-  const [isPlayingAudio, setIsPlayingAudio] = useState<boolean>(false);
-  const [audioSpeed, setAudioSpeed] = useState<number>(1.0);
-
-  // Category filter
-  const [activeCategory, setActiveCategory] = useState<'all' | 'safety' | 'returns' | 'legal' | 'budgeting' | 'credit'>('all');
-
-  const filteredMyths = activeCategory === 'all'
-    ? MYTHS_DATA
-    : MYTHS_DATA.filter((m) => m.category === activeCategory);
-
-  const handleChipTap = (myth: MythItem) => {
-    setSelectedMyth(myth);
-    setIsPlayingAudio(false);
-  };
-
-  const toggleAudio = () => {
-    setIsPlayingAudio(!isPlayingAudio);
-  };
-
-  const getVernacularQuestion = (myth: MythItem) => {
-    const item = myth as any;
-    switch (currentLang) {
-      case 'hi': return item.questionHindi || myth.question;
-      case 'ta': return item.questionTamil || myth.question;
-      case 'te': return item.questionTelugu || myth.question;
-      case 'mr': return item.questionMarathi || myth.question;
-      default: return myth.question;
-    }
-  };
-
-  const getVernacularAnswer = (myth: MythItem) => {
-    const item = myth as any;
-    switch (currentLang) {
-      case 'hi': return item.answerHindi || myth.answer;
-      case 'ta': return item.answerTamil || myth.answer;
-      case 'te': return item.answerTelugu || myth.answer;
-      case 'mr': return item.answerMarathi || myth.answer;
-      default: return myth.answer;
-    }
-  };
+  const activeMyth = MYTHS_DATA.find((m) => m.id === activeMythId) || MYTHS_DATA[0];
 
   return (
-    <section className={`${standalonePage ? 'min-h-screen bg-[#F4E6DF] py-10' : 'py-24 bg-[#F4E6DF]'} text-[#2A1A20] relative`}>
-      <div className="container mx-auto px-4 sm:px-6 max-w-5xl">
-        {/* STANDALONE PAGE HEADER BAR */}
-        {standalonePage && (
-          <div className="flex items-center justify-between mb-8 pb-4 border-b border-[#E6D2C8]">
-            <Button variant="secondary" size="sm" onClick={onBack}>
+    <section className={`py-20 ${standalonePage ? 'bg-[#EEE9DF] min-h-screen' : 'bg-[#F4F0E8]/60 border-t border-[#1B2632]/10'} text-[#1B2632]`}>
+      <div className="max-w-6xl mx-auto px-6">
+        
+        {/* Back navigation for standalone page */}
+        {standalonePage && onBack && (
+          <div className="flex items-center justify-between mb-8">
+            <button
+              onClick={onBack}
+              className="px-4 py-2 rounded-full bg-white border border-[#C9C1B1] text-xs font-bold text-[#1B2632] flex items-center gap-1.5 hover:bg-[#F4F0E8] transition"
+            >
               <ArrowLeft className="w-4 h-4" />
-              <span>Back to Workspace</span>
-            </Button>
+              <span>Back</span>
+            </button>
 
-            {onSelectLang && (
-              <select
-                value={currentLang}
-                onChange={(e) => onSelectLang(e.target.value as LanguageCode)}
-                className="px-3.5 py-1.5 rounded-full bg-[#FBF2EC] border border-[#E6D2C8] text-xs font-bold text-[#3B2530] focus:outline-none cursor-pointer"
-              >
-                {LANGUAGES.map((lang) => (
-                  <option key={lang.code} value={lang.code}>
-                    {lang.flag} {lang.nativeName}
-                  </option>
-                ))}
-              </select>
-            )}
+            <select
+              value={currentLang}
+              onChange={(e) => onSelectLang(e.target.value as LanguageCode)}
+              className="px-3 py-1.5 rounded-full bg-white border border-[#C9C1B1] text-xs font-bold text-[#1B2632]"
+            >
+              {LANGUAGES.map((l) => (
+                <option key={l.code} value={l.code}>
+                  {l.flag} {l.nativeName}
+                </option>
+              ))}
+            </select>
           </div>
         )}
 
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-10 space-y-3">
-          <Badge variant="maroon" icon={<HelpCircle className="w-3.5 h-3.5" />}>
-            Myth-Buster & Instant Vernacular Doubts
-          </Badge>
-
-          <h2 className="font-serif-display text-3xl sm:text-5xl text-[#2A1A20]">
-            Financial Myths <span className="text-[#3B2530] underline decoration-[#3B2530]/20">Busted in Plain Words</span>
+        <div className="text-center max-w-2xl mx-auto space-y-3 mb-10">
+          <span className="bg-[#A35139]/10 text-[#A35139] px-3.5 py-1 rounded-full text-xs font-semibold uppercase tracking-wider inline-block">
+            MYTH-BUSTER ENGINE
+          </span>
+          <h2 className="font-serif text-3xl sm:text-4xl font-medium tracking-tight text-[#1B2632] leading-[1.25]">
+            Financial Myths Busted in Plain Words
           </h2>
-          <p className="text-[#8C7378] text-sm sm:text-base">
-            Tap any common doubt below for zero-jargon answers in {currentLangObj.nativeName} with audio playback.
+          <p className="text-base text-[#5C6B7A] leading-relaxed">
+            Fear and misconceptions are the biggest barriers to investing. Tap any question below for a honest, jargon-free breakdown.
           </p>
         </div>
 
-        {/* Category Filters */}
-        <div className="flex items-center justify-center gap-2 overflow-x-auto pb-4 mb-6 scrollbar-none">
-          {[
-            { id: 'all', label: 'All Doubts' },
-            { id: 'safety', label: 'Safety & Risk' },
-            { id: 'returns', label: 'SIP vs RD' },
-            { id: 'legal', label: 'Legal & Safety' },
-            { id: 'budgeting', label: 'Low Income' },
-            { id: 'credit', label: 'CIBIL Score' },
-          ].map((cat) => (
-            <Badge
-              key={cat.id}
-              variant={activeCategory === cat.id ? 'active' : 'outline'}
-              onClick={() => setActiveCategory(cat.id as any)}
-            >
-              {cat.label}
-            </Badge>
-          ))}
-        </div>
-
-        {/* HORIZONTALLY SCROLLABLE QUESTION CHIPS AS BADGE PILLS */}
-        <div className="relative mb-10">
-          <div className="flex items-center gap-3 overflow-x-auto pb-4 pt-1 scrollbar-none snap-x px-1">
-            {filteredMyths.map((myth) => {
-              const isSelected = selectedMyth.id === myth.id;
-              const vernacularQ = getVernacularQuestion(myth);
-
-              return (
-                <button
-                  key={myth.id}
-                  onClick={() => handleChipTap(myth)}
-                  className={`snap-start shrink-0 px-5 py-3 rounded-full text-xs font-bold transition-all duration-200 flex items-center gap-2 border ${
-                    isSelected
-                      ? 'bg-[#3B2530] text-white border-[#3B2530] shadow-md scale-[1.02]'
-                      : 'bg-[#FBF2EC] border-[#E6D2C8] text-[#2A1A20] hover:border-[#3B2530]'
-                  }`}
-                >
-                  <Sparkles className={`w-3.5 h-3.5 ${isSelected ? 'text-white' : 'text-[#3B2530]'}`} />
-                  <span>{vernacularQ}</span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* STREAMED ANSWER DISPLAYED INSIDE A FULL-WIDTH CARD WITH MICRO-LABEL */}
-        <Card padding="lg" className="space-y-6 shadow-xl relative">
-          {/* Card Top Header */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#E6D2C8] pb-5">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-[#3B2530] text-white flex items-center justify-center font-bold">
-                <Sparkles className="w-5 h-5 fill-white/20" />
-              </div>
-              <div>
-                <MicroLabel>HONEST VERNACULAR ANSWER</MicroLabel>
-                <h3 className="font-extrabold text-base sm:text-lg text-[#2A1A20]">
-                  {getVernacularQuestion(selectedMyth)}
-                </h3>
-              </div>
-            </div>
-
-            {/* Audio Playback Control */}
-            <div className="flex items-center gap-3 bg-[#F4E6DF] border border-[#E6D2C8] p-2 rounded-2xl shrink-0">
+        {/* Horizontal Scrollable Filter Chips */}
+        <div className="flex items-center justify-center gap-2.5 overflow-x-auto pb-4 scrollbar-none mb-6">
+          {MYTHS_DATA.map((myth) => {
+            const isActive = myth.id === activeMythId;
+            return (
               <button
-                onClick={toggleAudio}
-                className="w-9 h-9 rounded-full bg-[#3B2530] text-white flex items-center justify-center font-bold shadow-sm transition-transform active:scale-95"
-                title={isPlayingAudio ? 'Pause Audio' : 'Listen in Native Language'}
+                key={myth.id}
+                onClick={() => {
+                  setActiveMythId(myth.id);
+                  setIsPlaying(false);
+                }}
+                className={`px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all border ${
+                  isActive
+                    ? 'bg-[#1B2632] text-white border-[#1B2632] shadow-sm'
+                    : 'bg-white text-[#5C6B7A] border-[#C9C1B1] hover:text-[#1B2632]'
+                }`}
               >
-                {isPlayingAudio ? <Pause className="w-4 h-4 fill-white" /> : <Play className="w-4 h-4 fill-white ml-0.5" />}
+                {myth.chipLabelVernacular[currentLang] || myth.chipLabelVernacular.hi || myth.question}
               </button>
+            );
+          })}
+        </div>
 
-              <div className="text-[11px] font-bold text-[#8C7378]">
-                {isPlayingAudio ? 'PLAYING AUDIO' : 'NATIVE AUDIO'}
+        {/* Bounded White Card */}
+        <div className="bg-white p-6 sm:p-8 rounded-2xl border border-[#1B2632]/10 shadow-sm max-w-4xl mx-auto space-y-6">
+          
+          {/* Active Question */}
+          <div className="flex items-start justify-between gap-4 border-b border-[#C9C1B1]/40 pb-4">
+            <div>
+              <div className="text-[10px] font-bold text-[#A35139] uppercase tracking-wider mb-1">
+                POPULAR QUESTION
               </div>
+              <h3 className="font-serif text-xl sm:text-2xl font-semibold text-[#1B2632] leading-snug">
+                "{activeMyth.chipLabelVernacular[currentLang] || activeMyth.chipLabelVernacular.hi || activeMyth.question}"
+              </h3>
+            </div>
+            
+            <div className="shrink-0">
+              <span className="bg-[#FFB162]/20 text-[#A35139] px-3 py-1 rounded-full text-xs font-mono font-bold">
+                {activeMyth.category}
+              </span>
+            </div>
+          </div>
 
-              <select
-                value={audioSpeed}
-                onChange={(e) => setAudioSpeed(Number(e.target.value))}
-                className="bg-transparent text-[#3B2530] text-xs font-mono font-bold focus:outline-none cursor-pointer border-l border-[#E6D2C8] pl-2"
+          {/* Audio Player Bar */}
+          <div className="p-3.5 rounded-xl bg-[#F4F0E8] border border-[#C9C1B1]/60 flex items-center justify-between gap-3 text-xs">
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => setIsPlaying(!isPlaying)}
+                className="w-8 h-8 rounded-full bg-[#1B2632] text-white flex items-center justify-center hover:bg-[#2C3B4D] transition shadow-xs"
               >
-                <option value={1.0}>1.0x</option>
-                <option value={1.25}>1.25x</option>
-                <option value={1.5}>1.5x</option>
-              </select>
-            </div>
-          </div>
-
-          {/* Vernacular Answer Text */}
-          <div className="space-y-4 text-[#2A1A20]">
-            <p className="text-base sm:text-lg leading-relaxed font-medium">
-              {getVernacularAnswer(selectedMyth)}
-            </p>
-
-            {(selectedMyth as any).subventionBreakdown && (
-              <div className="p-4 rounded-2xl bg-[#F4E6DF] border border-[#E6D2C8] text-xs leading-relaxed text-[#2A1A20]">
-                <MicroLabel className="text-[#3B2530] mb-1">GOVERNMENT SUBSIDY BENEFIT</MicroLabel>
-                {(selectedMyth as any).subventionBreakdown}
+                {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4 ml-0.5" />}
+              </button>
+              <div className="flex items-center gap-1.5 text-[#1B2632] font-semibold">
+                <Volume2 className="w-4 h-4 text-[#A35139]" />
+                <span>Native Audio 1.0x</span>
               </div>
-            )}
+            </div>
+            <span className="text-[10px] font-mono text-[#5C6B7A]">Hindi / Regional Vernacular</span>
           </div>
 
-          {/* Action Footer Buttons */}
-          <div className="pt-4 border-t border-[#E6D2C8] flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="text-xs text-[#8C7378] flex items-center gap-1.5 font-medium">
-              <ShieldCheck className="w-4 h-4 text-[#3B2530]" />
-              <span>SEBI & RBI Regulatory Transparency Compliant</span>
-            </div>
-
-            <div className="flex items-center gap-3 w-full sm:w-auto">
-              {onOpenSimulator && (
-                <Button variant="secondary" size="sm" onClick={onOpenSimulator}>
-                  <Sliders className="w-3.5 h-3.5" />
-                  <span>Simulate Growth</span>
-                </Button>
-              )}
-
-              {onAskAIWithQuestion && (
-                <Button variant="primary" size="sm" onClick={() => onAskAIWithQuestion(getVernacularQuestion(selectedMyth), getVernacularAnswer(selectedMyth))}>
-                  <span>Ask AI Follow-Up</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </Button>
-              )}
+          {/* Answer Breakdown Text */}
+          <div className="space-y-3">
+            <p className="text-sm sm:text-base text-[#1B2632] leading-relaxed">
+              {activeMyth.answerVernacular[currentLang] || activeMyth.answerVernacular.hi || activeMyth.answer}
+            </p>
+            
+            <div className="bg-[#F4F0E8]/80 p-4 rounded-xl text-xs space-y-1.5 text-[#5C6B7A]">
+              <div className="font-bold text-[#1B2632] flex items-center gap-1">
+                <span>Key Takeaway:</span>
+              </div>
+              <p className="leading-relaxed">
+                Market risk is manageable over time through diversification and disciplined Monthly SIPs.
+              </p>
             </div>
           </div>
-        </Card>
+
+          {/* Footer Compliance Badge */}
+          <div className="pt-4 border-t border-[#C9C1B1]/40 flex items-center justify-between text-xs text-[#5C6B7A]">
+            <div className="flex items-center gap-1.5 text-emerald-700 font-semibold">
+              <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+              <span>SEBI & RBI Transparency Compliant</span>
+            </div>
+            <div className="flex items-center gap-1 text-[11px] text-[#A35139] font-bold">
+              <ShieldCheck className="w-3.5 h-3.5" />
+              <span>Verified Fact</span>
+            </div>
+          </div>
+
+        </div>
+
       </div>
     </section>
   );

@@ -262,25 +262,24 @@ export function App() {
         />
 
         {/* MYTH-BUSTING & FINANCIAL FAQ SECTION ON LANDING PAGE */}
-        <section className="py-14 bg-white border-y border-slate-200">
-          <div className="container mx-auto px-4">
-            <MythBustingSection
-              currentLang={currentLang}
-              onSelectLang={(lang) => setCurrentLang(lang)}
-              onOpenSimulator={() => setCurrentView('simulator')}
-              onAskAIWithQuestion={() => setCurrentView('auth')}
-            />
-          </div>
-        </section>
+        <MythBustingSection
+          currentLang={currentLang}
+          onSelectLang={(lang) => setCurrentLang(lang)}
+          onOpenSimulator={() => setCurrentView('simulator')}
+          onAskAIWithQuestion={() => setCurrentView('auth')}
+        />
 
-        {/* Standalone Simulator & Goal Cards Callout Banners */}
-        <section className="py-12 bg-[#FBF7F2] border-b border-slate-200 text-center">
-          <div className="container mx-auto px-4 max-w-4xl space-y-6">
+        {/* Standalone Simulator & Goal Cards Callout Banner */}
+        <section className="py-16 bg-[#F4F0E8] border-t border-[#1B2632]/10 text-center">
+          <div className="max-w-4xl mx-auto px-6 space-y-6">
             <div className="space-y-2">
-              <h3 className="text-2xl sm:text-3xl font-extrabold text-[#2B2B2B]">
+              <span className="bg-[#A35139]/10 text-[#A35139] px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider inline-block">
+                PRE-BUILT SIMULATORS
+              </span>
+              <h3 className="font-serif text-2xl sm:text-3xl font-semibold text-[#1B2632]">
                 Explore Pre-Built Financial Goal Templates
               </h3>
-              <p className="text-sm text-[#6B6B6B]">
+              <p className="text-sm text-[#5C6B7A] max-w-2xl mx-auto leading-relaxed">
                 Child's Education, Wedding, Emergency Fund, Home Down Payment, Retirement & Custom Goals.
               </p>
             </div>
@@ -288,14 +287,14 @@ export function App() {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <button
                 onClick={() => setCurrentView('goals')}
-                className="btn btn-primary px-8 py-3.5 text-sm font-bold shadow-md w-full sm:w-auto"
+                className="bg-[#1B2632] hover:bg-[#2C3B4D] text-white px-7 py-3 rounded-full text-sm font-semibold shadow-sm w-full sm:w-auto cursor-pointer"
               >
                 Browse Goal Planning Cards Grid
               </button>
 
               <button
                 onClick={() => setCurrentView('simulator')}
-                className="btn btn-[#0F7173] btn-secondary px-8 py-3.5 text-sm font-bold w-full sm:w-auto"
+                className="bg-white hover:bg-[#EEE9DF] text-[#1B2632] border border-[#C9C1B1] px-7 py-3 rounded-full text-sm font-semibold w-full sm:w-auto cursor-pointer"
               >
                 Open Standalone Simulator Page
               </button>

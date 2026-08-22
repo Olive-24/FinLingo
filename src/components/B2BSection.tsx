@@ -1,7 +1,6 @@
 import React from 'react';
-import { Building2, TrendingUp, ShieldCheck, Zap, ArrowRight } from 'lucide-react';
+import { ArrowRight, CheckCircle2, ShieldCheck, TrendingUp, Users } from 'lucide-react';
 import type { LanguageCode } from '../types';
-import { Card, Badge, MicroLabel, Button } from './ui/Primitives';
 
 interface B2BSectionProps {
   currentLang: LanguageCode;
@@ -10,87 +9,88 @@ interface B2BSectionProps {
 
 export const B2BSection: React.FC<B2BSectionProps> = ({ onOpenB2BModal }) => {
   return (
-    <section id="b2b-partners" className="py-24 bg-[#F4E6DF] text-[#2A1A20] relative">
-      <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
-        <Card padding="lg" className="border-2 border-[#3B2530] shadow-2xl relative overflow-hidden">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-            {/* Left Column: Business Value Props */}
-            <div className="lg:col-span-7 space-y-6">
-              <Badge variant="maroon" icon={<Building2 className="w-3.5 h-3.5" />}>
-                Enterprise White-Label Licensing & SDK
-              </Badge>
+    <section className="py-20 bg-[#EEE9DF] text-[#1B2632]">
+      <div className="max-w-6xl mx-auto px-6">
+        
+        {/* Split Container Card */}
+        <div className="bg-white rounded-3xl p-8 sm:p-12 border border-[#1B2632]/10 shadow-sm grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+          
+          {/* Left Column: Narrative & Bullets */}
+          <div className="space-y-6">
+            <span className="bg-[#A35139]/10 text-[#A35139] px-3.5 py-1 rounded-full text-xs font-semibold uppercase tracking-wider inline-block">
+              ENTERPRISE B2B PARTNER CONSOLE
+            </span>
 
-              <h2 className="font-serif-display text-3xl sm:text-4xl lg:text-5xl text-[#2A1A20] leading-tight">
-                Reach <span className="text-[#3B2530] underline decoration-[#3B2530]/20">190M+ underserved borrowers</span> through one integration
-              </h2>
+            <h2 className="font-serif text-3xl sm:text-4xl font-medium tracking-tight text-[#1B2632] leading-[1.25]">
+              Reach 190M+ Underserved Borrowers in Tier-2/3 India
+            </h2>
 
-              <p className="text-[#8C7378] text-base leading-relaxed font-normal">
-                Empower vernacular borrowers with automated AI voice guidance. Reduce NPA rates, boost lead qualification, and audit compliance for Banks, NBFCs, and MFIs.
-              </p>
+            <p className="text-base text-[#5C6B7A] leading-relaxed">
+              Banks and NBFCs use FinLingo's white-label voice engine to onboard first-time borrowers, reduce drop-offs, and lower NPA risks.
+            </p>
 
-              {/* Bullet Value Props */}
-              <div className="space-y-4 pt-2">
-                <div className="flex items-start gap-3.5">
-                  <div className="w-8 h-8 rounded-full bg-[#3B2530] text-white flex items-center justify-center shrink-0 mt-0.5 shadow-sm">
-                    <TrendingUp className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <h4 className="text-sm font-extrabold text-[#2A1A20]">3.4x Higher Vernacular Conversion</h4>
-                    <p className="text-xs text-[#8C7378]">Educated borrowers complete credit applications significantly faster.</p>
-                  </div>
-                </div>
+            <ul className="space-y-3 text-sm text-[#1B2632]">
+              <li className="flex items-center gap-2.5 font-medium">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                <span>Multi-lingual voice guidance in 10+ regional Indian dialects</span>
+              </li>
+              <li className="flex items-center gap-2.5 font-medium">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                <span>Pre-packaged SIP & Loan EMI simulators for easy customer onboarding</span>
+              </li>
+              <li className="flex items-center gap-2.5 font-medium">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                <span>Aggregate anonymized analytical dashboards for risk benchmarking</span>
+              </li>
+            </ul>
 
-                <div className="flex items-start gap-3.5">
-                  <div className="w-8 h-8 rounded-full bg-[#3B2530] text-white flex items-center justify-center shrink-0 mt-0.5 shadow-sm">
-                    <ShieldCheck className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <h4 className="text-xs font-extrabold text-[#2A1A20]">42% Lower NPA & Default Rates</h4>
-                    <p className="text-xs text-[#8C7378]">Borrowers who simulate EMIs have significantly higher on-time repayment.</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3.5">
-                  <div className="w-8 h-8 rounded-full bg-[#3B2530] text-white flex items-center justify-center shrink-0 mt-0.5 shadow-sm">
-                    <Zap className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <h4 className="text-xs font-extrabold text-[#2A1A20]">Plug & Play Vernacular Voice SDK</h4>
-                    <p className="text-xs text-[#8C7378]">Embed FinLingo simulator directly into your existing Android & iOS mobile app.</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="pt-4">
-                <Button variant="primary" size="lg" onClick={onOpenB2BModal}>
-                  <span>Request White-Label Demo & API Specs</span>
-                  <ArrowRight className="w-4 h-4" />
-                </Button>
-              </div>
-            </div>
-
-            {/* Right Column: Stat Trio with Micro-label Captions */}
-            <div className="lg:col-span-5 space-y-4">
-              <div className="p-6 rounded-2xl bg-[#F4E6DF] border border-[#E6D2C8] space-y-1">
-                <div className="text-4xl font-black font-mono text-[#3B2530]">3.4x</div>
-                <MicroLabel>CREDIT APPLICATION COMPLETION RATE</MicroLabel>
-                <div className="text-[11px] text-[#8C7378]">Verified across rural & semi-urban bank pilot programs</div>
-              </div>
-
-              <div className="p-6 rounded-2xl bg-[#F4E6DF] border border-[#E6D2C8] space-y-1">
-                <div className="text-4xl font-black font-mono text-[#3B2530]">42%</div>
-                <MicroLabel>REDUCTION IN LOAN NPA DEFAULTS</MicroLabel>
-                <div className="text-[11px] text-[#8C7378]">Through clear EMI interest subvention transparency</div>
-              </div>
-
-              <div className="p-6 rounded-2xl bg-[#F4E6DF] border border-[#E6D2C8] space-y-1">
-                <div className="text-4xl font-black font-mono text-[#3B2530]">190M+</div>
-                <MicroLabel>TARGET VERNACULAR BORROWERS IN INDIA</MicroLabel>
-                <div className="text-[11px] text-[#8C7378]">8 regional languages supported out-of-the-box</div>
-              </div>
+            <div className="pt-2">
+              <button
+                onClick={onOpenB2BModal}
+                className="bg-[#1B2632] hover:bg-[#2C3B4D] text-white px-7 py-3.5 rounded-full text-sm font-semibold transition inline-flex items-center gap-2 shadow-sm cursor-pointer"
+              >
+                <span>Request White-Label Demo →</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
             </div>
           </div>
-        </Card>
+
+          {/* Right Column: Clean Stacked Metric Stat Boxes */}
+          <div className="space-y-4">
+            
+            <div className="p-6 rounded-2xl bg-[#F4F0E8] border border-[#C9C1B1]/60 flex items-center justify-between">
+              <div>
+                <div className="text-3xl sm:text-4xl font-serif font-bold text-[#1B2632]">3.4x</div>
+                <div className="text-xs text-[#5C6B7A] font-semibold mt-1">Higher Loan Application Conversion</div>
+              </div>
+              <div className="w-12 h-12 rounded-xl bg-white text-[#A35139] flex items-center justify-center font-bold shadow-xs">
+                <TrendingUp className="w-6 h-6" />
+              </div>
+            </div>
+
+            <div className="p-6 rounded-2xl bg-[#F4F0E8] border border-[#C9C1B1]/60 flex items-center justify-between">
+              <div>
+                <div className="text-3xl sm:text-4xl font-serif font-bold text-[#1B2632]">42%</div>
+                <div className="text-xs text-[#5C6B7A] font-semibold mt-1">Lower NPA Defaults via Informed Borrowers</div>
+              </div>
+              <div className="w-12 h-12 rounded-xl bg-white text-[#A35139] flex items-center justify-center font-bold shadow-xs">
+                <ShieldCheck className="w-6 h-6" />
+              </div>
+            </div>
+
+            <div className="p-6 rounded-2xl bg-[#F4F0E8] border border-[#C9C1B1]/60 flex items-center justify-between">
+              <div>
+                <div className="text-3xl sm:text-4xl font-serif font-bold text-[#1B2632]">190M+</div>
+                <div className="text-xs text-[#5C6B7A] font-semibold mt-1">Addressable Vernacular Market in India</div>
+              </div>
+              <div className="w-12 h-12 rounded-xl bg-white text-[#A35139] flex items-center justify-center font-bold shadow-xs">
+                <Users className="w-6 h-6" />
+              </div>
+            </div>
+
+          </div>
+
+        </div>
       </div>
     </section>
   );
