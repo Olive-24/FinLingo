@@ -5,9 +5,10 @@ import type { B2BFormData } from '../types';
 interface B2BPartnerModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onOpenDashboardDemo?: () => void;
 }
 
-export const B2BPartnerModal: React.FC<B2BPartnerModalProps> = ({ isOpen, onClose }) => {
+export const B2BPartnerModal: React.FC<B2BPartnerModalProps> = ({ isOpen, onClose, onOpenDashboardDemo }) => {
   const [formData, setFormData] = useState<B2BFormData>({
     fullName: '',
     institutionName: '',
@@ -46,17 +47,35 @@ export const B2BPartnerModal: React.FC<B2BPartnerModalProps> = ({ isOpen, onClos
         {!isSubmitted ? (
           <div>
             {/* Header */}
-            <div className="flex items-center gap-3 mb-6">
+            <div className="flex items-center gap-3 mb-4">
               <div className="w-12 h-12 rounded-2xl bg-indigo-500/20 border border-indigo-500/40 flex items-center justify-center text-indigo-400 shrink-0">
                 <Building2 className="w-6 h-6" />
               </div>
               <div>
-                <h3 className="text-xl font-bold text-white">Partner with FinLingo</h3>
-                <p className="text-xs text-slate-400">
-                  Empower your vernacular customers with AI financial literacy & simulators.
-                </p>
+                <h3 className="text-xl font-extrabold text-white tracking-tight">FinLingo for Enterprise Banks</h3>
+                <p className="text-xs text-slate-300">White-label licensing & regional vernacular SDK integration</p>
               </div>
             </div>
+
+            {/* Quick Demo Launch Banner for Hackathon Evaluation */}
+            {onOpenDashboardDemo && (
+              <div className="mb-5 p-3 rounded-2xl bg-indigo-950/80 border border-indigo-500/30 flex items-center justify-between gap-3">
+                <div className="text-xs text-indigo-200">
+                  <span className="font-bold text-white block">Evaluator & Judge Quick Pass:</span>
+                  Explore live B2B Admin Console metrics & analytics
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    onClose();
+                    onOpenDashboardDemo();
+                  }}
+                  className="px-3 py-1.5 rounded-xl bg-indigo-500 hover:bg-indigo-600 text-white font-bold text-xs shrink-0 shadow-md transition-colors"
+                >
+                  Open B2B Console Demo
+                </button>
+              </div>
+            )}
 
             {/* Lead Form */}
             <form onSubmit={handleSubmit} className="space-y-4">

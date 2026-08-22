@@ -16,10 +16,11 @@ import { SimulatorPage } from './components/SimulatorPage';
 import { GoalPlanningCardsPage } from './components/GoalPlanningCardsPage';
 import { MythBustingSection } from './components/MythBustingSection';
 import { UserProfileDashboard } from './components/UserProfileDashboard';
+import { B2BPartnerDashboard } from './components/B2BPartnerDashboard';
 
 export function App() {
   const [currentView, setCurrentView] = useState<
-    'landing' | 'auth' | 'onboarding' | 'main-app' | 'simulator' | 'goals' | 'myths' | 'dashboard'
+    'landing' | 'auth' | 'onboarding' | 'main-app' | 'simulator' | 'goals' | 'myths' | 'dashboard' | 'b2b-dashboard'
   >('landing');
   
   const [currentLang, setCurrentLang] = useState<LanguageCode>('en');
@@ -51,7 +52,18 @@ export function App() {
     setCurrentView('landing');
   };
 
-  // VIEW 1: USER PROFILE & PROGRESS DASHBOARD
+  // VIEW 1: SEPARATE B2B PARTNER ENTERPRISE DASHBOARD
+  if (currentView === 'b2b-dashboard') {
+    return (
+      <B2BPartnerDashboard
+        currentLang={currentLang}
+        onSelectLang={(lang) => setCurrentLang(lang)}
+        onClose={() => setCurrentView('landing')}
+      />
+    );
+  }
+
+  // VIEW 2: USER PROFILE & PROGRESS DASHBOARD
   if (currentView === 'dashboard') {
     return (
       <UserProfileDashboard
@@ -301,6 +313,7 @@ export function App() {
       <B2BPartnerModal
         isOpen={isB2BModalOpen}
         onClose={() => setIsB2BModalOpen(false)}
+        onOpenDashboardDemo={() => setCurrentView('b2b-dashboard')}
       />
 
       <PrivacyModal

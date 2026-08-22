@@ -12,6 +12,7 @@ interface NavbarProps {
   onOpenGoalPlanning?: () => void;
   onOpenMythBusting?: () => void;
   onOpenDashboard?: () => void;
+  onOpenB2BDashboard?: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -22,6 +23,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenGoalPlanning,
   onOpenMythBusting,
   onOpenDashboard,
+  onOpenB2BDashboard,
 }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isLangOpen, setIsLangOpen] = useState(false);
@@ -149,8 +151,14 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           {/* B2B Partner Button */}
           <button
-            onClick={onOpenB2BModal}
-            className="px-4 py-2.5 rounded-full bg-[#1E2761]/10 border border-[#1E2761]/20 text-[#1E2761] hover:bg-[#1E2761]/20 text-xs font-bold transition-all flex items-center gap-1.5"
+            onClick={() => {
+              if (onOpenB2BDashboard) {
+                onOpenB2BDashboard();
+              } else {
+                onOpenB2BModal();
+              }
+            }}
+            className="px-4 py-2.5 rounded-full bg-[#1E2761]/10 border border-[#1E2761]/20 text-[#1E2761] hover:bg-[#1E2761] hover:text-white text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm"
           >
             <Building2 className="w-3.5 h-3.5" />
             {t.partnerBtn}
