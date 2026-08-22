@@ -83,7 +83,7 @@ export const MythBustingSection: React.FC<MythBustingSectionProps> = ({
                     : 'bg-white text-[#5C6B7A] border-[#C9C1B1] hover:text-[#1B2632] hover:bg-[#F4F0E8]'
                 }`}
               >
-                {myth.chipLabelVernacular[currentLang] || myth.chipLabelVernacular.hi || myth.question}
+                {myth.tag}
               </button>
             );
           })}
@@ -92,20 +92,20 @@ export const MythBustingSection: React.FC<MythBustingSectionProps> = ({
         {/* Answer Card with p-8 md:p-10 */}
         <div className="p-8 md:p-10 max-w-4xl mx-auto rounded-3xl bg-white border border-[#1B2632]/10 shadow-md space-y-6">
           
-          {/* Active Question Title & Tag */}
+          {/* Active Question Title & Category */}
           <div className="flex items-start justify-between gap-4 border-b border-[#C9C1B1]/40 pb-4">
             <div>
               <div className="text-[10px] font-bold text-[#A35139] uppercase tracking-wider mb-1">
-                POPULAR QUESTION
+                {activeMyth.category.toUpperCase()}
               </div>
               <h3 className="font-serif text-2xl md:text-3xl font-semibold text-[#1B2632] leading-snug">
-                "{activeMyth.chipLabelVernacular[currentLang] || activeMyth.chipLabelVernacular.hi || activeMyth.question}"
+                "{activeMyth.question}"
               </h3>
             </div>
             
             <div className="shrink-0">
               <span className="bg-[#FFB162]/20 text-[#A35139] px-3.5 py-1 rounded-full text-xs font-mono font-bold">
-                {activeMyth.category.toUpperCase()}
+                {activeMyth.tag}
               </span>
             </div>
           </div>
@@ -121,24 +121,24 @@ export const MythBustingSection: React.FC<MythBustingSectionProps> = ({
               </button>
               <div className="flex items-center gap-1.5 text-[#1B2632] font-semibold">
                 <Volume2 className="w-4 h-4 text-[#A35139]" />
-                <span>Native Voice Explanation (1.0x)</span>
+                <span>Audio Explanation ({activeMyth.audioDuration})</span>
               </div>
             </div>
-            <span className="text-[10px] font-mono text-[#5C6B7A]">Hindi / Regional Vernacular</span>
+            <span className="text-[10px] font-mono text-[#5C6B7A]">Native Audio 1.0x</span>
           </div>
 
           {/* Answer Breakdown Text */}
           <div className="space-y-4">
             <p className="text-base text-[#1B2632] leading-relaxed">
-              {activeMyth.answerVernacular[currentLang] || activeMyth.answerVernacular.hi || activeMyth.answer}
+              {activeMyth.answer}
             </p>
             
             <div className="bg-[#F4F0E8]/80 p-5 rounded-2xl text-xs space-y-1.5 text-[#5C6B7A]">
               <div className="font-bold text-[#1B2632] flex items-center gap-1">
                 <span>Key Takeaway:</span>
               </div>
-              <p className="leading-relaxed text-sm">
-                Market risks are calculated and regulated. Over 3-5+ years, disciplined SIP investments historically outperform traditional bank fixed deposits.
+              <p className="leading-relaxed text-sm text-[#1B2632]">
+                {activeMyth.takeaway}
               </p>
             </div>
           </div>
@@ -147,7 +147,7 @@ export const MythBustingSection: React.FC<MythBustingSectionProps> = ({
           <div className="pt-4 border-t border-[#C9C1B1]/40 flex flex-wrap items-center justify-between text-xs text-[#5C6B7A] gap-2">
             <div className="flex items-center gap-1.5 text-emerald-700 font-semibold">
               <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-              <span>SEBI & RBI Transparency Compliant</span>
+              <span>{activeMyth.compliance}</span>
             </div>
             <div className="flex items-center gap-1 text-[11px] text-[#A35139] font-bold">
               <ShieldCheck className="w-3.5 h-3.5" />

@@ -19,24 +19,76 @@ export function FinLingoLanding({
 
   const myths = [
     {
+      id: "mutual-funds-risk",
+      tag: "Safety & Risk",
       q: "Can I lose all my money in Mutual Funds or SIPs?",
-      tag: "Market Safety",
-      a: "Mutual funds carry calculated market risk, but your capital does not vanish overnight like a scam. Investments are held in SEBI-regulated diversified assets across top Indian companies (TATA, Reliance, HDFC). Over 5+ year horizons, diversified equity SIPs have historically beaten inflation with 12-14% average annual returns."
+      category: "Market Safety",
+      a: "Mutual funds carry calculated market risk, but your money does NOT vanish overnight like a financial scam. Investments are allocated across SEBI-regulated, diversified blue-chip companies (such as TATA, Reliance, and HDFC). While short-term values fluctuate with market cycles, diversified equity SIPs held for 5+ years have historically beaten inflation with 12-14% average annual compounding returns.",
+      takeaway: "Market risk is mitigated over time through systematic monthly diversification.",
+      compliance: "SEBI & RBI Transparency Compliant"
     },
     {
-      q: "What is the actual difference between an SIP and a Bank RD?",
-      tag: "SIP vs RD",
-      a: "A Recurring Deposit (RD) provides fixed, guaranteed returns (~6.5-7%) but often fails to beat real inflation and is fully taxable. An SIP in equity mutual funds compounds your wealth in market-linked assets, offering higher long-term growth potential and better tax efficiency."
+      id: "sip-vs-rd",
+      tag: "SIP vs Bank RD",
+      q: "What is the difference between an SIP and a Bank Recurring Deposit (RD)?",
+      category: "Wealth Growth",
+      a: "A Bank RD provides fixed guaranteed interest (~6.5-7% p.a.) but often fails to beat real inflation after taxes. An SIP in equity mutual funds invests directly in expanding market sectors, providing higher long-term capital growth potential and better tax efficiency for goals beyond 3 years.",
+      takeaway: "RD protects nominal capital, whereas SIP builds inflation-beating wealth.",
+      compliance: "Verified Financial Fact"
     },
     {
-      q: "How does Kisan Credit Card (KCC) 4% interest subvention work?",
-      tag: "Govt Schemes",
-      a: "The standard KCC interest rate is 9%. The government provides a 2% interest subvention, bringing it to 7%. If you repay your loan on time, an additional 3% prompt repayment incentive is applied, making your effective interest rate just 4% per annum."
+      id: "platform-safety",
+      tag: "Platform Security",
+      q: "Is FinLingo a legitimate and secure platform?",
+      category: "Trust & Safety",
+      a: "Yes. FinLingo is an educational intelligence and simulation sandbox. We do not take custody of your money or execute unauthorized transactions. All loan simulations and calculation formulas adhere strictly to RBI regulatory disclosure norms.",
+      takeaway: "100% risk-free educational sandbox with zero financial custody.",
+      compliance: "RBI Disclosure Compliant"
     },
     {
-      q: "Does checking loan eligibility lower my CIBIL credit score?",
-      tag: "Credit Score",
-      a: "Checking your own credit score or exploring loan quotes through a pre-qualification simulator counts as a 'Soft Inquiry' and has ZERO impact on your CIBIL score. Only formal loan applications submitted to banks count as 'Hard Inquiries'."
+      id: "low-income-savings",
+      tag: "Low-Income Planning",
+      q: "How can I start saving with a modest monthly income?",
+      category: "Micro-Investing",
+      a: "You do not need large sums of capital to start. Micro-SIPs allow automated investing starting at just ₹100 to ₹500 per month. Automating small transfers on salary day instills discipline without straining your essential household expenses.",
+      takeaway: "Consistency and early compounding matter far more than initial ticket size.",
+      compliance: "SEBI Financial Literacy"
+    },
+    {
+      id: "fd-inflation",
+      tag: "Fixed Deposits",
+      q: "Why do Fixed Deposits struggle to beat inflation?",
+      category: "Purchasing Power",
+      a: "If a Fixed Deposit yields 6.5% interest and inflation is 6%, your real gain is only 0.5% before tax. After deducting income tax slab rates on interest earned, real purchasing power often stays flat or declines over 10+ year periods.",
+      takeaway: "FDs offer safety for emergency cash, but equities are essential for real wealth growth.",
+      compliance: "Verified Fact"
+    },
+    {
+      id: "cibil-score-inquiry",
+      tag: "CIBIL Score",
+      q: "Does checking loan interest rates lower my CIBIL credit score?",
+      category: "Credit Health",
+      a: "No. Checking interest rates, running simulators, or pulling your own report is considered a 'Soft Inquiry' and has zero effect on your score. A drop only happens when banks initiate 'Hard Inquiries' upon submitting formal loan applications.",
+      takeaway: "Simulating quotes is completely safe and private.",
+      compliance: "Credit Bureau Standard"
+    },
+    {
+      id: "kcc-subvention",
+      tag: "Govt Subsidies",
+      q: "How does the Kisan Credit Card (KCC) 4% interest subvention work?",
+      category: "Rural Banking",
+      a: "Standard agricultural credit rates are 9%. The Government of India provides a 2% upfront interest subvention, reducing it to 7%. Farmers who practice prompt, on-time annual repayments receive an additional 3% rebate, reducing effective interest to just 4% per year.",
+      takeaway: "Disciplined annual repayment unlocks the lowest 4% interest rate.",
+      compliance: "NABARD & RBI Scheme"
+    },
+    {
+      id: "pause-sip",
+      tag: "SIP Flexibility",
+      q: "Can I pause or stop my SIP during financial emergencies?",
+      category: "Liquidity",
+      a: "Yes, mutual fund SIPs offer 100% flexibility. You can pause monthly deductions for up to 3-6 months or stop them entirely with zero penalty fees. Accumulated units continue to earn compounding market returns.",
+      takeaway: "SIPs carry no contractual lock-in penalties unlike insurance policies.",
+      compliance: "SEBI Mutual Fund Regulations"
     }
   ];
 
@@ -230,18 +282,28 @@ export function FinLingoLanding({
           </div>
 
           <div className="bg-white rounded-3xl border border-[#1B2632]/10 p-8 md:p-10 shadow-md space-y-6">
-            <div className="flex justify-between items-start gap-4">
-              <h3 className="font-serif text-2xl md:text-3xl font-semibold text-[#1B2632] leading-snug">
-                "{myths[activeMyth].q}"
-              </h3>
+            <div className="flex justify-between items-start gap-4 border-b border-gray-100 pb-4">
+              <div>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-[#A35139] block mb-1">
+                  {myths[activeMyth].category}
+                </span>
+                <h3 className="font-serif text-2xl md:text-3xl font-semibold text-[#1B2632] leading-snug">
+                  "{myths[activeMyth].q}"
+                </h3>
+              </div>
               <span className="text-xs bg-emerald-50 text-emerald-800 border border-emerald-200 px-3 py-1 rounded-full font-semibold shrink-0">
-                SEBI & RBI Compliant
+                {myths[activeMyth].compliance}
               </span>
             </div>
 
             <p className="text-base text-[#5C6B7A] leading-relaxed">
               {myths[activeMyth].a}
             </p>
+
+            <div className="bg-[#F4F0E8] p-4 rounded-2xl text-xs space-y-1">
+              <span className="font-bold text-[#1B2632]">Key Takeaway:</span>
+              <p className="text-sm text-[#1B2632] leading-relaxed">{myths[activeMyth].takeaway}</p>
+            </div>
           </div>
         </div>
       </section>

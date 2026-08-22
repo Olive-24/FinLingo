@@ -235,13 +235,12 @@ export const VoiceChatInterface: React.FC<VoiceChatInterfaceProps> = ({
       const lowerSend = textToSend.toLowerCase();
       const matchedMyth = MYTHS_DATA.find((m) => {
         const qEng = m.question.toLowerCase();
-        const qChip = m.chipLabel.toLowerCase();
-        const qVern = (m.chipLabelVernacular[user.preferredLanguage] || m.chipLabelVernacular.hi || '').toLowerCase();
-        return lowerSend.includes(qEng) || lowerSend.includes(qChip) || (qVern && lowerSend.includes(qVern)) || (qVern && qVern.includes(lowerSend));
+        const tag = m.tag.toLowerCase();
+        return lowerSend.includes(qEng) || lowerSend.includes(tag);
       });
 
       if (matchedMyth) {
-        aiText = matchedMyth.answerVernacular[user.preferredLanguage] || matchedMyth.answerVernacular.hi || matchedMyth.answer;
+        aiText = matchedMyth.answer;
       } else if (detectedGoal) {
         aiText = `I noticed you are planning for **${detectedGoal.title}**!
 To reach ₹${detectedGoal.targetAmount.toLocaleString('en-IN')} in ${detectedGoal.timeframeYears} years, saving a disciplined ~₹${detectedGoal.suggestedMonthlySavings}/month in a balanced SIP can help beat inflation.
@@ -407,7 +406,7 @@ Tap **"Simulate this goal"** below to adjust timeframe & return parameters live!
 
             <div className="flex items-center gap-2 overflow-x-auto pb-1 pt-0.5 scrollbar-none snap-x">
               {MYTHS_DATA.map((myth) => {
-                const chipText = myth.chipLabelVernacular[user.preferredLanguage] || myth.chipLabelVernacular.hi || myth.chipLabel;
+                const chipText = myth.question;
                 const isTapped = tappedChipId === myth.id;
 
                 return (
