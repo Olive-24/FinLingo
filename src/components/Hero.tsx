@@ -14,33 +14,33 @@ export const Hero: React.FC<HeroProps> = ({ currentLang, onOpenOnboarding, onOpe
   const t = TRANSLATIONS[currentLang].hero;
 
   return (
-    <section className="pt-32 pb-20 md:pt-40 md:pb-28 bg-[#F4E6DF] text-[#2A1A20] relative">
+    <section className="pt-32 pb-20 md:pt-40 md:pb-28 bg-[#EEE9DF] text-[#1B2632] relative">
       <div className="container mx-auto px-4 sm:px-6">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center max-w-6xl mx-auto">
           {/* LEFT COLUMN: Narrative & Editorial Headline */}
           <div className="lg:col-span-7 space-y-7 text-center lg:text-left">
             {/* Top Micro-label Pill */}
             <div className="inline-flex items-center gap-2">
-              <Badge variant="default" icon={<Mic className="w-3.5 h-3.5 text-[#3B2530]" />}>
+              <Badge variant="default" icon={<Mic className="w-3.5 h-3.5 text-[#A35139]" />}>
                 {t.badge}
               </Badge>
             </div>
 
             {/* Editorial Serif Headline */}
             <div className="space-y-3">
-              <h1 className="text-3xl md:text-5xl lg:text-6xl font-serif leading-[1.2] tracking-tight mb-4 text-[#2D1E25]">
+              <h1 className="text-3xl md:text-5xl lg:text-6xl font-serif leading-[1.25] tracking-tight mb-4 text-[#1B2632]">
                 Apni bhasha mein{' '}
-                <span className="text-[#3B232E] underline decoration-[#3B232E]/20 underline-offset-8">
+                <span className="text-[#A35139] underline decoration-[#A35139]/20 underline-offset-8">
                   paison ki samajh
                 </span>
               </h1>
-              <div className="font-indic text-xl sm:text-2xl font-bold text-[#7A6870] tracking-tight">
+              <div className="font-indic text-xl sm:text-2xl font-bold text-[#5C6B7A] tracking-tight">
                 अपनी भाषा में पैसों की समझ
               </div>
             </div>
 
             {/* Subtext */}
-            <p className="text-sm md:text-base leading-relaxed text-[#7A6870] mb-4 max-w-2xl mx-auto lg:mx-0 font-normal">
+            <p className="text-sm md:text-base leading-relaxed text-[#5C6B7A] mb-4 max-w-2xl mx-auto lg:mx-0 font-normal">
               {t.subTitle}
             </p>
 
@@ -52,7 +52,7 @@ export const Hero: React.FC<HeroProps> = ({ currentLang, onOpenOnboarding, onOpe
               </Button>
 
               <Button variant="secondary" size="lg" onClick={onOpenB2BModal}>
-                <Building2 className="w-4 h-4 text-[#3B2530]" />
+                <Building2 className="w-4 h-4 text-[#A35139]" />
                 <span>For Banks & NBFCs</span>
               </Button>
             </div>

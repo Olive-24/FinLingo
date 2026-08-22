@@ -1,6 +1,6 @@
 import React from 'react';
 
-// 1. REUSABLE CARD PRIMITIVE (16px Radius / Solid White / #3B232E Hairline Border)
+// 1. REUSABLE CARD PRIMITIVE
 interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
   variant?: 'default' | 'muted' | 'accent' | 'outlined';
@@ -25,17 +25,17 @@ export const Card: React.FC<CardProps> = ({
 
   const variantClasses = {
     default:
-      'bg-white border border-[rgba(59,35,46,0.08)] text-[#2D1E25] shadow-[0_4px_24px_-2px_rgba(59,35,46,0.04)]',
-    muted: 'bg-[#F6ECE6]/80 border border-[rgba(59,35,46,0.08)] text-[#7A6870]',
-    accent: 'bg-[#3B232E] border border-[#3B232E] text-white shadow-md',
-    outlined: 'bg-transparent border-2 border-dashed border-[#EAD7CF] text-[#2D1E25]',
+      'bg-white border border-[#C9C1B1]/60 text-[#1B2632] shadow-sm hover:border-[#1B2632]/30',
+    muted: 'bg-[#F4F0E8] border border-[#C9C1B1]/60 text-[#5C6B7A]',
+    accent: 'bg-[#1B2632] border border-[#1B2632] text-white shadow-md',
+    outlined: 'bg-transparent border-2 border-dashed border-[#C9C1B1] text-[#1B2632]',
   }[variant];
 
   return (
     <div
       onClick={onClick}
       className={`rounded-2xl transition-all duration-200 ${paddingClasses} ${variantClasses} ${
-        onClick ? 'cursor-pointer hover:-translate-y-0.5 hover:border-[rgba(59,35,46,0.2)] hover:shadow-lg' : ''
+        onClick ? 'cursor-pointer hover:-translate-y-0.5 hover:shadow-md' : ''
       } ${className}`}
       {...props}
     >
@@ -44,7 +44,7 @@ export const Card: React.FC<CardProps> = ({
   );
 };
 
-// 2. REUSABLE BUTTON PRIMITIVE (Primary Plum #3B232E, Secondary Transparent, Outline)
+// 2. REUSABLE BUTTON PRIMITIVE
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
   variant?: 'primary' | 'secondary' | 'outline';
@@ -62,18 +62,18 @@ export const Button: React.FC<ButtonProps> = ({
   ...props
 }) => {
   const sizeClasses = {
-    sm: 'px-3.5 py-1.5 text-xs font-bold',
-    md: 'px-5 py-2.5 text-xs sm:text-sm font-bold',
-    lg: 'px-7 py-3.5 text-sm sm:text-base font-extrabold',
+    sm: 'px-3.5 py-1.5 text-xs font-semibold',
+    md: 'px-5 py-2.5 text-xs sm:text-sm font-semibold',
+    lg: 'px-7 py-3.5 text-sm sm:text-base font-bold',
   }[size];
 
   const variantClasses = {
     primary:
-      'bg-[#3B232E] text-white border border-[#3B232E] hover:bg-[#523241] hover:border-[#523241] shadow-sm hover:shadow-md active:scale-[0.98]',
+      'bg-[#1B2632] text-white border border-[#1B2632] hover:bg-[#2C3B4D] hover:border-[#2C3B4D] shadow-sm active:scale-[0.98]',
     secondary:
-      'bg-[#EAD7CF] text-[#3B232E] border border-[#EAD7CF] hover:bg-[#3B232E] hover:text-white active:scale-[0.98]',
+      'bg-[#FFB162]/20 text-[#A35139] border border-[#FFB162]/40 hover:bg-[#FFB162]/30 active:scale-[0.98]',
     outline:
-      'bg-transparent text-[#3B232E] border border-[rgba(59,35,46,0.2)] hover:bg-[#EAD7CF]/50 active:scale-[0.98]',
+      'bg-transparent text-[#1B2632] border border-[#C9C1B1] hover:bg-white/80 active:scale-[0.98]',
   }[variant];
 
   return (
@@ -90,7 +90,7 @@ export const Button: React.FC<ButtonProps> = ({
 // 3. REUSABLE BADGE / PILL PRIMITIVE
 interface BadgeProps {
   children: React.ReactNode;
-  variant?: 'default' | 'active' | 'outline' | 'plum' | 'maroon';
+  variant?: 'default' | 'active' | 'outline' | 'plum' | 'maroon' | 'flame' | 'truffle';
   icon?: React.ReactNode;
   className?: string;
   onClick?: () => void;
@@ -104,11 +104,13 @@ export const Badge: React.FC<BadgeProps> = ({
   onClick,
 }) => {
   const variantClasses = {
-    default: 'bg-[#EAD7CF] border border-[rgba(59,35,46,0.1)] text-[#3B232E]',
-    active: 'bg-[#3B232E] border border-[#3B232E] text-white shadow-sm',
-    outline: 'bg-transparent border border-[#EAD7CF] text-[#7A6870]',
-    plum: 'bg-[#3B232E]/10 border border-[#3B232E]/20 text-[#3B232E]',
-    maroon: 'bg-[#3B232E]/10 border border-[#3B232E]/20 text-[#3B232E]',
+    default: 'bg-[#FFB162]/20 border border-[#FFB162]/40 text-[#A35139]',
+    active: 'bg-[#1B2632] border border-[#1B2632] text-white shadow-sm',
+    outline: 'bg-transparent border border-[#C9C1B1] text-[#5C6B7A]',
+    plum: 'bg-[#A35139]/10 border border-[#A35139]/20 text-[#A35139]',
+    maroon: 'bg-[#A35139]/10 border border-[#A35139]/20 text-[#A35139]',
+    flame: 'bg-[#FFB162]/20 border border-[#FFB162]/40 text-[#A35139]',
+    truffle: 'bg-[#A35139] text-white border border-[#A35139]',
   }[variant];
 
   return (
@@ -132,7 +134,7 @@ interface MicroLabelProps {
 
 export const MicroLabel: React.FC<MicroLabelProps> = ({ children, className = '' }) => {
   return (
-    <div className={`text-[11px] font-semibold uppercase tracking-[0.12em] text-[#7A6870] font-sans ${className}`}>
+    <div className={`text-[11px] font-bold uppercase tracking-wider text-[#A35139] font-sans ${className}`}>
       {children}
     </div>
   );

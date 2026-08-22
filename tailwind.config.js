@@ -7,17 +7,17 @@ export default {
   theme: {
     extend: {
       colors: {
-        canvas: '#F6ECE6',
-        plum: {
-          DEFAULT: '#3B232E',
-          hover: '#523241',
+        canvas: '#EEE9DF',       // Palladian Linen
+        surface: '#FFFFFF',      // Pure white
+        well: '#F4F0E8',         // Soft tint well
+        oatmeal: '#C9C1B1',      // Border oatmeal
+        abyssal: {
+          DEFAULT: '#1B2632',    // Abyssal Anchorfish Blue
+          hover: '#2C3B4D',
         },
-        rose: {
-          accent: '#EAD7CF',
-        },
-        charcoal: '#2D1E25',
-        mauve: '#7A6870',
-        growth: '#2D6A4F',
+        truffle: '#A35139',       // Truffle Trouble Warm Contrast Accent
+        flame: '#FFB162',         // Burning Flame Interactive Highlight
+        slateText: '#5C6B7A',     // Muted Secondary Text
       },
       fontFamily: {
         serif: ['Playfair Display', 'Fraunces', 'Georgia', 'serif'],
