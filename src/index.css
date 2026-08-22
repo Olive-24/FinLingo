@@ -1,30 +1,27 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Fraunces:ital,opsz,wght@0,9..144,400..900;1,9..144,400..900&family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&family=Inter:wght@400;500;600;700;800&family=Noto+Sans:ital,wght@0,400..700;1,400..700&display=swap');
+@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
   --font-serif: 'Playfair Display', 'Fraunces', Georgia, serif;
   --font-sans: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-indic: 'Noto Sans', 'Plus Jakarta Sans', sans-serif;
 
-  /* FinLingo Refined Color Palette Tokens */
-  --bg-canvas: #F6ECE6;        /* App Canvas Background: Warm linen / blush parchment */
-  --bg-card: #FFFFFF;          /* Card & Surface Background: Solid white for elevated contrast */
-  --border-token: rgba(59, 35, 46, 0.08); /* Card Border Token */
-  --border-strong: rgba(59, 35, 46, 0.15);
+  /* FinLingo Palette Tokens */
+  --bg-canvas: #F6ECE6;
+  --bg-card: #FFFFFF;
+  --border-token: rgba(59, 35, 46, 0.1);
 
-  --plum-primary: #3B232E;     /* Primary Brand Accent (Plum/Wine) */
-  --plum-hover: #523241;       /* Primary Accent Hover */
-  --pill-accent: #EAD7CF;      /* Secondary / Pill Accent (Muted warm rose) */
+  --plum-primary: #3B232E;
+  --plum-hover: #523241;
+  --pill-accent: #EAD7CF;
 
-  --text-primary: #2D1E25;     /* Primary Text: Soft charcoal-plum */
-  --text-muted: #7A6870;       /* Muted / Supporting Text */
+  --text-primary: #2D1E25;
+  --text-muted: #7A6870;
   --text-white: #FFFFFF;
-  --success-growth: #2D6A4F;   /* Success / Growth Accent */
-
-  /* Elevation Tokens */
-  --radius-card: 16px;
-  --radius-pill: 9999px;
-  --shadow-card: 0 4px 24px -2px rgba(59, 35, 46, 0.04), 0 1px 2px rgba(59, 35, 46, 0.02);
-  --shadow-plum: 0 8px 24px rgba(59, 35, 46, 0.18);
+  --success-growth: #2D6A4F;
 }
 
 * {
@@ -44,8 +41,8 @@ html {
 
 body {
   min-height: 100vh;
-  background-color: var(--bg-canvas);
-  color: var(--text-primary);
+  background-color: #F6ECE6;
+  color: #2D1E25;
   -webkit-font-smoothing: antialiased;
   position: relative;
   overflow-x: hidden;
@@ -56,37 +53,35 @@ body {
   font-family: var(--font-serif);
   font-weight: 500;
   letter-spacing: -0.02em;
-  color: var(--text-primary);
+  color: #2D1E25;
 }
 
 .font-indic {
   font-family: var(--font-indic);
 }
 
-/* UI LABELS & METADATA (SMALL CAPS GEOMETRIC SANS) */
 .micro-label {
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.12em;
   font-weight: 700;
-  color: var(--text-muted);
+  color: #7A6870;
   font-family: var(--font-sans);
 }
 
-/* CARD ELEVATION UTILITY */
+/* EDITORIAL UTILITY CARDS */
 .editorial-card {
-  background-color: var(--bg-card);
-  border: 1px solid var(--border-token);
-  border-radius: var(--radius-card);
-  padding: 24px;
-  box-shadow: var(--shadow-card);
-  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease;
+  background-color: #FFFFFF;
+  border: 1px solid rgba(59, 35, 46, 0.1);
+  border-radius: 1rem; /* rounded-2xl */
+  padding: 1.5rem;
+  box-shadow: 0 1px 2px 0 rgba(59, 35, 46, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .editorial-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 32px -4px rgba(59, 35, 46, 0.08);
-  border-color: rgba(59, 35, 46, 0.18);
+  box-shadow: 0 10px 25px -5px rgba(59, 35, 46, 0.1);
 }
 
 /* BUTTON PRIMITIVES */
@@ -95,7 +90,7 @@ body {
   color: #FFFFFF;
   font-weight: 700;
   font-size: 14px;
-  padding: 10px 22px;
+  padding: 10px 20px;
   border-radius: 9999px;
   border: 1px solid #3B232E;
   transition: all 0.2s ease;
@@ -104,58 +99,11 @@ body {
   justify-content: center;
   gap: 8px;
   cursor: pointer;
-  box-shadow: 0 2px 8px rgba(59, 35, 46, 0.12);
 }
 
 .btn-plum-primary:hover {
   background-color: #523241;
   border-color: #523241;
-  transform: translateY(-1px);
-  box-shadow: 0 6px 18px rgba(59, 35, 46, 0.22);
-}
-
-.btn-plum-secondary {
-  background-color: transparent;
-  color: #3B232E;
-  font-weight: 700;
-  font-size: 14px;
-  padding: 10px 22px;
-  border-radius: 9999px;
-  border: 1px solid rgba(59, 35, 46, 0.2);
-  transition: all 0.2s ease;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  cursor: pointer;
-}
-
-.btn-plum-secondary:hover {
-  background-color: #EAD7CF;
-  border-color: #3B232E;
-  transform: translateY(-1px);
-}
-
-/* BADGE & PILL PRIMITIVES */
-.badge-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 12px;
-  border-radius: 9999px;
-  background-color: #EAD7CF;
-  border: 1px solid rgba(59, 35, 46, 0.1);
-  color: #3B232E;
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-}
-
-.badge-pill-active {
-  background-color: #3B232E;
-  color: #FFFFFF;
-  border-color: #3B232E;
 }
 
 /* SCROLLBAR STYLING */
@@ -171,8 +119,4 @@ body {
 ::-webkit-scrollbar-thumb {
   background: #EAD7CF;
   border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #7A6870;
 }
