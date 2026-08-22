@@ -9,10 +9,10 @@ import {
   ArrowLeft,
   ShieldCheck,
 } from 'lucide-react';
-import { motion } from 'framer-motion';
 import type { LanguageCode } from '../types';
 import { LANGUAGES } from '../data/languages';
 import { MYTHS_DATA, type MythItem } from '../data/mythsData';
+import { Card, Badge, MicroLabel, Button } from './ui/Primitives';
 
 interface MythBustingSectionProps {
   currentLang: LanguageCode;
@@ -33,9 +33,8 @@ export const MythBustingSection: React.FC<MythBustingSectionProps> = ({
 }) => {
   const currentLangObj = LANGUAGES.find((l) => l.code === currentLang) || LANGUAGES[0];
 
-  // Active selected myth item (Default to first myth: "Can I lose money in mutual funds?")
+  // Active selected myth item (Default to first myth)
   const [selectedMyth, setSelectedMyth] = useState<MythItem>(MYTHS_DATA[0]);
-  const [tappedMythId, setTappedMythId] = useState<string | null>(null);
 
   // Audio Playback State (TTS)
   const [isPlayingAudio, setIsPlayingAudio] = useState<boolean>(false);
@@ -49,13 +48,8 @@ export const MythBustingSection: React.FC<MythBustingSectionProps> = ({
     : MYTHS_DATA.filter((m) => m.category === activeCategory);
 
   const handleChipTap = (myth: MythItem) => {
-    setTappedMythId(myth.id);
     setSelectedMyth(myth);
     setIsPlayingAudio(false);
-
-    setTimeout(() => {
-      setTappedMythId(null);
-    }, 250);
   };
 
   const toggleAudio = () => {
@@ -85,30 +79,24 @@ export const MythBustingSection: React.FC<MythBustingSectionProps> = ({
   };
 
   return (
-    <section className={`${standalonePage ? 'min-h-screen bg-[#0A0A0F] py-10' : 'py-20 bg-[#0A0A0F]'} text-white relative overflow-hidden`}>
-      {/* AMBIENT GLOW ORB */}
-      <div className="orb-teal top-1/3 left-10 opacity-20" />
-
-      <div className="container mx-auto px-4 relative z-20 max-w-5xl">
+    <section className={`${standalonePage ? 'min-h-screen bg-[#F4E6DF] py-10' : 'py-24 bg-[#F4E6DF]'} text-[#2A1A20] relative`}>
+      <div className="container mx-auto px-4 sm:px-6 max-w-5xl">
         {/* STANDALONE PAGE HEADER BAR */}
         {standalonePage && (
-          <div className="flex items-center justify-between mb-8 pb-4 border-b border-white/10">
-            <button
-              onClick={onBack}
-              className="px-4 py-2 rounded-full bg-white/5 hover:bg-white/10 text-white font-bold text-xs flex items-center gap-2 border border-white/10"
-            >
+          <div className="flex items-center justify-between mb-8 pb-4 border-b border-[#E6D2C8]">
+            <Button variant="secondary" size="sm" onClick={onBack}>
               <ArrowLeft className="w-4 h-4" />
               <span>Back to Workspace</span>
-            </button>
+            </Button>
 
             {onSelectLang && (
               <select
                 value={currentLang}
                 onChange={(e) => onSelectLang(e.target.value as LanguageCode)}
-                className="px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-bold text-[#14B8A6] focus:outline-none cursor-pointer"
+                className="px-3.5 py-1.5 rounded-full bg-[#FBF2EC] border border-[#E6D2C8] text-xs font-bold text-[#3B2530] focus:outline-none cursor-pointer"
               >
                 {LANGUAGES.map((lang) => (
-                  <option key={lang.code} value={lang.code} className="bg-[#0A0A0F] text-white">
+                  <option key={lang.code} value={lang.code}>
                     {lang.flag} {lang.nativeName}
                   </option>
                 ))}
@@ -119,15 +107,14 @@ export const MythBustingSection: React.FC<MythBustingSectionProps> = ({
 
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-10 space-y-3">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-300 text-xs font-extrabold backdrop-blur-md">
-            <HelpCircle className="w-3.5 h-3.5" />
-            <span>Myth-Buster & Instant Vernacular Doubts</span>
-          </div>
+          <Badge variant="maroon" icon={<HelpCircle className="w-3.5 h-3.5" />}>
+            Myth-Buster & Instant Vernacular Doubts
+          </Badge>
 
-          <h2 className="text-3xl sm:text-5xl font-black tracking-tight">
-            Financial Myths <span className="gradient-text-amber">Busted in Plain Words</span>
+          <h2 className="font-serif-display text-3xl sm:text-5xl text-[#2A1A20]">
+            Financial Myths <span className="text-[#3B2530] underline decoration-[#3B2530]/20">Busted in Plain Words</span>
           </h2>
-          <p className="text-slate-400 text-sm sm:text-base">
+          <p className="text-[#8C7378] text-sm sm:text-base">
             Tap any common doubt below for zero-jargon answers in {currentLangObj.nativeName} with audio playback.
           </p>
         </div>
@@ -142,41 +129,34 @@ export const MythBustingSection: React.FC<MythBustingSectionProps> = ({
             { id: 'budgeting', label: 'Low Income' },
             { id: 'credit', label: 'CIBIL Score' },
           ].map((cat) => (
-            <button
+            <Badge
               key={cat.id}
+              variant={activeCategory === cat.id ? 'active' : 'outline'}
               onClick={() => setActiveCategory(cat.id as any)}
-              className={`px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-all ${
-                activeCategory === cat.id
-                  ? 'bg-gradient-to-r from-[#14B8A6] to-[#8B5CF6] text-white shadow-lg shadow-[#14B8A6]/20'
-                  : 'bg-white/5 text-slate-400 hover:text-white border border-white/10'
-              }`}
             >
               {cat.label}
-            </button>
+            </Badge>
           ))}
         </div>
 
-        {/* HORIZONTALLY SCROLLABLE QUESTION CHIPS AS GLASS PILLS WITH GRADIENT HOVER BORDER */}
+        {/* HORIZONTALLY SCROLLABLE QUESTION CHIPS AS BADGE PILLS */}
         <div className="relative mb-10">
           <div className="flex items-center gap-3 overflow-x-auto pb-4 pt-1 scrollbar-none snap-x px-1">
             {filteredMyths.map((myth) => {
               const isSelected = selectedMyth.id === myth.id;
-              const isTapped = tappedMythId === myth.id;
               const vernacularQ = getVernacularQuestion(myth);
 
               return (
                 <button
                   key={myth.id}
                   onClick={() => handleChipTap(myth)}
-                  className={`snap-start shrink-0 px-5 py-3 rounded-full text-xs font-bold transition-all duration-200 flex items-center gap-2.5 backdrop-blur-md shadow-md ${
-                    isTapped
-                      ? 'bg-gradient-to-r from-[#14B8A6] to-[#8B5CF6] text-white scale-95'
-                      : isSelected
-                      ? 'bg-gradient-to-r from-[#14B8A6] to-[#8B5CF6] text-white shadow-lg shadow-[#14B8A6]/25 border border-[#14B8A6]'
-                      : 'bg-white/5 border border-white/10 text-slate-200 hover:border-[#14B8A6]/50 hover:bg-white/10'
+                  className={`snap-start shrink-0 px-5 py-3 rounded-full text-xs font-bold transition-all duration-200 flex items-center gap-2 border ${
+                    isSelected
+                      ? 'bg-[#3B2530] text-white border-[#3B2530] shadow-md scale-[1.02]'
+                      : 'bg-[#FBF2EC] border-[#E6D2C8] text-[#2A1A20] hover:border-[#3B2530]'
                   }`}
                 >
-                  <Sparkles className={`w-3.5 h-3.5 ${isSelected ? 'text-white' : 'text-[#14B8A6]'}`} />
+                  <Sparkles className={`w-3.5 h-3.5 ${isSelected ? 'text-white' : 'text-[#3B2530]'}`} />
                   <span>{vernacularQ}</span>
                 </button>
               );
@@ -184,109 +164,86 @@ export const MythBustingSection: React.FC<MythBustingSectionProps> = ({
           </div>
         </div>
 
-        {/* STREAMED ANSWER DISPLAYED INSIDE A LARGER GLASS PANEL BELOW */}
-        <motion.div
-          key={selectedMyth.id}
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
-          className="glass-card p-6 sm:p-9 bg-[#0A0A0F]/90 border border-white/15 rounded-3xl space-y-6 shadow-2xl relative"
-        >
-          {/* Answer Card Top Header */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-5">
+        {/* STREAMED ANSWER DISPLAYED INSIDE A FULL-WIDTH CARD WITH MICRO-LABEL */}
+        <Card padding="lg" className="space-y-6 shadow-xl relative">
+          {/* Card Top Header */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#E6D2C8] pb-5">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-[#14B8A6] to-[#8B5CF6] text-white flex items-center justify-center font-bold shadow-lg shadow-[#14B8A6]/20">
-                <Sparkles className="w-6 h-6 fill-white/20" />
+              <div className="w-10 h-10 rounded-xl bg-[#3B2530] text-white flex items-center justify-center font-bold">
+                <Sparkles className="w-5 h-5 fill-white/20" />
               </div>
               <div>
-                <h3 className="font-extrabold text-base sm:text-lg text-white">
+                <MicroLabel>HONEST VERNACULAR ANSWER</MicroLabel>
+                <h3 className="font-extrabold text-base sm:text-lg text-[#2A1A20]">
                   {getVernacularQuestion(selectedMyth)}
                 </h3>
-                <p className="text-xs text-slate-400">
-                  FinLingo Verified Explanation • <span className="text-[#14B8A6] font-bold">{selectedMyth.trustTag}</span>
-                </p>
               </div>
             </div>
 
-            {/* MINIMAL WAVEFORM VISUALIZATION AUDIO PLAYBACK CONTROL */}
-            <div className="flex items-center gap-3 bg-white/5 border border-white/10 p-2 rounded-2xl shrink-0">
+            {/* Audio Playback Control */}
+            <div className="flex items-center gap-3 bg-[#F4E6DF] border border-[#E6D2C8] p-2 rounded-2xl shrink-0">
               <button
                 onClick={toggleAudio}
-                className="w-10 h-10 rounded-full bg-[#14B8A6] hover:bg-[#0D9488] text-slate-950 flex items-center justify-center font-bold shadow-md transition-all"
+                className="w-9 h-9 rounded-full bg-[#3B2530] text-white flex items-center justify-center font-bold shadow-sm transition-transform active:scale-95"
                 title={isPlayingAudio ? 'Pause Audio' : 'Listen in Native Language'}
               >
-                {isPlayingAudio ? <Pause className="w-5 h-5 fill-slate-950" /> : <Play className="w-5 h-5 fill-slate-950 ml-0.5" />}
+                {isPlayingAudio ? <Pause className="w-4 h-4 fill-white" /> : <Play className="w-4 h-4 fill-white ml-0.5" />}
               </button>
 
-              {/* Animated Waveform Lines */}
-              <div className="flex items-center gap-1 h-6 px-1">
-                {[0.4, 0.9, 0.6, 1.0, 0.5, 0.8].map((h, i) => (
-                  <span
-                    key={i}
-                    className={`w-1 rounded-full bg-[#14B8A6] transition-all duration-300 ${
-                      isPlayingAudio ? 'animate-pulse' : 'opacity-40'
-                    }`}
-                    style={{ height: isPlayingAudio ? `${h * 24}px` : '8px' }}
-                  />
-                ))}
+              <div className="text-[11px] font-bold text-[#8C7378]">
+                {isPlayingAudio ? 'PLAYING AUDIO' : 'NATIVE AUDIO'}
               </div>
 
               <select
                 value={audioSpeed}
                 onChange={(e) => setAudioSpeed(Number(e.target.value))}
-                className="bg-transparent text-slate-300 text-xs font-mono font-bold focus:outline-none cursor-pointer border-l border-white/10 pl-2"
+                className="bg-transparent text-[#3B2530] text-xs font-mono font-bold focus:outline-none cursor-pointer border-l border-[#E6D2C8] pl-2"
               >
-                <option value={1.0} className="bg-[#0A0A0F]">1.0x</option>
-                <option value={1.25} className="bg-[#0A0A0F]">1.25x</option>
-                <option value={1.5} className="bg-[#0A0A0F]">1.5x</option>
+                <option value={1.0}>1.0x</option>
+                <option value={1.25}>1.25x</option>
+                <option value={1.5}>1.5x</option>
               </select>
             </div>
           </div>
 
           {/* Vernacular Answer Text */}
-          <div className="space-y-4 text-slate-200">
+          <div className="space-y-4 text-[#2A1A20]">
             <p className="text-base sm:text-lg leading-relaxed font-medium">
               {getVernacularAnswer(selectedMyth)}
             </p>
 
             {(selectedMyth as any).subventionBreakdown && (
-              <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-200 text-xs leading-relaxed">
-                <span className="font-bold text-amber-300 block mb-1">Government Subsidy Benefit:</span>
+              <div className="p-4 rounded-2xl bg-[#F4E6DF] border border-[#E6D2C8] text-xs leading-relaxed text-[#2A1A20]">
+                <MicroLabel className="text-[#3B2530] mb-1">GOVERNMENT SUBSIDY BENEFIT</MicroLabel>
                 {(selectedMyth as any).subventionBreakdown}
               </div>
             )}
           </div>
 
           {/* Action Footer Buttons */}
-          <div className="pt-4 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="text-xs text-slate-400 flex items-center gap-1.5">
-              <ShieldCheck className="w-4 h-4 text-[#14B8A6]" />
+          <div className="pt-4 border-t border-[#E6D2C8] flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="text-xs text-[#8C7378] flex items-center gap-1.5 font-medium">
+              <ShieldCheck className="w-4 h-4 text-[#3B2530]" />
               <span>SEBI & RBI Regulatory Transparency Compliant</span>
             </div>
 
             <div className="flex items-center gap-3 w-full sm:w-auto">
               {onOpenSimulator && (
-                <button
-                  onClick={onOpenSimulator}
-                  className="px-5 py-2.5 rounded-full bg-white/5 hover:bg-white/10 text-white font-bold text-xs border border-white/10 transition-all flex items-center justify-center gap-1.5 flex-1 sm:flex-none"
-                >
-                  <Sliders className="w-4 h-4 text-[#14B8A6]" />
+                <Button variant="secondary" size="sm" onClick={onOpenSimulator}>
+                  <Sliders className="w-3.5 h-3.5" />
                   <span>Simulate Growth</span>
-                </button>
+                </Button>
               )}
 
               {onAskAIWithQuestion && (
-                <button
-                  onClick={() => onAskAIWithQuestion(getVernacularQuestion(selectedMyth), getVernacularAnswer(selectedMyth))}
-                  className="px-6 py-2.5 rounded-full btn-gradient text-white font-bold text-xs shadow-md flex items-center justify-center gap-1.5 flex-1 sm:flex-none"
-                >
+                <Button variant="primary" size="sm" onClick={() => onAskAIWithQuestion(getVernacularQuestion(selectedMyth), getVernacularAnswer(selectedMyth))}>
                   <span>Ask AI Follow-Up</span>
-                  <ArrowRight className="w-4 h-4" />
-                </button>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Button>
               )}
             </div>
           </div>
-        </motion.div>
+        </Card>
       </div>
     </section>
   );

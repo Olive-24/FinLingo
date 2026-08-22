@@ -24,6 +24,7 @@ import { LANGUAGES } from '../data/languages';
 import { Sidebar } from './Sidebar';
 import { GoalSimulatorModal } from './GoalSimulatorModal';
 import { MYTHS_DATA } from '../data/mythsData';
+import { Button } from './ui/Primitives';
 
 interface VoiceChatInterfaceProps {
   user: UserProfile;
@@ -314,68 +315,68 @@ Tap **"Simulate this goal"** below to adjust timeframe & return parameters live!
       />
 
       {/* MAIN WORKSPACE CANVAS */}
-      <div className="flex-1 flex flex-col justify-between h-screen overflow-hidden relative bg-[#FBF7F2]">
-        {/* HEADER BAR */}
-        <header className="bg-white/90 backdrop-blur-md border-b border-slate-200 px-4 py-3 sticky top-0 z-20 flex items-center justify-between shadow-sm">
+      <div className="flex-1 flex flex-col justify-between h-screen overflow-hidden relative bg-[#F4E6DF] text-[#2A1A20]">
+        {/* HEADER BAR WITH SEGMENTED CONTROL TABS */}
+        <header className="bg-[#F4E6DF]/95 backdrop-blur-md border-b border-[#E6D2C8] px-4 sm:px-6 py-3.5 sticky top-0 z-20 flex items-center justify-between shadow-sm">
           <div className="flex items-center gap-3">
             {/* Mobile Hamburger Menu Toggle */}
             <button
               onClick={() => setIsMobileSidebarOpen(true)}
-              className="lg:hidden p-2 rounded-xl bg-slate-100 text-[#2B2B2B] hover:bg-slate-200"
+              className="lg:hidden p-2 rounded-xl bg-[#FBF2EC] border border-[#E6D2C8] text-[#3B2530]"
             >
               <Menu className="w-5 h-5" />
             </button>
 
             {/* Title & Active Language */}
             <div>
-              <h2 className="font-extrabold text-base text-[#2B2B2B] tracking-tight flex items-center gap-2">
+              <h2 className="font-extrabold text-base text-[#2A1A20] tracking-tight flex items-center gap-2 font-sans">
                 <span>{currentThread.title}</span>
-                <span className="w-2 h-2 rounded-full bg-[#0F7173] animate-pulse" />
+                <span className="w-2 h-2 rounded-full bg-[#3B2530] animate-pulse" />
               </h2>
-              <p className="text-[11px] text-[#6B6B6B]">
-                FinLingo AI Assistant • <span className="text-[#0F7173] font-bold">{currentLangObj.flag} {currentLangObj.nativeName}</span>
+              <p className="text-[11px] text-[#8C7378]">
+                FinLingo AI Console • <span className="text-[#3B2530] font-bold">{currentLangObj.flag} {currentLangObj.nativeName}</span>
               </p>
             </div>
           </div>
 
-          {/* Action Buttons */}
+          {/* Segmented Control Mode Tabs */}
           <div className="flex items-center gap-2">
+            <div className="hidden sm:flex items-center gap-1 bg-[#FBF2EC] border border-[#E6D2C8] p-1 rounded-full shadow-inner">
+              <button
+                className="px-3.5 py-1.5 rounded-full text-xs font-bold bg-[#3B2530] text-white shadow-sm"
+              >
+                Voice Chat
+              </button>
+
+              {onOpenGoalPlanning && (
+                <button
+                  onClick={onOpenGoalPlanning}
+                  className="px-3.5 py-1.5 rounded-full text-xs font-bold text-[#8C7378] hover:text-[#3B2530] transition-colors"
+                >
+                  Goal Cards
+                </button>
+              )}
+
+              {onOpenMythBusting && (
+                <button
+                  onClick={onOpenMythBusting}
+                  className="px-3.5 py-1.5 rounded-full text-xs font-bold text-[#8C7378] hover:text-[#3B2530] transition-colors"
+                >
+                  Myth-Buster
+                </button>
+              )}
+            </div>
+
             {onOpenDashboard && (
-              <button
-                onClick={onOpenDashboard}
-                className="px-3 py-1.5 rounded-full bg-emerald-50 hover:bg-emerald-100/80 text-emerald-800 text-xs font-bold flex items-center gap-1.5 transition-all border border-emerald-300/60"
-                title="Profile & Progress Dashboard"
-              >
-                <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
-                <span className="hidden sm:inline">Dashboard</span>
-              </button>
-            )}
-
-            {onOpenMythBusting && (
-              <button
-                onClick={onOpenMythBusting}
-                className="px-3 py-1.5 rounded-full bg-amber-500/10 hover:bg-amber-500/20 text-[#D98D15] text-xs font-bold flex items-center gap-1.5 transition-all border border-[#F5A623]/30"
-                title="Myth-Busting & Doubts"
-              >
+              <Button variant="secondary" size="sm" onClick={onOpenDashboard}>
                 <Sparkles className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Myth-Buster</span>
-              </button>
-            )}
-
-            {onOpenGoalPlanning && (
-              <button
-                onClick={onOpenGoalPlanning}
-                className="px-3 py-1.5 rounded-full bg-[#0F7173]/10 hover:bg-[#0F7173]/20 text-[#0F7173] text-xs font-bold flex items-center gap-1.5 transition-all border border-[#0F7173]/20"
-                title="Open Goal Cards Grid"
-              >
-                <Sparkles className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Goal Cards</span>
-              </button>
+                <span className="hidden sm:inline">Profile</span>
+              </Button>
             )}
 
             <button
               onClick={onReOnboard}
-              className="p-2 rounded-full bg-slate-100 hover:bg-slate-200 text-[#0F7173] text-xs flex items-center gap-1 font-bold"
+              className="p-2 rounded-full bg-[#FBF2EC] border border-[#E6D2C8] text-[#3B2530] text-xs font-bold hover:bg-[#3B2530]/10"
               title="Change Language or Profile"
             >
               <RotateCcw className="w-4 h-4" />
