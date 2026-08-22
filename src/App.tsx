@@ -15,9 +15,9 @@ import { VoiceChatInterface } from './components/VoiceChatInterface';
 import { SimulatorPage } from './components/SimulatorPage';
 import { GoalPlanningCardsPage } from './components/GoalPlanningCardsPage';
 import { MythBustingSection } from './components/MythBustingSection';
-import { UserProfileDashboard } from './components/UserProfileDashboard';
 import { B2BPartnerDashboard } from './components/B2BPartnerDashboard';
 import { PricingPage } from './components/PricingPage';
+import { DashboardWorkspace } from './components/DashboardWorkspace';
 
 export function App() {
   const [currentView, setCurrentView] = useState<
@@ -82,10 +82,10 @@ export function App() {
     );
   }
 
-  // VIEW 2: USER PROFILE & PROGRESS DASHBOARD
+  // VIEW 2: USER CONSOLE DASHBOARD WORKSPACE (REFRACTION DESIGN SYSTEM)
   if (currentView === 'dashboard') {
     return (
-      <UserProfileDashboard
+      <DashboardWorkspace
         userProfile={userProfile}
         currentLang={currentLang}
         onSelectLang={(lang) => {
@@ -94,23 +94,17 @@ export function App() {
             setUserProfile({ ...userProfile, preferredLanguage: lang });
           }
         }}
-        onBack={() => {
+        onOpenChat={() => {
           if (userProfile && userProfile.isOnboardingCompleted) {
             setCurrentView('main-app');
           } else {
-            setCurrentView('landing');
+            setCurrentView('auth');
           }
         }}
+        onOpenGoals={() => setCurrentView('goals')}
+        onOpenMyths={() => setCurrentView('myths')}
+        onOpenB2B={() => setCurrentView('b2b-dashboard')}
         onLogout={handleLogout}
-        onReOnboard={() => setCurrentView('onboarding')}
-        onOpenGoalPlanning={() => setCurrentView('goals')}
-        onOpenSimulatorWithGoal={() => {
-          if (userProfile && userProfile.isOnboardingCompleted) {
-            setCurrentView('main-app');
-          } else {
-            setCurrentView('simulator');
-          }
-        }}
       />
     );
   }
