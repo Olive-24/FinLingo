@@ -1,12 +1,5 @@
 import { useState } from 'react';
 import type { LanguageCode, UserProfile } from './types';
-import { Navbar } from './components/Navbar';
-import { Hero } from './components/Hero';
-import { AnimatedDemoStrip } from './components/AnimatedDemoStrip';
-import { ThreeStepVisual } from './components/ThreeStepVisual';
-import { B2BSection } from './components/B2BSection';
-import { Testimonials } from './components/Testimonials';
-import { Footer } from './components/Footer';
 import { B2BPartnerModal } from './components/B2BPartnerModal';
 import { PrivacyModal } from './components/PrivacyModal';
 import { AuthScreen } from './components/AuthScreen';
@@ -18,6 +11,7 @@ import { MythBustingSection } from './components/MythBustingSection';
 import { B2BPartnerDashboard } from './components/B2BPartnerDashboard';
 import { PricingPage } from './components/PricingPage';
 import { DashboardWorkspace } from './components/DashboardWorkspace';
+import { FinLingoLanding } from './components/FinLingoLanding';
 
 export function App() {
   const [currentView, setCurrentView] = useState<
@@ -231,94 +225,13 @@ export function App() {
 
   // VIEW 7: PUBLIC LANDING PAGE
   return (
-    <div className="min-h-screen bg-[#EEE9DF] text-[#1B2632] selection:bg-[#1B2632] selection:text-white relative overflow-x-hidden">
-      {/* Sticky Top Header */}
-      <Navbar
-        currentLang={currentLang}
-        onSelectLang={(lang) => setCurrentLang(lang)}
-        onOpenB2BModal={() => setIsB2BModalOpen(true)}
-        onOpenOnboarding={() => setCurrentView('auth')}
-        onOpenGoalPlanning={() => setCurrentView('goals')}
-        onOpenMythBusting={() => setCurrentView('myths')}
+    <>
+      <FinLingoLanding
+        onOpenAuth={() => setCurrentView('auth')}
         onOpenDashboard={() => setCurrentView('dashboard')}
-      />
-
-      {/* Main Landing Page Content */}
-      <main>
-        {/* Hero Section */}
-        <Hero
-          currentLang={currentLang}
-          onOpenOnboarding={() => setCurrentView('auth')}
-          onOpenB2BModal={() => setIsB2BModalOpen(true)}
-        />
-
-        {/* Animated Demo Strip (Voice -> AI -> Interactive Sandbox) */}
-        <AnimatedDemoStrip currentLang={currentLang} />
-
-        {/* 3-Step Visual Guide (Bolo, Samjho, Simulate Karo) */}
-        <ThreeStepVisual
-          currentLang={currentLang}
-          onOpenOnboarding={() => setCurrentView('auth')}
-        />
-
-        {/* MYTH-BUSTING & FINANCIAL FAQ SECTION ON LANDING PAGE */}
-        <MythBustingSection
-          currentLang={currentLang}
-          onSelectLang={(lang) => setCurrentLang(lang)}
-          onOpenSimulator={() => setCurrentView('simulator')}
-          onAskAIWithQuestion={() => setCurrentView('auth')}
-        />
-
-        {/* Standalone Simulator & Goal Cards Callout Banner */}
-        <section className="py-16 bg-[#F4F0E8] border-t border-[#1B2632]/10 text-center">
-          <div className="max-w-4xl mx-auto px-6 space-y-6">
-            <div className="space-y-2">
-              <span className="bg-[#A35139]/10 text-[#A35139] px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider inline-block">
-                PRE-BUILT SIMULATORS
-              </span>
-              <h3 className="font-serif text-2xl sm:text-3xl font-semibold text-[#1B2632]">
-                Explore Pre-Built Financial Goal Templates
-              </h3>
-              <p className="text-sm text-[#5C6B7A] max-w-2xl mx-auto leading-relaxed">
-                Child's Education, Wedding, Emergency Fund, Home Down Payment, Retirement & Custom Goals.
-              </p>
-            </div>
-
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <button
-                onClick={() => setCurrentView('goals')}
-                className="bg-[#1B2632] hover:bg-[#2C3B4D] text-white px-7 py-3 rounded-full text-sm font-semibold shadow-sm w-full sm:w-auto cursor-pointer"
-              >
-                Browse Goal Planning Cards Grid
-              </button>
-
-              <button
-                onClick={() => setCurrentView('simulator')}
-                className="bg-white hover:bg-[#EEE9DF] text-[#1B2632] border border-[#C9C1B1] px-7 py-3 rounded-full text-sm font-semibold w-full sm:w-auto cursor-pointer"
-              >
-                Open Standalone Simulator Page
-              </button>
-            </div>
-          </div>
-        </section>
-
-        {/* For Banks & NBFCs B2B Revenue & Trust Section */}
-        <B2BSection
-          currentLang={currentLang}
-          onOpenB2BModal={() => setIsB2BModalOpen(true)}
-        />
-
-        {/* Social Proof & Testimonials */}
-        <Testimonials currentLang={currentLang} />
-      </main>
-
-      {/* Footer */}
-      <Footer
-        currentLang={currentLang}
-        onSelectLang={(lang) => setCurrentLang(lang)}
-        onOpenPrivacy={() => setIsPrivacyOpen(true)}
-        onOpenB2BModal={() => setIsB2BModalOpen(true)}
-        onOpenOnboarding={() => setCurrentView('auth')}
+        onOpenGoals={() => setCurrentView('goals')}
+        onOpenMyths={() => setCurrentView('myths')}
+        onOpenB2B={() => setIsB2BModalOpen(true)}
       />
 
       {/* Modals */}
@@ -332,7 +245,7 @@ export function App() {
         isOpen={isPrivacyOpen}
         onClose={() => setIsPrivacyOpen(false)}
       />
-    </div>
+    </>
   );
 }
 
