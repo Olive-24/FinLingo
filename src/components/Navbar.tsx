@@ -13,6 +13,7 @@ interface NavbarProps {
   onOpenMythBusting?: () => void;
   onOpenDashboard?: () => void;
   onOpenB2BDashboard?: () => void;
+  onOpenPricing?: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -24,6 +25,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenMythBusting,
   onOpenDashboard,
   onOpenB2BDashboard,
+  onOpenPricing,
 }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isLangOpen, setIsLangOpen] = useState(false);
@@ -70,6 +72,14 @@ export const Navbar: React.FC<NavbarProps> = ({
 
         {/* Desktop Nav Links */}
         <nav className="hidden md:flex items-center gap-6 text-sm font-semibold text-[#2B2B2B]">
+          {onOpenPricing && (
+            <button
+              onClick={onOpenPricing}
+              className="hover:text-[#0F7173] transition-colors"
+            >
+              Pricing
+            </button>
+          )}
           {onOpenDashboard && (
             <button
               onClick={onOpenDashboard}

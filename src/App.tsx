@@ -17,10 +17,11 @@ import { GoalPlanningCardsPage } from './components/GoalPlanningCardsPage';
 import { MythBustingSection } from './components/MythBustingSection';
 import { UserProfileDashboard } from './components/UserProfileDashboard';
 import { B2BPartnerDashboard } from './components/B2BPartnerDashboard';
+import { PricingPage } from './components/PricingPage';
 
 export function App() {
   const [currentView, setCurrentView] = useState<
-    'landing' | 'auth' | 'onboarding' | 'main-app' | 'simulator' | 'goals' | 'myths' | 'dashboard' | 'b2b-dashboard'
+    'landing' | 'auth' | 'onboarding' | 'main-app' | 'simulator' | 'goals' | 'myths' | 'dashboard' | 'b2b-dashboard' | 'pricing'
   >('landing');
   
   const [currentLang, setCurrentLang] = useState<LanguageCode>('en');
@@ -52,7 +53,25 @@ export function App() {
     setCurrentView('landing');
   };
 
-  // VIEW 1: SEPARATE B2B PARTNER ENTERPRISE DASHBOARD
+  // VIEW 1: PREMIUM SUBSCRIPTION & PRICING PAGE
+  if (currentView === 'pricing') {
+    return (
+      <PricingPage
+        currentLang={currentLang}
+        onSelectLang={(lang) => setCurrentLang(lang)}
+        onBack={() => {
+          if (userProfile && userProfile.isOnboardingCompleted) {
+            setCurrentView('main-app');
+          } else {
+            setCurrentView('landing');
+          }
+        }}
+        userProfile={userProfile}
+      />
+    );
+  }
+
+  // VIEW 2: SEPARATE B2B PARTNER ENTERPRISE DASHBOARD
   if (currentView === 'b2b-dashboard') {
     return (
       <B2BPartnerDashboard

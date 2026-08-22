@@ -28,6 +28,7 @@ interface SidebarProps {
   onOpenGoalPlanning?: () => void;
   onOpenMythBusting?: () => void;
   onOpenDashboard?: () => void;
+  onOpenPricing?: () => void;
   isOpenMobile: boolean;
   onCloseMobile: () => void;
 }
@@ -44,6 +45,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onOpenGoalPlanning,
   onOpenMythBusting,
   onOpenDashboard,
+  onOpenPricing,
   isOpenMobile,
   onCloseMobile,
 }) => {
@@ -202,8 +204,24 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </div>
         </div>
 
-        {/* PINNED QUICK-ACCESS GOAL & MYTH SHORTCUTS */}
+        {/* PINNED QUICK-ACCESS GOAL, MYTH & PRICING SHORTCUTS */}
         <div className="space-y-2 pt-3 border-t border-slate-100">
+          {onOpenPricing && (
+            <button
+              onClick={() => {
+                onOpenPricing();
+                onCloseMobile();
+              }}
+              className="w-full mb-1 p-2.5 rounded-xl bg-gradient-to-r from-[#0F7173]/15 to-[#2ECC91]/15 border border-[#0F7173]/30 hover:from-[#0F7173]/25 hover:to-[#2ECC91]/25 text-[#0F7173] font-black text-xs flex items-center justify-between transition-all"
+            >
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-[#0F7173] fill-[#0F7173]" />
+                <span>Upgrade to Premium ✨</span>
+              </div>
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          )}
+
           {onOpenDashboard && (
             <button
               onClick={() => {
