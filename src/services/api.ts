@@ -1,6 +1,12 @@
-// Centralized Frontend API Service Layer for FinLingo Full-Stack Architecture
+import { GoogleGenAI } from '@google/genai';
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
+const geminiApiKey = import.meta.env.VITE_GEMINI_API_KEY;
+
+let directAI: GoogleGenAI | null = null;
+if (geminiApiKey) {
+  directAI = new GoogleGenAI({ apiKey: geminiApiKey });
+}
 
 export interface LiveMarketData {
   fundHouse: string;
@@ -37,6 +43,11 @@ export const askVernacularAI = async (
   prompt: string,
   language: string = 'Hindi'
 ): Promise<{ answer: string; source?: string }> => {
+  if (!prompt || !prompt.trim()) {
+    return { answer: 'Please enter a valid query.' };
+  }
+
+  // 1. Try Backend Express API Endpoint (/api/ai/chat)
   try {
     const res = await fetch(`${API_BASE}/ai/chat`, {
       method: 'POST',
@@ -44,20 +55,36 @@ export const askVernacularAI = async (
       body: JSON.stringify({ prompt, language }),
     });
 
-    if (!res.ok) {
-      throw new Error(`HTTP error! status: ${res.status}`);
+    if (res.ok) {
+      const data = await res.json();
+      if (data && data.answer) {
+        return { answer: data.answer, source: data.source || 'backend-api' };
+      }
     }
-
-    return await res.json();
   } catch (error) {
-    console.warn('API Endpoint notice, returning client fallback analysis:', error);
-    return {
-      answer: `FinLingo AI analysis for "${prompt}" (${language}):
-• SIP and wealth compounding: Investing systematically monthly in diversified funds earns ~12% - 14% p.a. over 5 years.
-• Safety & Regulation: Always check SEBI registration and RBI benchmark guidelines.`,
-      source: 'client-fallback',
-    };
+    console.warn('Backend API endpoint unreachable, attempting client direct SDK...', error);
   }
+
+  // 2. Direct Gemini SDK Integration (If running purely on frontend with VITE_GEMINI_API_KEY)
+  if (directAI) {
+    try {
+      const response = await directAI.models.generateContent({
+        model: 'gemini-2.5-flash',
+        contents: `You are FinLingo, a helpful financial assistant. Explain the following term or question clearly in plain, simple ${language}: "${prompt}"`,
+      });
+      if (response && response.text) {
+        return { answer: response.text, source: 'direct-gemini-sdk' };
+      }
+    } catch (directErr) {
+      console.error('Direct Gemini SDK error:', directErr);
+    }
+  }
+
+  // 3. Generic Network Error Fallback (No static hardcoded template strings)
+  return {
+    answer: "I'm having trouble connecting to the network right now. Please check your backend server.",
+    source: 'network-error',
+  };
 };
 
 // 2. LIVE AMFI MUTUAL FUND NAV & MARKET RATES

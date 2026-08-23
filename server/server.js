@@ -66,22 +66,25 @@ Break down and explain this question in simple, everyday, jargon-free ${language
         return res.json({ answer: response.text, source: 'gemini-2.5-flash' });
       }
     } catch (aiErr) {
-      console.warn('Gemini API call warning, using intelligent financial response generator:', aiErr.message);
+      console.error('Gemini API execution error:', aiErr.message);
+      return res.status(500).json({
+        error: 'AI generation failed',
+        answer: "I'm having trouble connecting to the network right now. Please check your backend server.",
+        details: aiErr.message
+      });
     }
 
-    // High quality intelligent financial answer fallback
-    const fallbackAnswers = {
-      Hindi: `नमस्ते! FinLingo AI विश्लेषण:\n• ${prompt} के विषय में: भारतीय रिजर्व बैंक (RBI) और SEBI के नियमों के अनुसार हमेशा नियमित बचत और सही SIP योजना का चयन करना चाहिए।\n• 5 साल की अवधि के लिए 12% से 14% p.a. का अनुमानित चक्रवृद्धि रिटर्न हासिल किया जा सकता है।\n• बिना किसी गुप्त शुल्क के पारदर्शी सलाह हेतु FinLingo कैलकुलेटर का प्रयोग करें।`,
-      Tamil: `வணக்கம்! FinLingo AI விளக்கம்:\n• "${prompt}" குறித்த உங்கள் கேள்விக்கு SEBI / RBI வழிகாட்டுதல்களின்படி சரியான SIP முதலீடு சிறந்த தேர்வாகும்.\n• 5 ஆண்டுகள் காலவரம்பில் 12% - 14% ஆண்டு கூட்டு வளர்ச்சி பெற முடியும்.`,
-      Telugu: `నమస్కారం! FinLingo AI విశ్లేషణ:\n• "${prompt}" పై SEBI మరియు RBI నిబంధనల ప్రకారం క్రమమైన SIP పెట్టుబడి సురక్షితమైనది.\n• 5 సంవత్సరాల కాలంలో 12% వరకు వార్షిక రాబడి లభిస్తుంది.`,
-      English: `Hello! FinLingo AI Analysis:\n• Regarding "${prompt}": As per RBI and SEBI guidelines, disciplined monthly SIPs in diversified mutual funds help beat inflation effectively.\n• Over a 5-year timeframe, compounding historical returns range between 12% - 14.2% p.a.`
-    };
-
-    const answer = fallbackAnswers[language] || fallbackAnswers['English'];
-    res.json({ answer, source: 'finlingo-rules-engine' });
+    res.status(500).json({
+      error: 'AI generation failed',
+      answer: "I'm having trouble connecting to the network right now. Please check your backend server."
+    });
 
   } catch (error) {
-    res.status(500).json({ error: 'AI generation failed', details: error.message });
+    res.status(500).json({
+      error: 'AI generation failed',
+      answer: "I'm having trouble connecting to the network right now. Please check your backend server.",
+      details: error.message
+    });
   }
 });
 
