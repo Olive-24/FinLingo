@@ -1,13 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   ArrowLeft,
   Sparkles,
   Info,
   TrendingUp,
   Send,
+  BookmarkPlus,
+  CheckCircle2,
 } from 'lucide-react';
 import type { LanguageCode } from '../types';
 import { LANGUAGES } from '../data/languages';
+import { fetchLiveMarketData, saveUserGoal, type LiveMarketData } from '../services/api';
 
 interface SimulatorPageProps {
   currentLang: LanguageCode;
@@ -32,9 +35,28 @@ export const SimulatorPage: React.FC<SimulatorPageProps> = ({
   const [monthlyAmount, setMonthlyAmount] = useState<number>(1500);
   const [durationYears, setDurationYears] = useState<number>(3);
   const [compareFD, setCompareFD] = useState<boolean>(true);
+  const [isSaved, setIsSaved] = useState<boolean>(false);
 
-  const sipRate = 12.0; // 12% expected annual return
-  const fdRate = 6.5; // 6.5% guaranteed FD annual return
+  // Live AMFI Market Data State
+  const [marketData, setMarketData] = useState<LiveMarketData>({
+    fundHouse: 'PPFAS Mutual Fund',
+    schemeName: 'Parag Parikh Flexi Cap Fund - Direct Plan - Growth',
+    currentNav: 84.52,
+    navDate: new Date().toLocaleDateString('en-IN'),
+    benchmarkFdRate: 6.5,
+    historicalCAGR: 14.2,
+  });
+
+  useEffect(() => {
+    fetchLiveMarketData().then((data) => {
+      if (data && data.currentNav) {
+        setMarketData(data);
+      }
+    });
+  }, []);
+
+  const sipRate = marketData.historicalCAGR || 12.0; // Live fund return CAGR
+  const fdRate = marketData.benchmarkFdRate || 6.5; // Live bank benchmark FD return
 
   // Calculate SIP returns
   const calculateSIPReturns = (amount: number, years: number, rate: number) => {
@@ -492,11 +514,37 @@ Can you explain the risk difference between SIP and FD for my profile?`;
                 </div>
               )}
 
+              {/* Save Goal Action Button */}
+              <div className="flex flex-col sm:flex-row gap-3 pt-2">
+                <button
+                  onClick={async () => {
+                    await saveUserGoal({
+                      title: `Custom Goal (₹${monthlyAmount.toLocaleString('en-IN')}/mo)`,
+                      targetAmount: sipResult.finalValue,
+                      monthlySavings: monthlyAmount,
+                      tenureYears: durationYears,
+                      expectedReturnRate: sipRate,
+                      projectedMaturity: sipResult.finalValue,
+                    });
+                    setIsSaved(true);
+                    setTimeout(() => setIsSaved(false), 3000);
+                  }}
+                  className={`py-3.5 px-6 rounded-full font-extrabold text-sm flex items-center justify-center gap-2 transition-all cursor-pointer shadow-md ${
+                    isSaved
+                      ? 'bg-emerald-600 text-white'
+                      : 'bg-[#1B2632] hover:bg-[#2C3B4D] text-white'
+                  }`}
+                >
+                  {isSaved ? <CheckCircle2 className="w-4 h-4 text-white" /> : <BookmarkPlus className="w-4 h-4 text-amber-300" />}
+                  <span>{isSaved ? 'Goal Saved to Profile!' : 'Save Goal to Profile'}</span>
+                </button>
+              </div>
+
               {/* PERSISTENT NEUTRAL LEGAL & TRUST DISCLAIMER BANNER */}
               <div className="p-3.5 rounded-2xl bg-slate-100 border border-slate-200 text-xs text-[#64748B] flex items-center gap-2.5">
                 <Info className="w-4 h-4 text-[#0F7173] shrink-0" />
                 <span className="font-semibold">
-                  This is a simulation, not a real investment. Projected values assume market compounding rates.
+                  Live AMFI Data ({marketData.fundHouse}): NAV ₹{marketData.currentNav} ({marketData.navDate}) • Benchmark FD: {marketData.benchmarkFdRate}% • Historical CAGR: {marketData.historicalCAGR}%. This is a simulation for educational purposes.
                 </span>
               </div>
 

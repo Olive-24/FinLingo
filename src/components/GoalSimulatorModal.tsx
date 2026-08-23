@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { X, Sliders, ShieldCheck, Send, Flame } from 'lucide-react';
 import type { DetectedGoal, LanguageCode } from '../types';
+import { saveUserGoal } from '../services/api';
 
 interface GoalSimulatorModalProps {
   goal: DetectedGoal | null;
@@ -48,7 +49,17 @@ export const GoalSimulatorModal: React.FC<GoalSimulatorModalProps> = ({
     targetAmount * Math.pow(1 + inflationRate / 100, timeframeYears)
   );
 
-  const handleApplyToChat = () => {
+  const handleApplyToChat = async () => {
+    // Persist goal to MongoDB via backend API
+    await saveUserGoal({
+      title: goal.title,
+      targetAmount,
+      monthlySavings: monthlySIP,
+      tenureYears: timeframeYears,
+      expectedReturnRate: returnRate,
+      projectedMaturity: targetAmount,
+    });
+
     const summary = `I simulated my goal "${goal.title}":
 • Target Goal Amount: ₹${targetAmount.toLocaleString('en-IN')} (Inflation Adjusted: ₹${inflationAdjustedTarget.toLocaleString('en-IN')})
 • Target Time Horizon: ${timeframeYears} Years

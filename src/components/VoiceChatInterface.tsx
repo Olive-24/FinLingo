@@ -25,6 +25,7 @@ import { Sidebar } from './Sidebar';
 import { GoalSimulatorModal } from './GoalSimulatorModal';
 import { MYTHS_DATA } from '../data/mythsData';
 import { Button } from './ui/Primitives';
+import { askVernacularAI } from '../services/api';
 
 interface VoiceChatInterfaceProps {
   user: UserProfile;
@@ -211,7 +212,7 @@ export const VoiceChatInterface: React.FC<VoiceChatInterfaceProps> = ({
   };
 
   // Send User Message
-  const handleUserSend = (textInput?: string) => {
+  const handleUserSend = async (textInput?: string) => {
     const textToSend = textInput || inputQuery;
     if (!textToSend.trim()) return;
 
@@ -227,66 +228,66 @@ export const VoiceChatInterface: React.FC<VoiceChatInterfaceProps> = ({
 
     setInputQuery('');
 
-    // Generate Tailored AI Response
-    setTimeout(() => {
-      let aiText = '';
-      let loanCalc = undefined;
+    // Fetch Live Generative Vernacular AI Response from Backend Service
+    let aiText = '';
+    let loanCalc = undefined;
 
-      const lowerSend = textToSend.toLowerCase();
-      const matchedMyth = MYTHS_DATA.find((m) => {
-        const qEng = m.question.toLowerCase();
-        const tag = m.tag.toLowerCase();
-        return lowerSend.includes(qEng) || lowerSend.includes(tag);
-      });
+    const lowerSend = textToSend.toLowerCase();
+    const matchedMyth = MYTHS_DATA.find((m) => {
+      const qEng = m.question.toLowerCase();
+      const tag = m.tag.toLowerCase();
+      return lowerSend.includes(qEng) || lowerSend.includes(tag);
+    });
 
-      if (matchedMyth) {
-        aiText = matchedMyth.answer;
-      } else if (detectedGoal) {
-        aiText = `I noticed you are planning for **${detectedGoal.title}**!
+    if (matchedMyth) {
+      aiText = matchedMyth.answer;
+    } else if (detectedGoal) {
+      aiText = `I noticed you are planning for **${detectedGoal.title}**!
 To reach ₹${detectedGoal.targetAmount.toLocaleString('en-IN')} in ${detectedGoal.timeframeYears} years, saving a disciplined ~₹${detectedGoal.suggestedMonthlySavings}/month in a balanced SIP can help beat inflation.
 
 Tap **"Simulate this goal"** below to adjust timeframe & return parameters live!`;
-      } else if (textToSend.includes('₹50,000') || textToSend.includes('EMI')) {
-        aiText = `For a Personal Loan of ₹50,000 at 14% p.a. over 24 months:
+    } else if (textToSend.includes('₹50,000') || textToSend.includes('EMI')) {
+      aiText = `For a Personal Loan of ₹50,000 at 14% p.a. over 24 months:
 • Monthly EMI: ₹2,401/month.
 • Total Interest Paid: ₹7,624.
 • Zero prepayment penalty if paid early via UPI.`;
-        loanCalc = {
-          principal: 50000,
-          interestRate: 14,
-          tenureMonths: 24,
-          monthlyEMI: 2401,
-          totalInterest: 7624,
-        };
-      } else {
-        aiText = `I have processed your query in ${currentLangObj.name}. FinLingo provides zero-jargon explanations tailored to your profile as a ${user.occupation}. Ask about EMIs, goal savings, or SIP returns anytime!`;
-      }
-
-      const aiMsg: VoiceChatMessage = {
-        id: `ai_${Date.now()}`,
-        sender: 'ai',
-        text: aiText,
-        detectedGoal: detectedGoal,
-        loanCalculation: loanCalc,
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      loanCalc = {
+        principal: 50000,
+        interestRate: 14,
+        tenureMonths: 24,
+        monthlyEMI: 2401,
+        totalInterest: 7624,
       };
+    } else {
+      // Call Live Gemini AI Endpoint via service layer
+      const aiResponse = await askVernacularAI(textToSend, currentLangObj.nativeName);
+      aiText = aiResponse.answer;
+    }
 
-      const finalMessages = [...updatedMessages, aiMsg];
-      const updatedThreads = threads.map((t) =>
-        t.id === activeThreadId
-          ? {
-              ...t,
-              title: textToSend.length > 25 ? `${textToSend.substring(0, 25)}...` : textToSend,
-              lastUpdated: 'Just now',
-              messagesCount: finalMessages.length,
-              messages: finalMessages,
-            }
-          : t
-      );
+    const aiMsg: VoiceChatMessage = {
+      id: `ai_${Date.now()}`,
+      sender: 'ai',
+      text: aiText,
+      detectedGoal: detectedGoal,
+      loanCalculation: loanCalc,
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+    };
 
-      setThreads(updatedThreads);
-      setPlayingAudioId(aiMsg.id);
-    }, 800);
+    const finalMessages = [...updatedMessages, aiMsg];
+    const updatedThreads = threads.map((t) =>
+      t.id === activeThreadId
+        ? {
+            ...t,
+            title: textToSend.length > 25 ? `${textToSend.substring(0, 25)}...` : textToSend,
+            lastUpdated: 'Just now',
+            messagesCount: finalMessages.length,
+            messages: finalMessages,
+          }
+        : t
+    );
+
+    setThreads(updatedThreads);
+    setPlayingAudioId(aiMsg.id);
   };
 
   const handleOpenGoalSimulator = (goal: DetectedGoal) => {

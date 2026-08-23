@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
-import { Play, Pause, CheckCircle2, Volume2, ShieldCheck, ArrowLeft } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Play, Pause, CheckCircle2, Volume2, ShieldCheck, ArrowLeft, BellRing } from 'lucide-react';
 import type { LanguageCode } from '../types';
 import { MYTHS_DATA } from '../data/mythsData';
 import { LANGUAGES } from '../data/languages';
+import { fetchFinancialNews, type FinancialNewsItem } from '../services/api';
 
 interface MythBustingSectionProps {
   standalonePage?: boolean;
@@ -21,6 +22,11 @@ export const MythBustingSection: React.FC<MythBustingSectionProps> = ({
 }) => {
   const [activeMythId, setActiveMythId] = useState<string>(MYTHS_DATA[0].id);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
+  const [newsAlerts, setNewsAlerts] = useState<FinancialNewsItem[]>([]);
+
+  useEffect(() => {
+    fetchFinancialNews().then((data) => setNewsAlerts(data));
+  }, []);
 
   const activeMyth = MYTHS_DATA.find((m) => m.id === activeMythId) || MYTHS_DATA[0];
 
@@ -50,6 +56,29 @@ export const MythBustingSection: React.FC<MythBustingSectionProps> = ({
                 </option>
               ))}
             </select>
+          </div>
+        )}
+
+        {/* Live Regulatory Alerts Banner */}
+        {newsAlerts.length > 0 && (
+          <div className="mb-8 p-3.5 sm:p-4 rounded-2xl bg-[#1B2632] text-white space-y-2 shadow-md">
+            <div className="flex items-center gap-2 text-xs font-bold text-[#FFB162] uppercase tracking-wider">
+              <BellRing className="w-4 h-4 text-[#FFB162] animate-bounce shrink-0" />
+              <span>Live Regulatory & Circular Updates</span>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+              {newsAlerts.slice(0, 2).map((item) => (
+                <div key={item.id} className="p-2.5 rounded-xl bg-white/10 border border-white/10 space-y-1">
+                  <div className="font-extrabold text-white flex items-center justify-between">
+                    <span>{item.title}</span>
+                    <span className="text-[10px] bg-[#FFB162]/20 text-[#FFB162] px-2 py-0.5 rounded font-mono shrink-0 ml-1">
+                      {item.category}
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-slate-300 leading-relaxed">{item.summary}</p>
+                </div>
+              ))}
+            </div>
           </div>
         )}
 
