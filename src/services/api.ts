@@ -1,12 +1,5 @@
-import { GoogleGenAI } from '@google/genai';
-
 const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
 const geminiApiKey = import.meta.env.VITE_GEMINI_API_KEY;
-
-let directAI: GoogleGenAI | null = null;
-if (geminiApiKey) {
-  directAI = new GoogleGenAI({ apiKey: geminiApiKey });
-}
 
 export interface LiveMarketData {
   fundHouse: string;
@@ -47,7 +40,7 @@ export const askVernacularAI = async (
     return { answer: 'Please enter a valid query.' };
   }
 
-  // 1. Try Backend Express API Endpoint (/api/ai/chat)
+  // 1. Primary: Asynchronous call to Backend Express API Endpoint (/api/ai/chat)
   try {
     const res = await fetch(`${API_BASE}/ai/chat`, {
       method: 'POST',
@@ -62,13 +55,15 @@ export const askVernacularAI = async (
       }
     }
   } catch (error) {
-    console.warn('Backend API endpoint unreachable, attempting client direct SDK...', error);
+    console.warn('Backend Express API endpoint unreachable, attempting fallback...', error);
   }
 
-  // 2. Direct Gemini SDK Integration (If running purely on frontend with VITE_GEMINI_API_KEY)
-  if (directAI) {
+  // 2. Secondary: Dynamic Browser Gemini SDK (If VITE_GEMINI_API_KEY is defined in frontend .env)
+  if (geminiApiKey) {
     try {
-      const response = await directAI.models.generateContent({
+      const { GoogleGenAI } = await import('@google/genai');
+      const ai = new GoogleGenAI({ apiKey: geminiApiKey });
+      const response = await ai.models.generateContent({
         model: 'gemini-2.5-flash',
         contents: `You are FinLingo, a helpful financial assistant. Explain the following term or question clearly in plain, simple ${language}: "${prompt}"`,
       });
@@ -76,11 +71,11 @@ export const askVernacularAI = async (
         return { answer: response.text, source: 'direct-gemini-sdk' };
       }
     } catch (directErr) {
-      console.error('Direct Gemini SDK error:', directErr);
+      console.warn('Direct Gemini SDK call error:', directErr);
     }
   }
 
-  // 3. Generic Network Error Fallback (No static hardcoded template strings)
+  // 3. Generic Network Error Fallback Notice
   return {
     answer: "I'm having trouble connecting to the network right now. Please check your backend server.",
     source: 'network-error',
