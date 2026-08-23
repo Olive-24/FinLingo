@@ -87,6 +87,65 @@ export const VoiceChatInterface: React.FC<VoiceChatInterfaceProps> = ({
   // TTS Audio Player States
   const [playingAudioId, setPlayingAudioId] = useState<string | null>(null);
   const [audioSpeed, setAudioSpeed] = useState<number>(1.0);
+  const [isAudioPlaying, setIsAudioPlaying] = useState<boolean>(false);
+
+  const speakResponseText = (text: string, lang: string = 'English') => {
+    if (!('speechSynthesis' in window)) {
+      alert("Speech Synthesis is not supported in this browser.");
+      return;
+    }
+
+    // 1. Cancel any active speaking instance
+    window.speechSynthesis.cancel();
+
+    // 2. Clean markdown symbols (*, #, _, -) so TTS reads cleanly
+    const cleanText = text.replace(/[*#_`]/g, '').trim();
+    const utterance = new SpeechSynthesisUtterance(cleanText);
+
+    // 3. Map language to appropriate BCP-47 locale
+    const langMap: Record<string, string> = {
+      'Hindi': 'hi-IN',
+      'English': 'en-IN',
+      'Tamil': 'ta-IN',
+      'Telugu': 'te-IN',
+      'Bengali': 'bn-IN'
+    };
+    utterance.lang = langMap[lang] || 'en-IN';
+    utterance.rate = audioSpeed || 1.0;
+    utterance.pitch = 1.0;
+
+    // 4. Update UI playing states on start and end
+    utterance.onstart = () => {
+      setIsAudioPlaying(true);
+    };
+
+    utterance.onend = () => {
+      setIsAudioPlaying(false);
+      setPlayingAudioId(null);
+    };
+
+    utterance.onerror = (event) => {
+      console.error("SpeechSynthesis error:", event);
+      setIsAudioPlaying(false);
+      setPlayingAudioId(null);
+    };
+
+    // 5. Trigger playback
+    window.speechSynthesis.speak(utterance);
+  };
+
+  const handleToggleAudio = (msgId: string, text: string) => {
+    if (playingAudioId === msgId && isAudioPlaying) {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+      }
+      setIsAudioPlaying(false);
+      setPlayingAudioId(null);
+    } else {
+      setPlayingAudioId(msgId);
+      speakResponseText(text, currentLangObj.nativeName);
+    }
+  };
 
   // Active Goal Simulator Modal State
   const [simGoal, setSimGoal] = useState<DetectedGoal | null>(null);
@@ -276,6 +335,7 @@ export const VoiceChatInterface: React.FC<VoiceChatInterfaceProps> = ({
 
     setThreads(updatedThreads);
     setPlayingAudioId(aiMsg.id);
+    speakResponseText(aiMsg.text, currentLangObj.nativeName);
   };
 
   const handleOpenGoalSimulator = (goal: DetectedGoal) => {
@@ -470,17 +530,17 @@ export const VoiceChatInterface: React.FC<VoiceChatInterfaceProps> = ({
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
-                              setPlayingAudioId(isPlaying ? null : msg.id);
+                              handleToggleAudio(msg.id, msg.text);
                             }}
-                            className={`p-1.5 px-2.5 rounded-full flex items-center gap-1.5 font-bold transition-all ${
-                              isPlaying
+                            className={`p-1.5 px-2.5 rounded-full flex items-center gap-1.5 font-bold transition-all cursor-pointer ${
+                              isPlaying && isAudioPlaying
                                 ? 'bg-[#F5A623] text-slate-950 shadow-sm animate-pulse'
-                                : 'bg-white text-[#0F7173] border border-[#0F7173]/30'
+                                : 'bg-white text-[#0F7173] border border-[#0F7173]/30 hover:bg-[#0F7173]/5'
                             }`}
                           >
-                            {isPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
+                            {isPlaying && isAudioPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
                             <span className="text-[11px]">
-                              {isPlaying ? 'Playing Audio...' : 'Listen'}
+                              {isPlaying && isAudioPlaying ? 'Playing Audio...' : 'Listen'}
                             </span>
                           </button>
 
