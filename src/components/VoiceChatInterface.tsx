@@ -214,7 +214,7 @@ export const VoiceChatInterface: React.FC<VoiceChatInterfaceProps> = ({
   // Send User Message
   const handleUserSend = async (textInput?: string) => {
     const textToSend = textInput || inputQuery;
-    if (!textToSend.trim()) return;
+    if (!textToSend || !textToSend.trim()) return;
 
     const userMsg: VoiceChatMessage = {
       id: `user_${Date.now()}`,
@@ -228,40 +228,28 @@ export const VoiceChatInterface: React.FC<VoiceChatInterfaceProps> = ({
 
     setInputQuery('');
 
-    // Fetch Live Generative Vernacular AI Response from Backend Service
     let aiText = '';
     let loanCalc = undefined;
 
-    const lowerSend = textToSend.toLowerCase();
-    const matchedMyth = MYTHS_DATA.find((m) => {
-      const qEng = m.question.toLowerCase();
-      const tag = m.tag.toLowerCase();
-      return lowerSend.includes(qEng) || lowerSend.includes(tag);
-    });
-
-    if (matchedMyth) {
-      aiText = matchedMyth.answer;
-    } else if (detectedGoal) {
-      aiText = `I noticed you are planning for **${detectedGoal.title}**!
-To reach ₹${detectedGoal.targetAmount.toLocaleString('en-IN')} in ${detectedGoal.timeframeYears} years, saving a disciplined ~₹${detectedGoal.suggestedMonthlySavings}/month in a balanced SIP can help beat inflation.
-
-Tap **"Simulate this goal"** below to adjust timeframe & return parameters live!`;
-    } else if (textToSend.includes('₹50,000') || textToSend.includes('EMI')) {
-      aiText = `For a Personal Loan of ₹50,000 at 14% p.a. over 24 months:
-• Monthly EMI: ₹2,401/month.
-• Total Interest Paid: ₹7,624.
-• Zero prepayment penalty if paid early via UPI.`;
-      loanCalc = {
-        principal: 50000,
-        interestRate: 14,
-        tenureMonths: 24,
-        monthlyEMI: 2401,
-        totalInterest: 7624,
-      };
-    } else {
-      // Call Live Gemini AI Endpoint via service layer
-      const aiResponse = await askVernacularAI(textToSend, currentLangObj.nativeName);
+    try {
+      // Call Real Gemini AI API
+      const aiResponse = await askVernacularAI(textToSend, currentLangObj.nativeName || 'English');
       aiText = typeof aiResponse === 'string' ? aiResponse : (aiResponse?.answer || String(aiResponse));
+
+      if (detectedGoal) {
+        aiText += `\n\nTap **"Simulate this goal"** below to adjust timeframe & return parameters live!`;
+      } else if (textToSend.includes('₹50,000') && textToSend.includes('EMI')) {
+        loanCalc = {
+          principal: 50000,
+          interestRate: 14,
+          tenureMonths: 24,
+          monthlyEMI: 2401,
+          totalInterest: 7624,
+        };
+      }
+    } catch (err) {
+      console.error('Chat error:', err);
+      aiText = "Sorry, I couldn't process that right now. Please try again.";
     }
 
     const aiMsg: VoiceChatMessage = {
