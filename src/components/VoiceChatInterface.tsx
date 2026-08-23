@@ -261,7 +261,7 @@ Tap **"Simulate this goal"** below to adjust timeframe & return parameters live!
     } else {
       // Call Live Gemini AI Endpoint via service layer
       const aiResponse = await askVernacularAI(textToSend, currentLangObj.nativeName);
-      aiText = aiResponse.answer;
+      aiText = typeof aiResponse === 'string' ? aiResponse : (aiResponse?.answer || String(aiResponse));
     }
 
     const aiMsg: VoiceChatMessage = {
