@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import {
-  Sparkles,
   MessageSquare,
   TrendingUp,
   HelpCircle,
@@ -61,8 +60,10 @@ export const DashboardWorkspace: React.FC<DashboardWorkspaceProps> = ({
         <header className="w-full flex items-center justify-between py-2">
           {/* Left Brand Logo */}
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-[#1B2632] text-white flex items-center justify-center font-bold shadow-md shrink-0">
-              <Sparkles className="w-5 h-5 fill-white/20" />
+            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[#1B2632] flex items-center justify-center shadow-md shrink-0">
+              <svg className="w-4 h-4 sm:w-5 sm:h-5 fill-[#FFB162]" viewBox="0 0 24 24">
+                <path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z" />
+              </svg>
             </div>
             <div className="flex items-center gap-2">
               <span className="font-serif text-xl sm:text-2xl font-semibold text-[#1B2632] tracking-tight">

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import {
-  Sliders,
   ArrowLeft,
   Sparkles,
   Info,
@@ -168,8 +167,10 @@ Can you explain the risk difference between SIP and FD for my profile?`;
             </button>
 
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-xl bg-[#1B2632] text-white flex items-center justify-center font-bold shrink-0">
-                <Sliders className="w-4 h-4" />
+              <div className="w-8 h-8 rounded-full bg-[#1B2632] flex items-center justify-center font-bold shrink-0">
+                <svg className="w-4 h-4 fill-[#FFB162]" viewBox="0 0 24 24">
+                  <path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z" />
+                </svg>
               </div>
               <div className="truncate">
                 <h1 className="font-serif font-bold text-base sm:text-lg text-[#1B2632] truncate">

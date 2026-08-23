@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Globe, ChevronDown, Sparkles, Menu, X } from 'lucide-react';
+import { Globe, ChevronDown, Menu, X } from 'lucide-react';
 import type { LanguageCode } from '../types';
 import { LANGUAGES } from '../data/languages';
 
@@ -35,8 +35,10 @@ export const Navbar: React.FC<NavbarProps> = ({
         
         {/* Left: Brand logo wordmark + v1.0 Live badge */}
         <a href="#" className="flex items-center gap-2.5 sm:gap-3 group text-decoration-none">
-          <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-[#1B2632] text-white flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform shrink-0">
-            <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 fill-white/20" />
+          <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[#1B2632] flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform shrink-0">
+            <svg className="w-4 h-4 sm:w-5 sm:h-5 fill-[#FFB162]" viewBox="0 0 24 24">
+              <path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z" />
+            </svg>
           </div>
           <div className="flex items-center gap-1.5 sm:gap-2">
             <span className="font-serif font-bold text-xl sm:text-2xl tracking-tight text-[#1B2632]">

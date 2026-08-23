@@ -98,11 +98,18 @@ export function FinLingoLanding({
       {/* 1. STICKY TOP NAVBAR */}
       <header className="sticky top-0 z-50 bg-[#EEE9DF]/90 backdrop-blur-md border-b border-[#1B2632]/10 px-6 py-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <span className="font-serif text-2xl font-bold tracking-tight text-[#1B2632]">FinLingo</span>
-            <span className="text-[10px] uppercase font-bold tracking-widest bg-[#A35139]/10 text-[#A35139] px-2.5 py-0.5 rounded-full">
-              v1.0 Live
-            </span>
+          <div className="flex items-center gap-2.5 sm:gap-3">
+            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[#1B2632] flex items-center justify-center shadow-sm shrink-0">
+              <svg className="w-4 h-4 sm:w-5 sm:h-5 fill-[#FFB162]" viewBox="0 0 24 24">
+                <path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z" />
+              </svg>
+            </div>
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              <span className="font-serif text-xl sm:text-2xl font-bold tracking-tight text-[#1B2632]">FinLingo</span>
+              <span className="text-[9px] sm:text-[10px] uppercase font-bold tracking-widest bg-[#A35139]/10 text-[#A35139] px-2.5 py-0.5 rounded-full border border-[#FFB162]/40">
+                v1.0 Live
+              </span>
+            </div>
           </div>
 
           <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-[#5C6B7A]">
