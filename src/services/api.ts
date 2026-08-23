@@ -30,29 +30,22 @@ export interface SavedGoalData {
   projectedMaturity?: number;
 }
 
-// 1. LIVE VERNACULAR GENERATIVE AI ASSISTANT (Multi-Model REST API Cascade)
+// 1. LIVE VERNACULAR GENERATIVE AI ASSISTANT (Gemini 2.5 Flash API + Diagnostic Error Reporting)
 export const askVernacularAI = async (
   prompt: string,
   language: string = 'English'
 ): Promise<string> => {
-  const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+  const rawKey = import.meta.env.VITE_GEMINI_API_KEY;
+  const apiKey = typeof rawKey === 'string' ? rawKey.trim().replace(/^["']|["']$/g, '') : '';
 
   if (!prompt || !prompt.trim()) {
     return "Please enter a valid financial question.";
   }
 
   if (!apiKey) {
-    console.error("Missing VITE_GEMINI_API_KEY in .env");
-    return "API key missing. Please add VITE_GEMINI_API_KEY in your .env file.";
+    console.error("VITE_GEMINI_API_KEY is missing or empty in .env");
+    return "API Key is missing. Add VITE_GEMINI_API_KEY to your .env file and restart Vite.";
   }
-
-  // Model cascade: tries standard models in sequence until a valid candidate returns
-  const candidateModels = [
-    { version: 'v1beta', name: 'gemini-1.5-flash-latest' },
-    { version: 'v1', name: 'gemini-1.5-flash' },
-    { version: 'v1beta', name: 'gemini-2.0-flash' },
-    { version: 'v1beta', name: 'gemini-pro' }
-  ];
 
   const payload = {
     contents: [
@@ -60,49 +53,38 @@ export const askVernacularAI = async (
         role: "user",
         parts: [
           {
-            text: `You are FinLingo, an AI financial literacy assistant for Indian users. 
-Explain this query clearly, concisely, and without complex financial jargon in plain ${language}:
-"${prompt}"`
+            text: `You are FinLingo, a financial literacy assistant. Explain this in plain, simple ${language}: "${prompt}"`
           }
         ]
       }
-    ],
-    generationConfig: {
-      temperature: 0.4,
-      maxOutputTokens: 600
-    }
+    ]
   };
 
-  for (const target of candidateModels) {
-    const endpoint = `https://generativelanguage.googleapis.com/${target.version}/models/${target.name}:generateContent?key=${apiKey}`;
+  const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
 
-    try {
-      const response = await fetch(endpoint, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(payload)
-      });
+  try {
+    const response = await fetch(endpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload)
+    });
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        console.warn(`Failed endpoint [${target.name}]:`, errorData);
-        continue;
-      }
+    const data = await response.json();
 
-      const data = await response.json();
-      const generatedText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-
-      if (generatedText) {
-        return generatedText.trim();
-      }
-    } catch (networkError) {
-      console.warn(`Network error with model [${target.name}]:`, networkError);
+    if (!response.ok || data.error) {
+      console.error("Google AI Studio Error Details:", data);
+      const message = data?.error?.message || `HTTP error ${response.status}`;
+      return `Gemini API Error: ${message}`;
     }
-  }
 
-  return "Could not retrieve an answer from the AI engine. Please verify your API key access in Google AI Studio.";
+    const output = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+    return output ? output.trim() : "No text returned by the model.";
+  } catch (err: any) {
+    console.error("Network/Fetch Exception:", err);
+    return `Network Connection Error: ${err.message || "Failed to reach Google servers"}`;
+  }
 };
 
 // 2. LIVE AMFI MUTUAL FUND NAV & MARKET RATES
