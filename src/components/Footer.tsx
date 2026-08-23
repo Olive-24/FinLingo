@@ -31,10 +31,23 @@ export const Footer: React.FC<FooterProps> = ({
           
           {/* Brand & Language Selector */}
           <div className="lg:col-span-2 space-y-4">
-            <div className="flex items-center gap-2.5 sm:gap-3">
-              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[#1B2632] flex items-center justify-center shadow-sm shrink-0">
-                <svg className="w-4 h-4 sm:w-5 sm:h-5 fill-[#FFB162]" viewBox="0 0 24 24">
-                  <path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z" />
+            <div className="flex items-center gap-3">
+              {/* Circular Brand Sparkle Emblem */}
+              <div className="w-8 h-8 rounded-full bg-[#1B2632] flex items-center justify-center text-white shadow-sm shrink-0">
+                <svg 
+                  className="w-4 h-4" 
+                  viewBox="0 0 24 24" 
+                  fill="none" 
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  {/* Central 4-point AI Star / Petal Cluster */}
+                  <path 
+                    d="M12 2C12 7.52285 7.52285 12 2 12C7.52285 12 12 16.4771 12 22C12 16.4771 16.4771 12 22 12C16.4771 12 12 7.52285 12 2Z" 
+                    fill="currentColor" 
+                  />
+                  {/* Micro accent satellite dots */}
+                  <circle cx="19" cy="5" r="1.5" fill="currentColor" opacity="0.9" />
+                  <circle cx="5" cy="19" r="1.2" fill="currentColor" opacity="0.7" />
                 </svg>
               </div>
               <span className="font-serif font-bold text-xl tracking-tight text-[#1B2632]">FinLingo</span>

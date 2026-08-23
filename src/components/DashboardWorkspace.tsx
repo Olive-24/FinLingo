@@ -60,19 +60,34 @@ export const DashboardWorkspace: React.FC<DashboardWorkspaceProps> = ({
         <header className="w-full flex items-center justify-between py-2">
           {/* Left Brand Logo */}
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[#1B2632] flex items-center justify-center shadow-md shrink-0">
-              <svg className="w-4 h-4 sm:w-5 sm:h-5 fill-[#FFB162]" viewBox="0 0 24 24">
-                <path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z" />
+            {/* Circular Brand Sparkle Emblem */}
+            <div className="w-8 h-8 rounded-full bg-[#1B2632] flex items-center justify-center text-white shadow-sm shrink-0">
+              <svg 
+                className="w-4 h-4" 
+                viewBox="0 0 24 24" 
+                fill="none" 
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                {/* Central 4-point AI Star / Petal Cluster */}
+                <path 
+                  d="M12 2C12 7.52285 7.52285 12 2 12C7.52285 12 12 16.4771 12 22C12 16.4771 16.4771 12 22 12C16.4771 12 12 7.52285 12 2Z" 
+                  fill="currentColor" 
+                />
+                {/* Micro accent satellite dots */}
+                <circle cx="19" cy="5" r="1.5" fill="currentColor" opacity="0.9" />
+                <circle cx="5" cy="19" r="1.2" fill="currentColor" opacity="0.7" />
               </svg>
             </div>
-            <div className="flex items-center gap-2">
-              <span className="font-serif text-xl sm:text-2xl font-semibold text-[#1B2632] tracking-tight">
-                FinLingo
-              </span>
-              <span className="px-2.5 py-0.5 rounded-full bg-[#FFB162]/20 text-[#A35139] text-[9px] sm:text-[10px] font-mono font-bold border border-[#FFB162]/40">
-                v1.0 Live AI Engine
-              </span>
-            </div>
+
+            {/* Brand Name Wordmark */}
+            <span className="font-serif text-xl sm:text-2xl font-bold tracking-tight text-[#1B2632]">
+              FinLingo
+            </span>
+
+            {/* Version Tag Pill */}
+            <span className="text-[9px] sm:text-[10px] uppercase font-bold tracking-wider bg-[#A35139]/10 text-[#A35139] border border-[#A35139]/20 px-2.5 py-0.5 rounded-full">
+              v1.0 Live AI Engine
+            </span>
           </div>
 
           {/* Center Links */}
