@@ -213,7 +213,7 @@ export const AnimatedDemoStrip: React.FC<AnimatedDemoStripProps> = () => {
                   step={5000}
                   value={loanAmount}
                   onChange={(e) => setLoanAmount(Number(e.target.value))}
-                  className="w-full accent-[#3B2530] cursor-pointer"
+                  className="h-2 w-full bg-[#3B2530]/10 rounded-lg appearance-none cursor-pointer accent-[#3B2530]"
                 />
               </div>
 
@@ -229,7 +229,7 @@ export const AnimatedDemoStrip: React.FC<AnimatedDemoStripProps> = () => {
                   step={6}
                   value={tenureMonths}
                   onChange={(e) => setTenureMonths(Number(e.target.value))}
-                  className="w-full accent-[#3B2530] cursor-pointer"
+                  className="h-2 w-full bg-[#3B2530]/10 rounded-lg appearance-none cursor-pointer accent-[#3B2530]"
                 />
               </div>
 
@@ -245,7 +245,7 @@ export const AnimatedDemoStrip: React.FC<AnimatedDemoStripProps> = () => {
                   step={0.5}
                   value={interestRate}
                   onChange={(e) => setInterestRate(Number(e.target.value))}
-                  className="w-full accent-[#3B2530] cursor-pointer"
+                  className="h-2 w-full bg-[#3B2530]/10 rounded-lg appearance-none cursor-pointer accent-[#3B2530]"
                 />
               </div>
             </div>

@@ -13,9 +13,9 @@ export const Hero: React.FC<HeroProps> = ({ currentLang, onOpenOnboarding, onOpe
   const t = TRANSLATIONS[currentLang].hero;
 
   return (
-    <section className="py-16 md:py-24 bg-[#EEE9DF] text-[#1B2632]">
-      <div className="max-w-6xl mx-auto px-6">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+    <section className="py-12 sm:py-16 md:py-24 bg-[#EEE9DF] text-[#1B2632] overflow-x-hidden">
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center">
           
           {/* LEFT COLUMN: 7 Columns */}
           <div className="lg:col-span-7 space-y-6 text-left">
@@ -29,19 +29,19 @@ export const Hero: React.FC<HeroProps> = ({ currentLang, onOpenOnboarding, onOpe
 
             {/* H1 Serif Headline */}
             <div>
-              <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-medium tracking-tight text-[#1B2632] leading-[1.15] mb-4">
+              <h1 className="font-serif text-3xl sm:text-5xl lg:text-7xl font-medium tracking-tight text-[#1B2632] leading-[1.15] mb-4">
                 Apni bhasha mein{' '}
                 <span className="text-[#A35139] underline decoration-[#A35139]/20 underline-offset-8">
                   paison ki samajh
                 </span>
               </h1>
-              <div className="font-indic text-xl sm:text-2xl font-bold text-[#5C6B7A] tracking-tight">
+              <div className="font-indic text-lg sm:text-2xl font-bold text-[#5C6B7A] tracking-tight">
                 अपनी भाषा में पैसों की समझ
               </div>
             </div>
 
             {/* Body Paragraph */}
-            <p className="text-base text-[#5C6B7A] leading-relaxed max-w-2xl">
+            <p className="text-sm sm:text-base text-[#5C6B7A] leading-relaxed max-w-2xl">
               {t.subTitle}
             </p>
 
@@ -67,48 +67,48 @@ export const Hero: React.FC<HeroProps> = ({ currentLang, onOpenOnboarding, onOpe
 
           {/* RIGHT COLUMN: 5 Columns (Floating Voice Demo Card) */}
           <div className="lg:col-span-5">
-            <div className="bg-white p-6 rounded-2xl border border-[#1B2632]/10 shadow-lg space-y-4">
+            <div className="bg-white p-5 sm:p-8 rounded-3xl border border-[#1B2632]/10 shadow-lg space-y-4">
               {/* Card Header */}
               <div className="flex items-center justify-between border-b border-[#C9C1B1]/40 pb-3">
                 <div className="flex items-center gap-2">
-                  <div className="w-2.5 h-2.5 rounded-full bg-[#FFB162] animate-pulse" />
-                  <span className="text-[10px] font-bold text-[#A35139] uppercase tracking-wider">
+                  <div className="w-2.5 h-2.5 rounded-full bg-[#FFB162] animate-pulse shrink-0" />
+                  <span className="text-[10px] font-bold text-[#A35139] uppercase tracking-wider truncate">
                     ACTIVE VOICE SESSION • LIVE DEMO
                   </span>
                 </div>
-                <span className="text-[10px] font-mono text-[#5C6B7A]">0:14 / 1.0x</span>
+                <span className="text-[10px] font-mono text-[#5C6B7A] shrink-0">0:14 / 1.0x</span>
               </div>
 
               {/* Conversation Thread Preview */}
               <div className="space-y-3">
                 {/* User Question Bubble */}
-                <div className="bg-[#F4F0E8] p-3.5 rounded-xl border border-[#C9C1B1]/40 space-y-1">
+                <div className="bg-[#F4F0E8] p-3.5 rounded-2xl border border-[#C9C1B1]/40 space-y-1">
                   <div className="text-[10px] font-bold text-[#5C6B7A]">Ramesh (Salaried • Hindi)</div>
-                  <p className="font-indic text-xs text-[#1B2632] italic font-semibold">
+                  <p className="font-indic text-xs sm:text-sm text-[#1B2632] italic font-semibold leading-relaxed">
                     "Agar main ₹2,500 har mahine bachaaoon 5 saal ke liye, toh kitna milega?"
                   </p>
                 </div>
 
                 {/* AI Vernacular Breakdown Response */}
-                <div className="bg-[#1B2632]/5 p-3.5 rounded-xl border border-[#1B2632]/15 space-y-1.5">
+                <div className="bg-[#1B2632]/5 p-3.5 rounded-2xl border border-[#1B2632]/15 space-y-1.5">
                   <div className="flex items-center justify-between">
                     <span className="text-[10px] font-extrabold text-[#1B2632] flex items-center gap-1">
                       <Sparkles className="w-3 h-3 text-[#A35139]" />
                       <span>FinLingo AI Breakdown</span>
                     </span>
-                    <span className="bg-[#1B2632] text-white px-2 py-0.5 rounded-full text-[9px] font-mono">
+                    <span className="bg-[#1B2632] text-white px-2 py-0.5 rounded-full text-[9px] font-mono shrink-0">
                       Native Voice Ready
                     </span>
                   </div>
-                  <p className="text-xs text-[#1B2632] leading-relaxed">
-                    ₹2,500/mo SIP par 12% returns se 5 saal mein total amount banega <strong className="text-[#A35139] font-mono">₹2,06,216</strong>!
+                  <p className="text-xs sm:text-sm text-[#1B2632] leading-relaxed break-words">
+                    ₹2,500/mo SIP par 12% returns se 5 saal mein total amount banega <strong className="text-[#A35139] font-mono font-bold break-words">₹2,06,216</strong>!
                   </p>
                 </div>
 
                 {/* Simulated Maturity Value Display */}
-                <div className="p-3 bg-[#F4F0E8] rounded-xl border border-[#C9C1B1]/60 flex items-center justify-between text-xs">
-                  <span className="text-[#5C6B7A] font-semibold">Simulated Maturity Value</span>
-                  <span className="font-serif font-bold text-[#1B2632] text-lg">₹2,06,216</span>
+                <div className="p-3.5 bg-[#F4F0E8] rounded-2xl border border-[#C9C1B1]/60 flex items-center justify-between text-xs sm:text-sm gap-2">
+                  <span className="text-[#5C6B7A] font-semibold">Simulated Maturity</span>
+                  <span className="font-serif font-bold text-[#1B2632] text-lg sm:text-xl font-mono break-words text-right">₹2,06,216</span>
                 </div>
               </div>
             </div>

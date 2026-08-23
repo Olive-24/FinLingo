@@ -136,10 +136,10 @@ export const GoalPlanningCardsPage: React.FC<GoalPlanningCardsPageProps> = ({
   };
 
   return (
-    <div className="w-full min-h-screen bg-[#EEE9DF] text-[#1B2632] flex flex-col items-center selection:bg-[#FFB162]/30">
+    <div className="w-full min-h-screen bg-[#EEE9DF] text-[#1B2632] flex flex-col items-center selection:bg-[#FFB162]/30 overflow-x-hidden">
       
       {/* 1. TOP HEADER NAVBAR */}
-      <header className="w-full border-b border-[#1B2632]/10 bg-[#EEE9DF]/90 backdrop-blur sticky top-0 z-50 py-4 px-6 md:px-12">
+      <header className="w-full border-b border-[#1B2632]/10 bg-[#EEE9DF]/90 backdrop-blur sticky top-0 z-50 py-4 px-4 sm:px-6 lg:px-12">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
             <button
@@ -175,23 +175,23 @@ export const GoalPlanningCardsPage: React.FC<GoalPlanningCardsPageProps> = ({
       </header>
 
       {/* 2. MAIN CENTERED CONTENT CANVAS */}
-      <main className="w-full max-w-7xl mx-auto px-6 md:px-12 py-12 flex flex-col gap-12">
+      <main className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 py-8 sm:py-12 flex flex-col gap-8 sm:gap-12">
         
         {/* Page Header */}
-        <div className="w-full text-center max-w-3xl mx-auto space-y-4">
+        <div className="w-full text-center max-w-3xl mx-auto space-y-3">
           <span className="inline-block text-xs font-bold uppercase tracking-widest text-[#A35139] bg-[#A35139]/10 px-3.5 py-1 rounded-full">
             GOAL-BASED SIMULATORS
           </span>
-          <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-medium tracking-tight text-[#1B2632] leading-[1.2]">
+          <h1 className="font-serif text-3xl sm:text-5xl lg:text-6xl font-medium tracking-tight text-[#1B2632] leading-[1.2]">
             Plan Your Wealth Goals in Plain Terms
           </h1>
-          <p className="text-base text-[#5C6B7A] leading-relaxed">
+          <p className="text-sm sm:text-base text-[#5C6B7A] leading-relaxed">
             Select a pre-configured goal template below. Simulate target amounts, monthly SIP inputs, and expected returns tailored for <strong className="text-[#1B2632] capitalize">{userOccupation.replace('_', ' ')}</strong> in ({currentLangObj.flag} {currentLangObj.nativeName}).
           </p>
         </div>
 
         {/* Structured Responsive Grid */}
-        <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {goalTemplates.map((template) => {
             const targetAmount = template.defaultTargetAmount(userOccupation);
             const monthlySavings = template.suggestedMonthlySavings(targetAmount, template.defaultTimeframeYears);
@@ -199,38 +199,38 @@ export const GoalPlanningCardsPage: React.FC<GoalPlanningCardsPageProps> = ({
             return (
               <div
                 key={template.id}
-                className="bg-white rounded-3xl border border-[#1B2632]/10 p-7 md:p-8 shadow-sm flex flex-col justify-between hover:shadow-md transition group"
+                className="bg-white rounded-3xl border border-[#1B2632]/10 p-5 sm:p-8 shadow-sm flex flex-col justify-between hover:shadow-md transition group space-y-6"
               >
                 <div>
                   {/* Top Row: Icon + Horizon Pill */}
-                  <div className="mb-4 flex items-center justify-between">
-                    <div className="w-12 h-12 rounded-2xl bg-[#1B2632] text-white flex items-center justify-center font-bold shadow-xs">
+                  <div className="mb-4 flex items-center justify-between gap-2">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-[#1B2632] text-white flex items-center justify-center font-bold shadow-xs shrink-0">
                       {template.badgeIcon}
                     </div>
-                    <span className="bg-[#FFB162]/20 text-[#A35139] px-3 py-1 rounded-full text-xs font-mono font-bold">
+                    <span className="bg-[#FFB162]/20 text-[#A35139] px-3 py-1 rounded-full text-xs font-mono font-bold shrink-0">
                       {template.defaultTimeframeYears} Years Horizon
                     </span>
                   </div>
 
                   {/* Title & Description */}
-                  <h3 className="font-serif text-2xl font-semibold text-[#1B2632] mb-3 leading-snug">
+                  <h3 className="font-serif text-xl sm:text-2xl font-semibold text-[#1B2632] mb-2 leading-snug">
                     {template.title}
                   </h3>
-                  <p className="text-sm text-[#5C6B7A] leading-relaxed mb-6">
+                  <p className="text-xs sm:text-sm text-[#5C6B7A] leading-relaxed mb-6">
                     {template.description}
                   </p>
 
                   {/* Target Metric Box */}
-                  <div className="bg-[#F4F0E8] p-4 rounded-xl mb-6 flex justify-between items-center text-xs">
+                  <div className="bg-[#F4F0E8] p-4 rounded-2xl mb-4 flex justify-between items-center text-xs gap-2">
                     <div>
                       <div className="text-[#5C6B7A] font-semibold">Target Corpus</div>
-                      <div className="font-serif font-bold text-[#1B2632] text-lg">
+                      <div className="font-serif font-bold text-[#1B2632] text-base sm:text-lg break-words">
                         ₹{targetAmount.toLocaleString('en-IN')}
                       </div>
                     </div>
                     <div className="text-right">
                       <div className="text-[#5C6B7A] font-semibold">Monthly SIP</div>
-                      <div className="font-mono font-bold text-emerald-700 text-sm">
+                      <div className="font-mono font-bold text-emerald-700 text-xs sm:text-sm break-words">
                         ₹{monthlySavings.toLocaleString('en-IN')}/mo
                       </div>
                     </div>

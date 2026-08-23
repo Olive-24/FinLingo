@@ -153,14 +153,14 @@ Can you explain the risk difference between SIP and FD for my profile?`;
   };
 
   return (
-    <div className="w-full min-h-screen bg-[#EEE9DF] text-[#1B2632] flex flex-col items-center selection:bg-[#FFB162]/30">
+    <div className="w-full min-h-screen bg-[#EEE9DF] text-[#1B2632] flex flex-col items-center selection:bg-[#FFB162]/30 overflow-x-hidden">
       {/* HEADER */}
-      <header className="w-full border-b border-[#1B2632]/10 bg-[#EEE9DF]/90 backdrop-blur sticky top-0 z-50 py-4 px-6 md:px-12">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
+      <header className="w-full border-b border-[#1B2632]/10 bg-[#EEE9DF]/90 backdrop-blur sticky top-0 z-50 py-4 px-4 sm:px-6 lg:px-12">
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <button
               onClick={onBackToChat}
-              className="px-4 py-2 rounded-full bg-white border border-[#C9C1B1] text-xs font-bold text-[#1B2632] flex items-center gap-1.5 hover:bg-[#F4F0E8] transition cursor-pointer"
+              className="px-4 py-2 rounded-full bg-white border border-[#C9C1B1] text-xs font-bold text-[#1B2632] flex items-center gap-1.5 hover:bg-[#F4F0E8] transition cursor-pointer shrink-0"
               title="Return to Workspace"
             >
               <ArrowLeft className="w-4 h-4" />
@@ -168,14 +168,14 @@ Can you explain the risk difference between SIP and FD for my profile?`;
             </button>
 
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-xl bg-[#1B2632] text-white flex items-center justify-center font-bold">
+              <div className="w-8 h-8 rounded-xl bg-[#1B2632] text-white flex items-center justify-center font-bold shrink-0">
                 <Sliders className="w-4 h-4" />
               </div>
-              <div>
-                <h1 className="font-serif font-bold text-lg text-[#1B2632]">
+              <div className="truncate">
+                <h1 className="font-serif font-bold text-base sm:text-lg text-[#1B2632] truncate">
                   Savings & SIP Simulator
                 </h1>
-                <p className="text-[11px] text-[#5C6B7A]">
+                <p className="text-[11px] text-[#5C6B7A] truncate">
                   Interactive Growth Calculator • <span className="text-[#A35139] font-bold">{currentLangObj.flag} {currentLangObj.nativeName}</span>
                 </p>
               </div>
@@ -187,7 +187,7 @@ Can you explain the risk difference between SIP and FD for my profile?`;
             {onOpenDashboard && (
               <button
                 onClick={onOpenDashboard}
-                className="px-3.5 py-1.5 rounded-full bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs font-bold flex items-center gap-1.5 transition-all border border-emerald-300/60"
+                className="px-3.5 py-1.5 rounded-full bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs font-bold flex items-center gap-1.5 transition-all border border-emerald-300/60 cursor-pointer"
               >
                 <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
                 <span className="hidden sm:inline">Dashboard</span>
@@ -197,7 +197,7 @@ Can you explain the risk difference between SIP and FD for my profile?`;
             {onOpenMythBusting && (
               <button
                 onClick={onOpenMythBusting}
-                className="px-3.5 py-1.5 rounded-full bg-amber-500/10 hover:bg-amber-500/20 text-[#D98D15] text-xs font-bold flex items-center gap-1.5 transition-all border border-[#F5A623]/30"
+                className="px-3.5 py-1.5 rounded-full bg-amber-500/10 hover:bg-amber-500/20 text-[#D98D15] text-xs font-bold flex items-center gap-1.5 transition-all border border-[#F5A623]/30 cursor-pointer"
               >
                 <Sparkles className="w-3.5 h-3.5" />
                 <span className="hidden sm:inline">Myth-Buster</span>
@@ -207,7 +207,7 @@ Can you explain the risk difference between SIP and FD for my profile?`;
             {onOpenGoalPlanning && (
               <button
                 onClick={onOpenGoalPlanning}
-                className="px-3.5 py-1.5 rounded-full bg-[#0F7173]/10 hover:bg-[#0F7173]/20 text-[#0F7173] text-xs font-bold flex items-center gap-1.5 transition-all border border-[#0F7173]/20"
+                className="px-3.5 py-1.5 rounded-full bg-[#0F7173]/10 hover:bg-[#0F7173]/20 text-[#0F7173] text-xs font-bold flex items-center gap-1.5 transition-all border border-[#0F7173]/20 cursor-pointer"
               >
                 <Sparkles className="w-3.5 h-3.5 text-[#0F7173]" />
                 <span className="hidden sm:inline">Goal Cards</span>
@@ -232,28 +232,28 @@ Can you explain the risk difference between SIP and FD for my profile?`;
       </header>
 
       {/* MAIN CONTENT AREA */}
-      <main className="w-full max-w-7xl mx-auto px-6 md:px-12 py-12 flex flex-col gap-12">
+      <main className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 py-8 sm:py-12 flex flex-col gap-8 sm:gap-12">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* LEFT COLUMN: LARGE HORIZONTAL SLIDERS & CONTROLS */}
           <div className="lg:col-span-5 space-y-6">
-            <div className="card-surface p-6 sm:p-8 bg-white border border-slate-200 shadow-md space-y-6">
+            <div className="p-5 sm:p-8 bg-white border border-slate-200 rounded-3xl shadow-md space-y-6">
               <div className="flex items-center justify-between border-b border-slate-100 pb-4">
                 <div>
                   <h2 className="text-lg font-extrabold text-[#2B2B2B]">Simulate Scenarios</h2>
                   <p className="text-xs text-[#6B6B6B]">Drag sliders to see live compounding growth</p>
                 </div>
-                <div className="icon-badge icon-badge-teal !w-10 !h-10">
+                <div className="w-10 h-10 rounded-2xl bg-[#0F7173]/10 flex items-center justify-center shrink-0">
                   <Sparkles className="w-5 h-5 text-[#0F7173]" />
                 </div>
               </div>
 
               {/* SLIDER 1: MONTHLY AMOUNT */}
               <div className="space-y-3">
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between gap-2">
                   <label className="text-xs font-bold uppercase tracking-wider text-[#6B6B6B]">
                     Monthly Investment
                   </label>
-                  <span className="text-xl sm:text-2xl font-black text-[#0F7173] font-mono">
+                  <span className="text-lg sm:text-2xl font-black text-[#0F7173] font-mono break-words">
                     ₹{monthlyAmount.toLocaleString('en-IN')}
                     <span className="text-xs text-[#6B6B6B] font-normal">/mo</span>
                   </span>
@@ -266,6 +266,7 @@ Can you explain the risk difference between SIP and FD for my profile?`;
                   step="500"
                   value={monthlyAmount}
                   onChange={(e) => setMonthlyAmount(Number(e.target.value))}
+                  className="h-2 w-full bg-[#1B2632]/10 rounded-lg appearance-none cursor-pointer accent-[#0F7173]"
                 />
 
                 <div className="flex justify-between text-[11px] font-mono text-slate-400">
@@ -277,11 +278,11 @@ Can you explain the risk difference between SIP and FD for my profile?`;
 
               {/* SLIDER 2: DURATION */}
               <div className="space-y-3">
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between gap-2">
                   <label className="text-xs font-bold uppercase tracking-wider text-[#6B6B6B]">
                     Duration (Horizon)
                   </label>
-                  <span className="text-xl sm:text-2xl font-black text-[#0F7173] font-mono">
+                  <span className="text-lg sm:text-2xl font-black text-[#0F7173] font-mono break-words">
                     {durationYears} {durationYears === 1 ? 'Year' : 'Years'}
                     <span className="text-xs text-[#6B6B6B] font-normal"> ({durationYears * 12} Mos)</span>
                   </span>
@@ -294,6 +295,7 @@ Can you explain the risk difference between SIP and FD for my profile?`;
                   step="1"
                   value={durationYears}
                   onChange={(e) => setDurationYears(Number(e.target.value))}
+                  className="h-2 w-full bg-[#1B2632]/10 rounded-lg appearance-none cursor-pointer accent-[#0F7173]"
                 />
 
                 <div className="flex justify-between text-[11px] font-mono text-slate-400">
@@ -304,7 +306,7 @@ Can you explain the risk difference between SIP and FD for my profile?`;
               </div>
 
               {/* TOGGLE: COMPARE WITH FIXED DEPOSIT (FD) */}
-              <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
+              <div className="pt-4 border-t border-slate-100 flex items-center justify-between gap-3">
                 <div>
                   <div className="text-sm font-bold text-[#2B2B2B]">Compare with Fixed Deposit</div>
                   <div className="text-[11px] text-[#6B6B6B]">Compare SIP (12%) vs FD (6.5%)</div>
@@ -313,7 +315,7 @@ Can you explain the risk difference between SIP and FD for my profile?`;
                 <button
                   type="button"
                   onClick={() => setCompareFD(!compareFD)}
-                  className={`w-12 h-7 rounded-full p-1 transition-colors duration-200 flex items-center ${
+                  className={`w-12 h-7 rounded-full p-1 transition-colors duration-200 flex items-center shrink-0 cursor-pointer ${
                     compareFD ? 'bg-[#0F7173] justify-end' : 'bg-slate-300 justify-start'
                   }`}
                 >
@@ -323,7 +325,7 @@ Can you explain the risk difference between SIP and FD for my profile?`;
             </div>
 
             {/* Quick Preset Buttons */}
-            <div className="card-surface p-5 bg-white border border-slate-200 shadow-sm space-y-3">
+            <div className="p-5 bg-white border border-slate-200 rounded-3xl shadow-sm space-y-3">
               <div className="text-xs font-bold uppercase tracking-wider text-[#6B6B6B]">
                 Quick Scenario Shortcuts
               </div>
@@ -339,7 +341,7 @@ Can you explain the risk difference between SIP and FD for my profile?`;
                       setMonthlyAmount(item.amt);
                       setDurationYears(item.yrs);
                     }}
-                    className="py-2 px-2 rounded-xl bg-slate-50 hover:bg-[#0F7173]/10 border border-slate-200 text-xs font-bold text-[#0F7173] text-center transition-all"
+                    className="py-2.5 px-2 rounded-xl bg-slate-50 hover:bg-[#0F7173]/10 border border-slate-200 text-xs font-bold text-[#0F7173] text-center transition-all cursor-pointer truncate"
                   >
                     {item.label}
                   </button>
@@ -350,18 +352,18 @@ Can you explain the risk difference between SIP and FD for my profile?`;
 
           {/* RIGHT COLUMN: LIVE ANIMATED SVG AREA CHART & DYNAMIC SUMMARY */}
           <div className="lg:col-span-7 space-y-6">
-            <div className="card-surface p-6 sm:p-8 bg-white border border-slate-200 shadow-md space-y-6">
+            <div className="p-5 sm:p-8 bg-white border border-slate-200 rounded-3xl shadow-md space-y-6">
               {/* Chart Legend Callouts */}
               <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-4">
                 <div className="flex items-center gap-4 text-xs font-bold">
                   <div className="flex items-center gap-1.5">
-                    <span className="w-3 h-3 rounded-full bg-[#0F7173]" />
+                    <span className="w-3 h-3 rounded-full bg-[#0F7173] shrink-0" />
                     <span>SIP Growth (12% Expected)</span>
                   </div>
 
                   {compareFD && (
                     <div className="flex items-center gap-1.5 text-slate-500">
-                      <span className="w-3 h-3 rounded-full bg-[#64748B]" />
+                      <span className="w-3 h-3 rounded-full bg-[#64748B] shrink-0" />
                       <span>Bank FD (6.5% Guaranteed)</span>
                     </div>
                   )}
@@ -448,33 +450,33 @@ Can you explain the risk difference between SIP and FD for my profile?`;
               </div>
 
               {/* DYNAMIC PLAIN-LANGUAGE VERNACULAR SUMMARY SENTENCE (18-20px) */}
-              <div className="p-5 rounded-2xl bg-[#0F7173]/10 border border-[#0F7173]/20 space-y-2">
+              <div className="p-4 sm:p-5 rounded-2xl bg-[#0F7173]/10 border border-[#0F7173]/20 space-y-2">
                 <div className="text-[11px] font-bold uppercase tracking-wider text-[#0F7173] flex items-center gap-1.5">
-                  <TrendingUp className="w-4 h-4 text-[#0F7173]" />
+                  <TrendingUp className="w-4 h-4 text-[#0F7173] shrink-0" />
                   <span>Dynamic Summary</span>
                 </div>
-                <p className="text-lg sm:text-xl font-extrabold text-[#2B2B2B] leading-relaxed">
+                <p className="text-base sm:text-xl font-extrabold text-[#2B2B2B] leading-relaxed break-words">
                   {getDynamicSummary()}
                 </p>
               </div>
 
               {/* FD VS SIP COMPARATIVE NUMBERS CARD */}
               {compareFD && (
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="p-4 rounded-2xl bg-[#0F7173]/10 border border-[#0F7173]/20 text-center space-y-1">
                     <div className="text-[11px] font-bold text-[#0F7173] uppercase">SIP Projected Return</div>
-                    <div className="text-2xl font-black text-[#0F7173] font-mono">
+                    <div className="text-xl sm:text-2xl font-black text-[#0F7173] font-mono break-words">
                       +₹{sipResult.wealthGain.toLocaleString('en-IN')}
                     </div>
-                    <div className="text-[11px] text-[#6B6B6B]">Total: ₹{sipResult.finalValue.toLocaleString('en-IN')}</div>
+                    <div className="text-[11px] text-[#6B6B6B] break-words">Total: ₹{sipResult.finalValue.toLocaleString('en-IN')}</div>
                   </div>
 
                   <div className="p-4 rounded-2xl bg-slate-100 border border-slate-200 text-center space-y-1">
                     <div className="text-[11px] font-bold text-[#64748B] uppercase">Bank FD Return</div>
-                    <div className="text-2xl font-black text-[#64748B] font-mono">
+                    <div className="text-xl sm:text-2xl font-black text-[#64748B] font-mono break-words">
                       +₹{fdResult.wealthGain.toLocaleString('en-IN')}
                     </div>
-                    <div className="text-[11px] text-[#6B6B6B]">Total: ₹{fdResult.finalValue.toLocaleString('en-IN')}</div>
+                    <div className="text-[11px] text-[#6B6B6B] break-words">Total: ₹{fdResult.finalValue.toLocaleString('en-IN')}</div>
                   </div>
                 </div>
               )}
@@ -491,7 +493,7 @@ Can you explain the risk difference between SIP and FD for my profile?`;
               <div className="pt-2">
                 <button
                   onClick={handleAskAI}
-                  className="w-full btn btn-primary py-4 text-base font-bold shadow-md shadow-[#0F7173]/20 flex items-center justify-center gap-2"
+                  className="w-full bg-[#0F7173] hover:bg-[#0B5456] text-white py-4 rounded-full text-sm sm:text-base font-bold shadow-md shadow-[#0F7173]/20 flex items-center justify-center gap-2 transition-all cursor-pointer"
                 >
                   <Send className="w-5 h-5" />
                   <span>Ask FinLingo AI About This Calculation</span>

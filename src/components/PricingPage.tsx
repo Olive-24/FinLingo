@@ -94,28 +94,28 @@ export const PricingPage: React.FC<PricingPageProps> = ({
   };
 
   return (
-    <div className="min-h-screen bg-[#FBF7F2] text-[#2B2B2B] flex flex-col justify-between selection:bg-[#0F7173] selection:text-white">
+    <div className="min-h-screen w-full bg-[#FBF7F2] text-[#2B2B2B] flex flex-col justify-between selection:bg-[#0F7173] selection:text-white overflow-x-hidden">
       {/* HEADER BAR */}
       <header className="bg-white/90 backdrop-blur-md border-b border-slate-200 sticky top-0 z-40 px-4 py-3.5 shadow-sm">
-        <div className="container mx-auto flex items-center justify-between">
+        <div className="w-full max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
             <button
               onClick={onBack}
-              className="p-2 rounded-full bg-slate-100 hover:bg-slate-200 text-[#2B2B2B] transition-colors text-xs font-bold flex items-center gap-1.5"
+              className="p-2 rounded-full bg-slate-100 hover:bg-slate-200 text-[#2B2B2B] transition-colors text-xs font-bold flex items-center gap-1.5 cursor-pointer shrink-0"
             >
               <ArrowLeft className="w-4 h-4" />
               <span className="hidden sm:inline">Back</span>
             </button>
 
             <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-full bg-[#0F7173]/15 text-[#0F7173] font-black flex items-center justify-center border border-[#0F7173]/30">
-                <Sparkles className="w-5 h-5 text-[#0F7173]" />
+              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[#0F7173]/15 text-[#0F7173] font-black flex items-center justify-center border border-[#0F7173]/30 shrink-0">
+                <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-[#0F7173]" />
               </div>
               <div>
-                <h1 className="font-extrabold text-base text-[#2B2B2B] tracking-tight flex items-center gap-2">
+                <h1 className="font-extrabold text-sm sm:text-base text-[#2B2B2B] tracking-tight flex items-center gap-2">
                   <span>FinLingo Subscription Plans</span>
                 </h1>
-                <p className="text-[11px] text-[#6B6B6B]">
+                <p className="text-[11px] text-[#6B6B6B] truncate">
                   Simple, Transparent Pricing • <span className="font-bold text-[#0F7173]">{currentLangObj.flag} {currentLangObj.nativeName}</span>
                 </p>
               </div>
@@ -140,7 +140,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({
       </header>
 
       {/* MAIN PRICING COMPARISON SECTION */}
-      <main className="container mx-auto px-4 py-8 sm:py-12 flex-1 max-w-4xl space-y-8">
+      <main className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 py-8 sm:py-12 flex-1 space-y-8">
         {/* Title Header */}
         <div className="text-center max-w-2xl mx-auto space-y-3">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#0F7173]/10 border border-[#0F7173]/20 text-[#0F7173] text-xs font-extrabold">
@@ -148,18 +148,18 @@ export const PricingPage: React.FC<PricingPageProps> = ({
             <span>Investment in Your Financial Freedom</span>
           </div>
 
-          <h2 className="text-3xl sm:text-4xl font-black text-[#2B2B2B] tracking-tight">
+          <h2 className="text-2xl sm:text-4xl font-black text-[#2B2B2B] tracking-tight">
             Choose the Right Plan for Your Family
           </h2>
-          <p className="text-sm text-[#6B6B6B]">
+          <p className="text-xs sm:text-sm text-[#6B6B6B]">
             Start free forever with basic voice AI or unlock personalized monthly reports, tax-saving tips & WhatsApp reminders for less than ₹2/day.
           </p>
         </div>
 
         {/* 2-COLUMN PRICING GRID (STACKS VERTICALLY ON MOBILE) */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 items-stretch pt-4">
-          {/* LEFT CARD: FREE PLAN (PLAIN WHITE CARD) */}
-          <div className="card-surface p-6 sm:p-8 bg-white border border-slate-200 rounded-3xl flex flex-col justify-between space-y-6 shadow-sm">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 items-stretch pt-4 max-w-4xl mx-auto">
+          {/* LEFT CARD: FREE PLAN */}
+          <div className="p-5 sm:p-8 bg-white border border-slate-200 rounded-3xl flex flex-col justify-between space-y-6 shadow-sm">
             <div className="space-y-4">
               <div className="space-y-1">
                 <span className="text-xs font-extrabold text-slate-400 uppercase tracking-wider">
@@ -173,7 +173,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({
 
               {/* Price */}
               <div className="py-2 border-y border-slate-100">
-                <div className="text-4xl font-black text-[#2B2B2B] font-mono">
+                <div className="text-3xl sm:text-4xl font-black text-[#2B2B2B] font-mono">
                   ₹0
                   <span className="text-sm font-semibold text-[#6B6B6B] font-sans"> / month</span>
                 </div>
@@ -211,16 +211,16 @@ export const PricingPage: React.FC<PricingPageProps> = ({
             {/* Outlined Button */}
             <button
               onClick={onBack}
-              className="w-full py-3.5 rounded-full border-2 border-[#0F7173] text-[#0F7173] hover:bg-[#0F7173]/10 font-extrabold text-sm transition-all"
+              className="w-full py-3.5 rounded-full border-2 border-[#0F7173] text-[#0F7173] hover:bg-[#0F7173]/10 font-extrabold text-sm transition-all cursor-pointer"
             >
               Continue Free
             </button>
           </div>
 
-          {/* RIGHT CARD: PREMIUM PLAN (SUBTLE TEAL BORDER & MARIGOLD RECOMMENDED RIBBON BADGE) */}
-          <div className="card-surface p-6 sm:p-8 bg-white border-2 border-[#0F7173] rounded-3xl flex flex-col justify-between space-y-6 shadow-xl relative overflow-hidden">
-            {/* Small Marigold "Recommended" Ribbon-Style Badge in top right corner */}
-            <div className="absolute top-4 right-4 bg-[#F5A623] text-slate-950 text-[11px] font-black px-3 py-1 rounded-full shadow-sm flex items-center gap-1">
+          {/* RIGHT CARD: PREMIUM PLAN */}
+          <div className="p-5 sm:p-8 bg-white border-2 border-[#0F7173] rounded-3xl flex flex-col justify-between space-y-6 shadow-xl relative overflow-hidden">
+            {/* Ribbon-Style Badge */}
+            <div className="absolute top-4 right-4 bg-[#F5A623] text-slate-950 text-[10px] sm:text-[11px] font-black px-3 py-1 rounded-full shadow-sm flex items-center gap-1">
               <Sparkles className="w-3 h-3 fill-slate-950 stroke-none" />
               <span>RECOMMENDED</span>
             </div>
@@ -240,8 +240,8 @@ export const PricingPage: React.FC<PricingPageProps> = ({
 
               {/* Price */}
               <div className="py-2 border-y border-slate-100">
-                <div className="flex items-baseline gap-2">
-                  <div className="text-4xl font-black text-[#0F7173] font-mono">
+                <div className="flex items-baseline gap-2 flex-wrap">
+                  <div className="text-3xl sm:text-4xl font-black text-[#0F7173] font-mono">
                     ₹49
                   </div>
                   <span className="text-sm font-semibold text-[#6B6B6B]"> / month</span>
@@ -277,7 +277,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({
             {/* Solid Primary Teal Button */}
             <button
               onClick={() => setIsRazorpayOpen(true)}
-              className="w-full py-4 rounded-full bg-[#0F7173] hover:bg-[#0B5456] text-white font-black text-sm shadow-lg shadow-[#0F7173]/25 transition-all flex items-center justify-center gap-2 group"
+              className="w-full py-4 rounded-full bg-[#0F7173] hover:bg-[#0B5456] text-white font-black text-sm shadow-lg shadow-[#0F7173]/25 transition-all flex items-center justify-center gap-2 group cursor-pointer"
             >
               <Sparkles className="w-4 h-4 text-amber-300 fill-amber-300" />
               <span>Upgrade to Premium — ₹49/mo</span>

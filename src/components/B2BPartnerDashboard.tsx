@@ -15,6 +15,7 @@ import {
   Filter,
   RefreshCw,
   Lock,
+  X,
 } from 'lucide-react';
 import type { LanguageCode } from '../types';
 
@@ -184,16 +185,20 @@ export const B2BPartnerDashboard: React.FC<B2BPartnerDashboardProps> = ({
     );
   }
 
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+
   // MAIN ENTERPRISE B2B DASHBOARD LAYOUT
   return (
-    <div className="min-h-screen bg-[#F4F6F8] font-sans text-[#1E2761] flex selection:bg-[#1E2761] selection:text-white">
-      {/* FIXED LEFT SIDEBAR IN ENTERPRISE NAVY (#1E2761) */}
-      <aside className="w-64 bg-[#1E2761] text-white flex flex-col justify-between shrink-0 shadow-lg z-30">
+    <div className="min-h-screen bg-[#F4F6F8] font-sans text-[#1E2761] flex flex-col md:flex-row selection:bg-[#1E2761] selection:text-white overflow-x-hidden">
+      {/* DESKTOP & MOBILE RESPONSIVE SIDEBAR */}
+      <aside className={`w-full md:w-64 bg-[#1E2761] text-white flex flex-col justify-between shrink-0 shadow-lg z-30 transition-all ${
+        isMobileSidebarOpen ? 'block' : 'hidden md:flex'
+      }`}>
         <div>
           {/* Institution Header Branding */}
-          <div className="p-5 border-b border-white/10 space-y-1">
+          <div className="p-4 sm:p-5 border-b border-white/10 space-y-1 flex items-center justify-between md:block">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-md bg-white text-[#1E2761] font-black flex items-center justify-center shadow-sm">
+              <div className="w-8 h-8 rounded-md bg-white text-[#1E2761] font-black flex items-center justify-center shadow-sm shrink-0">
                 <Building2 className="w-5 h-5 text-[#1E2761]" />
               </div>
               <div>
@@ -201,8 +206,19 @@ export const B2BPartnerDashboard: React.FC<B2BPartnerDashboardProps> = ({
                 <div className="text-[10px] text-slate-300 font-mono">White-Label Console</div>
               </div>
             </div>
-            <div className="pt-2 text-[11px] text-emerald-400 font-semibold truncate flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            
+            {/* Close button on mobile */}
+            <button
+              onClick={() => setIsMobileSidebarOpen(false)}
+              className="md:hidden p-1.5 rounded text-slate-300 hover:text-white"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+
+          <div className="p-4 sm:p-5 border-b border-white/10 hidden md:block">
+            <div className="text-[11px] text-emerald-400 font-semibold truncate flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
               <span className="truncate">{partnerBank.split(' ')[0]} Partner License</span>
             </div>
           </div>
@@ -210,62 +226,77 @@ export const B2BPartnerDashboard: React.FC<B2BPartnerDashboardProps> = ({
           {/* Navigation Items */}
           <nav className="p-3 space-y-1 text-xs font-semibold">
             <button
-              onClick={() => setActiveTab('overview')}
+              onClick={() => {
+                setActiveTab('overview');
+                setIsMobileSidebarOpen(false);
+              }}
               className={`w-full p-3 rounded-md flex items-center gap-3 transition-colors ${
                 activeTab === 'overview'
                   ? 'bg-white/15 text-white font-bold border-l-4 border-emerald-400'
                   : 'text-slate-300 hover:bg-white/10 hover:text-white'
               }`}
             >
-              <BarChart3 className="w-4 h-4" />
+              <BarChart3 className="w-4 h-4 shrink-0" />
               <span>Overview & Key Metrics</span>
             </button>
 
             <button
-              onClick={() => setActiveTab('analytics')}
+              onClick={() => {
+                setActiveTab('analytics');
+                setIsMobileSidebarOpen(false);
+              }}
               className={`w-full p-3 rounded-md flex items-center gap-3 transition-colors ${
                 activeTab === 'analytics'
                   ? 'bg-white/15 text-white font-bold border-l-4 border-emerald-400'
                   : 'text-slate-300 hover:bg-white/10 hover:text-white'
               }`}
             >
-              <Users className="w-4 h-4" />
+              <Users className="w-4 h-4 shrink-0" />
               <span>User Demographics</span>
             </button>
 
             <button
-              onClick={() => setActiveTab('languages')}
+              onClick={() => {
+                setActiveTab('languages');
+                setIsMobileSidebarOpen(false);
+              }}
               className={`w-full p-3 rounded-md flex items-center gap-3 transition-colors ${
                 activeTab === 'languages'
                   ? 'bg-white/15 text-white font-bold border-l-4 border-emerald-400'
                   : 'text-slate-300 hover:bg-white/10 hover:text-white'
               }`}
             >
-              <Globe className="w-4 h-4" />
+              <Globe className="w-4 h-4 shrink-0" />
               <span>Vernacular Language Map</span>
             </button>
 
             <button
-              onClick={() => setActiveTab('funnel')}
+              onClick={() => {
+                setActiveTab('funnel');
+                setIsMobileSidebarOpen(false);
+              }}
               className={`w-full p-3 rounded-md flex items-center gap-3 transition-colors ${
                 activeTab === 'funnel'
                   ? 'bg-white/15 text-white font-bold border-l-4 border-emerald-400'
                   : 'text-slate-300 hover:bg-white/10 hover:text-white'
               }`}
             >
-              <TrendingUp className="w-4 h-4" />
+              <TrendingUp className="w-4 h-4 shrink-0" />
               <span>Conversion Funnel</span>
             </button>
 
             <button
-              onClick={() => setActiveTab('settings')}
+              onClick={() => {
+                setActiveTab('settings');
+                setIsMobileSidebarOpen(false);
+              }}
               className={`w-full p-3 rounded-md flex items-center gap-3 transition-colors ${
                 activeTab === 'settings'
                   ? 'bg-white/15 text-white font-bold border-l-4 border-emerald-400'
                   : 'text-slate-300 hover:bg-white/10 hover:text-white'
               }`}
             >
-              <Sliders className="w-4 h-4" />
+              <Sliders className="w-4 h-4 shrink-0" />
               <span>White-Label Settings</span>
             </button>
           </nav>
@@ -281,7 +312,7 @@ export const B2BPartnerDashboard: React.FC<B2BPartnerDashboardProps> = ({
           <div className="flex items-center justify-between pt-1">
             <button
               onClick={onClose}
-              className="text-[11px] font-bold text-slate-300 hover:text-white flex items-center gap-1.5"
+              className="text-[11px] font-bold text-slate-300 hover:text-white flex items-center gap-1.5 cursor-pointer"
             >
               <span>Consumer View</span>
               <ChevronRight className="w-3.5 h-3.5" />
@@ -289,7 +320,7 @@ export const B2BPartnerDashboard: React.FC<B2BPartnerDashboardProps> = ({
 
             <button
               onClick={() => setIsAuthenticated(false)}
-              className="p-1.5 rounded bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white"
+              className="p-1.5 rounded bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white cursor-pointer"
               title="Lock Partner Console"
             >
               <LogOut className="w-3.5 h-3.5" />
@@ -301,17 +332,27 @@ export const B2BPartnerDashboard: React.FC<B2BPartnerDashboardProps> = ({
       {/* MAIN CONTENT AREA RIGHT (#F4F6F8) */}
       <div className="flex-1 flex flex-col min-w-0 overflow-y-auto">
         {/* TOP ENTERPRISE HEADER BAR */}
-        <header className="bg-white border-b border-slate-200 px-6 py-4 sticky top-0 z-20 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm">
-          <div>
-            <h1 className="text-xl font-black text-[#1E2761] tracking-tight flex items-center gap-2">
-              <span>B2B Partner Analytics Console</span>
-              <span className="text-xs font-mono px-2.5 py-0.5 rounded bg-slate-100 text-slate-700 font-bold border border-slate-200">
-                PROD v2.4
-              </span>
-            </h1>
-            <p className="text-xs text-slate-500 font-medium mt-0.5">
-              Aggregated & anonymized user insights for enterprise scaling and product qualification
-            </p>
+        <header className="bg-white border-b border-slate-200 px-4 sm:px-6 py-4 sticky top-0 z-20 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm">
+          <div className="flex items-center justify-between sm:block">
+            <div>
+              <h1 className="text-lg sm:text-xl font-black text-[#1E2761] tracking-tight flex items-center gap-2">
+                <span>B2B Partner Analytics Console</span>
+                <span className="text-xs font-mono px-2 py-0.5 rounded bg-slate-100 text-slate-700 font-bold border border-slate-200 shrink-0">
+                  PROD v2.4
+                </span>
+              </h1>
+              <p className="text-xs text-slate-500 font-medium mt-0.5 hidden sm:block">
+                Aggregated & anonymized user insights for enterprise scaling and product qualification
+              </p>
+            </div>
+
+            {/* Mobile Hamburger toggle button for sidebar */}
+            <button
+              onClick={() => setIsMobileSidebarOpen(!isMobileSidebarOpen)}
+              className="md:hidden p-2 rounded-md bg-slate-100 text-[#1E2761] border border-slate-200"
+            >
+              {isMobileSidebarOpen ? <X className="w-5 h-5" /> : <Filter className="w-5 h-5" />}
+            </button>
           </div>
 
           {/* Region & Date Filters */}

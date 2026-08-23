@@ -93,7 +93,7 @@ export function FinLingoLanding({
   ];
 
   return (
-    <div className="min-h-screen w-full bg-[#EEE9DF] text-[#1B2632] selection:bg-[#FFB162]/30 font-sans antialiased">
+    <div className="min-h-screen w-full overflow-x-hidden bg-[#EEE9DF] text-[#1B2632] selection:bg-[#FFB162]/30 font-sans antialiased">
       
       {/* 1. STICKY TOP NAVBAR */}
       <header className="sticky top-0 z-50 bg-[#EEE9DF]/90 backdrop-blur-md border-b border-[#1B2632]/10 px-6 py-4">

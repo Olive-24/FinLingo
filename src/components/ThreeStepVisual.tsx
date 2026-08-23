@@ -9,27 +9,27 @@ interface ThreeStepVisualProps {
 
 export const ThreeStepVisual: React.FC<ThreeStepVisualProps> = ({ onOpenOnboarding }) => {
   return (
-    <section id="how-it-works" className="py-20 border-t border-[#1B2632]/10 bg-[#EEE9DF] text-[#1B2632]">
-      <div className="max-w-6xl mx-auto px-6">
+    <section id="how-it-works" className="py-16 sm:py-20 border-t border-[#1B2632]/10 bg-[#EEE9DF] text-[#1B2632] overflow-x-hidden">
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
         
-        {/* Centered Header with mb-12 */}
-        <div className="text-center max-w-2xl mx-auto space-y-3 mb-12">
+        {/* Centered Header */}
+        <div className="text-center max-w-2xl mx-auto space-y-3 mb-10 sm:mb-12">
           <span className="bg-[#A35139]/10 text-[#A35139] px-3.5 py-1 rounded-full text-xs font-semibold uppercase tracking-wider inline-block">
             3-STEP SIMPLE GUIDE
           </span>
-          <h2 className="font-serif text-3xl sm:text-4xl font-medium tracking-tight text-[#1B2632] leading-[1.25]">
+          <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-medium tracking-tight text-[#1B2632] leading-snug">
             Three Steps to Financial Clarity
           </h2>
-          <p className="text-base text-[#5C6B7A] leading-relaxed">
+          <p className="text-sm sm:text-base text-[#5C6B7A] leading-relaxed">
             No banking manuals or complex formulas. Just speak, listen, and simulate live.
           </p>
         </div>
 
         {/* 3-Card Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           
           {/* Card 1: Step 01 */}
-          <div className="bg-white p-7 rounded-2xl border border-[#1B2632]/10 shadow-sm flex flex-col justify-between hover:border-[#1B2632]/30 transition space-y-6">
+          <div className="bg-white p-5 sm:p-8 rounded-3xl border border-[#1B2632]/10 shadow-sm flex flex-col justify-between hover:border-[#1B2632]/30 transition space-y-6">
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div className="w-10 h-10 rounded-xl bg-[#1B2632] text-white flex items-center justify-center font-bold">
@@ -40,7 +40,7 @@ export const ThreeStepVisual: React.FC<ThreeStepVisualProps> = ({ onOpenOnboardi
                 </span>
               </div>
 
-              <h3 className="font-serif text-xl sm:text-2xl font-semibold text-[#1B2632] leading-snug">
+              <h3 className="font-serif text-lg sm:text-xl font-semibold text-[#1B2632] leading-snug">
                 Bolo (Speak)
               </h3>
 
@@ -51,14 +51,14 @@ export const ThreeStepVisual: React.FC<ThreeStepVisualProps> = ({ onOpenOnboardi
 
             <button
               onClick={onOpenOnboarding}
-              className="inline-flex items-center gap-1.5 text-xs font-bold text-[#A35139] hover:text-[#1B2632] transition"
+              className="inline-flex items-center gap-1.5 text-xs font-bold text-[#A35139] hover:text-[#1B2632] transition cursor-pointer"
             >
               <span>Try Step 01 →</span>
             </button>
           </div>
 
           {/* Card 2: Step 02 */}
-          <div className="bg-white p-7 rounded-2xl border border-[#1B2632]/10 shadow-sm flex flex-col justify-between hover:border-[#1B2632]/30 transition space-y-6">
+          <div className="bg-white p-5 sm:p-8 rounded-3xl border border-[#1B2632]/10 shadow-sm flex flex-col justify-between hover:border-[#1B2632]/30 transition space-y-6">
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div className="w-10 h-10 rounded-xl bg-[#1B2632] text-white flex items-center justify-center font-bold">
@@ -69,7 +69,7 @@ export const ThreeStepVisual: React.FC<ThreeStepVisualProps> = ({ onOpenOnboardi
                 </span>
               </div>
 
-              <h3 className="font-serif text-xl sm:text-2xl font-semibold text-[#1B2632] leading-snug">
+              <h3 className="font-serif text-lg sm:text-xl font-semibold text-[#1B2632] leading-snug">
                 Samjho (Understand)
               </h3>
 
@@ -80,14 +80,14 @@ export const ThreeStepVisual: React.FC<ThreeStepVisualProps> = ({ onOpenOnboardi
 
             <button
               onClick={onOpenOnboarding}
-              className="inline-flex items-center gap-1.5 text-xs font-bold text-[#A35139] hover:text-[#1B2632] transition"
+              className="inline-flex items-center gap-1.5 text-xs font-bold text-[#A35139] hover:text-[#1B2632] transition cursor-pointer"
             >
               <span>Try Step 02 →</span>
             </button>
           </div>
 
           {/* Card 3: Step 03 */}
-          <div className="bg-white p-7 rounded-2xl border border-[#1B2632]/10 shadow-sm flex flex-col justify-between hover:border-[#1B2632]/30 transition space-y-6">
+          <div className="bg-white p-5 sm:p-8 rounded-3xl border border-[#1B2632]/10 shadow-sm flex flex-col justify-between hover:border-[#1B2632]/30 transition space-y-6">
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div className="w-10 h-10 rounded-xl bg-[#1B2632] text-white flex items-center justify-center font-bold">
@@ -98,7 +98,7 @@ export const ThreeStepVisual: React.FC<ThreeStepVisualProps> = ({ onOpenOnboardi
                 </span>
               </div>
 
-              <h3 className="font-serif text-xl sm:text-2xl font-semibold text-[#1B2632] leading-snug">
+              <h3 className="font-serif text-lg sm:text-xl font-semibold text-[#1B2632] leading-snug">
                 Simulate Karo
               </h3>
 
@@ -109,7 +109,7 @@ export const ThreeStepVisual: React.FC<ThreeStepVisualProps> = ({ onOpenOnboardi
 
             <button
               onClick={onOpenOnboarding}
-              className="inline-flex items-center gap-1.5 text-xs font-bold text-[#A35139] hover:text-[#1B2632] transition"
+              className="inline-flex items-center gap-1.5 text-xs font-bold text-[#A35139] hover:text-[#1B2632] transition cursor-pointer"
             >
               <span>Try Step 03 →</span>
             </button>

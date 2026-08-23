@@ -107,6 +107,7 @@ How do I start this SIP safely?`;
                 step="25000"
                 value={targetAmount}
                 onChange={(e) => setTargetAmount(Number(e.target.value))}
+                className="h-2 w-full bg-slate-700 rounded-lg appearance-none cursor-pointer accent-emerald-400"
               />
             </div>
 
@@ -123,6 +124,7 @@ How do I start this SIP safely?`;
                 step="1"
                 value={timeframeYears}
                 onChange={(e) => setTimeframeYears(Number(e.target.value))}
+                className="h-2 w-full bg-slate-700 rounded-lg appearance-none cursor-pointer accent-emerald-400"
               />
             </div>
 
