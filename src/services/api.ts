@@ -30,96 +30,44 @@ export interface SavedGoalData {
   projectedMaturity?: number;
 }
 
-// 1. LIVE VERNACULAR GENERATIVE AI ASSISTANT (Direct Gemini 2.5 Flash REST API + Express Fallback)
-export const askVernacularAI = async (
-  prompt: string,
-  language: string = 'English'
-): Promise<{ answer: string; source?: string }> => {
+// 1. LIVE VERNACULAR GENERATIVE AI ASSISTANT (Direct Gemini 2.5 Flash REST API)
+export const askVernacularAI = async (prompt: string, language: string = 'English'): Promise<string> => {
   const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
 
-  if (!prompt || !prompt.trim()) {
-    return { answer: 'Please enter a valid question.' };
+  if (!prompt || !prompt.trim()) return "Please enter a valid doubt.";
+
+  if (!apiKey) {
+    console.error("Missing VITE_GEMINI_API_KEY in .env");
+    return "API Key not configured. Please add VITE_GEMINI_API_KEY in your .env file.";
   }
 
-  // 1. Direct Google Gemini REST API Call (Zero NPM dependencies required)
-  if (apiKey) {
-    try {
-      const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            contents: [
-              {
-                parts: [
-                  {
-                    text: `You are FinLingo, a helpful, clear, and friendly financial literacy assistant. 
-Explain this question clearly in simple, jargon-free ${language} with direct examples:
-"${prompt}"`
-                  }
-                ]
-              }
-            ]
-          })
-        }
-      );
-
-      if (response.ok) {
-        const data = await response.json();
-        const textOutput = data.candidates?.[0]?.content?.parts?.[0]?.text;
-        if (textOutput) {
-          return { answer: textOutput, source: 'gemini-rest-api' };
-        }
-      }
-    } catch (error) {
-      console.warn('Direct Gemini REST API call failed, attempting backend Express API...', error);
-    }
-  }
-
-  // 2. Secondary Backend Express API Call (/api/ai/chat)
   try {
-    const res = await fetch(`${API_BASE}/ai/chat`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ prompt, language }),
-    });
-
-    if (res.ok) {
-      const data = await res.json();
-      if (data && data.answer) {
-        return { answer: data.answer, source: data.source || 'backend-api' };
+    const res = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [
+            {
+              parts: [
+                {
+                  text: `You are FinLingo, an AI financial assistant. Explain this clearly in simple ${language}: "${prompt}"`
+                }
+              ]
+            }
+          ]
+        })
       }
-    }
-  } catch (error) {
-    console.warn('Backend API endpoint unreachable, running dynamic fallback...', error);
-  }
+    );
 
-  // 3. Dynamic Fallback Logic (Never shows repetitive template strings)
-  return {
-    answer: getDynamicFallbackResponse(prompt, language),
-    source: 'dynamic-fallback'
-  };
+    const data = await res.json();
+    return data?.candidates?.[0]?.content?.parts?.[0]?.text || "No response generated.";
+  } catch (err) {
+    console.error("Gemini API Error:", err);
+    return "Network error. Please try again.";
+  }
 };
-
-function getDynamicFallbackResponse(query: string, language: string): string {
-  const lower = query.toLowerCase();
-
-  if (lower.includes('mrp')) {
-    return 'MRP stands for Maximum Retail Price. It is the highest price calculated by the manufacturer that a retailer can legally charge for a product in India, inclusive of all taxes.';
-  }
-  if (lower.includes('loan') || lower.includes('emi')) {
-    return 'A loan allows you to borrow money upfront which you repay in monthly EMIs (Equated Monthly Installments). Always compare the annual interest rate (APR) and processing charges before taking any loan.';
-  }
-  if (lower.includes('cibil') || lower.includes('credit score')) {
-    return 'A CIBIL score is a 3-digit score (between 300 and 900) that reflects your creditworthiness. A score above 750 helps you get loans approved faster with lower interest rates.';
-  }
-  if (lower.includes('fd') || lower.includes('fixed deposit')) {
-    return 'A Fixed Deposit (FD) is a secure bank investment offering guaranteed interest (around 6-7% p.a.) over a set period. It is great for emergency safety, though its returns may barely match real inflation.';
-  }
-
-  return `Here is what you should know about "${query}": In simple terms, managing money wisely involves budgeting your income, keeping an emergency fund for 6 months of expenses, and diversifying your savings across safe and growth-oriented options (${language}).`;
-}
 
 // 2. LIVE AMFI MUTUAL FUND NAV & MARKET RATES
 export const fetchLiveMarketData = async (): Promise<LiveMarketData> => {

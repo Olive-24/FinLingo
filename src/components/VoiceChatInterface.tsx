@@ -233,8 +233,8 @@ export const VoiceChatInterface: React.FC<VoiceChatInterfaceProps> = ({
 
     try {
       // Call Real Gemini AI API
-      const aiResponse = await askVernacularAI(textToSend, currentLangObj.nativeName || 'English');
-      aiText = typeof aiResponse === 'string' ? aiResponse : (aiResponse?.answer || String(aiResponse));
+      const responseText = await askVernacularAI(textToSend, currentLangObj.nativeName || 'English');
+      aiText = responseText;
 
       if (detectedGoal) {
         aiText += `\n\nTap **"Simulate this goal"** below to adjust timeframe & return parameters live!`;
