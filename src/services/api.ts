@@ -30,52 +30,79 @@ export interface SavedGoalData {
   projectedMaturity?: number;
 }
 
-// 1. LIVE VERNACULAR GENERATIVE AI ASSISTANT (Gemini 1.5 Flash REST API)
-export const askVernacularAI = async (prompt: string, language: string = 'English'): Promise<string> => {
+// 1. LIVE VERNACULAR GENERATIVE AI ASSISTANT (Multi-Model REST API Cascade)
+export const askVernacularAI = async (
+  prompt: string,
+  language: string = 'English'
+): Promise<string> => {
   const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
 
-  if (!prompt || !prompt.trim()) return "Please enter a valid doubt.";
+  if (!prompt || !prompt.trim()) {
+    return "Please enter a valid financial question.";
+  }
 
   if (!apiKey) {
     console.error("Missing VITE_GEMINI_API_KEY in .env");
-    return "API Key not configured. Please add VITE_GEMINI_API_KEY in your .env file.";
+    return "API key missing. Please add VITE_GEMINI_API_KEY in your .env file.";
   }
 
-  try {
-    const res = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+  // Model cascade: tries standard models in sequence until a valid candidate returns
+  const candidateModels = [
+    { version: 'v1beta', name: 'gemini-1.5-flash-latest' },
+    { version: 'v1', name: 'gemini-1.5-flash' },
+    { version: 'v1beta', name: 'gemini-2.0-flash' },
+    { version: 'v1beta', name: 'gemini-pro' }
+  ];
+
+  const payload = {
+    contents: [
       {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contents: [
-            {
-              role: "user",
-              parts: [
-                {
-                  text: `You are FinLingo, an AI financial literacy assistant. Explain the following question simply in plain ${language}: "${prompt}"`
-                }
-              ]
-            }
-          ]
-        })
+        role: "user",
+        parts: [
+          {
+            text: `You are FinLingo, an AI financial literacy assistant for Indian users. 
+Explain this query clearly, concisely, and without complex financial jargon in plain ${language}:
+"${prompt}"`
+          }
+        ]
       }
-    );
-
-    const data = await res.json();
-    console.log("Gemini API Full Response:", data);
-
-    if (data.error) {
-      console.error("Google API Error Details:", data.error);
-      return `API Error: ${data.error.message || "Invalid request"}`;
+    ],
+    generationConfig: {
+      temperature: 0.4,
+      maxOutputTokens: 600
     }
+  };
 
-    const answer = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-    return answer || "No text returned by the model.";
-  } catch (err: any) {
-    console.error("Network or Fetch Error:", err);
-    return `Network Error: ${err.message || "Failed to reach Google API"}`;
+  for (const target of candidateModels) {
+    const endpoint = `https://generativelanguage.googleapis.com/${target.version}/models/${target.name}:generateContent?key=${apiKey}`;
+
+    try {
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        console.warn(`Failed endpoint [${target.name}]:`, errorData);
+        continue;
+      }
+
+      const data = await response.json();
+      const generatedText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+
+      if (generatedText) {
+        return generatedText.trim();
+      }
+    } catch (networkError) {
+      console.warn(`Network error with model [${target.name}]:`, networkError);
+    }
   }
+
+  return "Could not retrieve an answer from the AI engine. Please verify your API key access in Google AI Studio.";
 };
 
 // 2. LIVE AMFI MUTUAL FUND NAV & MARKET RATES
