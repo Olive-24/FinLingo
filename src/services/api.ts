@@ -30,7 +30,7 @@ export interface SavedGoalData {
   projectedMaturity?: number;
 }
 
-// 1. LIVE VERNACULAR GENERATIVE AI ASSISTANT (Direct Gemini 2.5 Flash REST API)
+// 1. LIVE VERNACULAR GENERATIVE AI ASSISTANT (Gemini 1.5 Flash REST API)
 export const askVernacularAI = async (prompt: string, language: string = 'English'): Promise<string> => {
   const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
 
@@ -43,16 +43,17 @@ export const askVernacularAI = async (prompt: string, language: string = 'Englis
 
   try {
     const res = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           contents: [
             {
+              role: "user",
               parts: [
                 {
-                  text: `You are FinLingo, an AI financial assistant. Explain this clearly in simple ${language}: "${prompt}"`
+                  text: `You are FinLingo, an AI financial literacy assistant. Explain the following question simply in plain ${language}: "${prompt}"`
                 }
               ]
             }
@@ -62,10 +63,18 @@ export const askVernacularAI = async (prompt: string, language: string = 'Englis
     );
 
     const data = await res.json();
-    return data?.candidates?.[0]?.content?.parts?.[0]?.text || "No response generated.";
-  } catch (err) {
-    console.error("Gemini API Error:", err);
-    return "Network error. Please try again.";
+    console.log("Gemini API Full Response:", data);
+
+    if (data.error) {
+      console.error("Google API Error Details:", data.error);
+      return `API Error: ${data.error.message || "Invalid request"}`;
+    }
+
+    const answer = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+    return answer || "No text returned by the model.";
+  } catch (err: any) {
+    console.error("Network or Fetch Error:", err);
+    return `Network Error: ${err.message || "Failed to reach Google API"}`;
   }
 };
 
