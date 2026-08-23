@@ -30,7 +30,7 @@ export interface SavedGoalData {
   projectedMaturity?: number;
 }
 
-// 1. LIVE VERNACULAR GENERATIVE AI ASSISTANT (Gemini 2.5 Flash API + Diagnostic Error Reporting)
+// 1. LIVE VERNACULAR GENERATIVE AI ASSISTANT (Gemini 3.6 Flash API)
 export const askVernacularAI = async (
   prompt: string,
   language: string = 'English'
@@ -43,24 +43,10 @@ export const askVernacularAI = async (
   }
 
   if (!apiKey) {
-    console.error("VITE_GEMINI_API_KEY is missing or empty in .env");
     return "API Key is missing. Add VITE_GEMINI_API_KEY to your .env file and restart Vite.";
   }
 
-  const payload = {
-    contents: [
-      {
-        role: "user",
-        parts: [
-          {
-            text: `You are FinLingo, a financial literacy assistant. Explain this in plain, simple ${language}: "${prompt}"`
-          }
-        ]
-      }
-    ]
-  };
-
-  const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+  const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${apiKey}`;
 
   try {
     const response = await fetch(endpoint, {
@@ -68,22 +54,34 @@ export const askVernacularAI = async (
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify(payload)
+      body: JSON.stringify({
+        contents: [
+          {
+            role: "user",
+            parts: [
+              {
+                text: `You are FinLingo, a helpful financial literacy assistant for Indian retail investors and borrowers. 
+Explain this clearly in plain, simple, jargon-free ${language} with real-world examples:
+"${prompt}"`
+              }
+            ]
+          }
+        ]
+      })
     });
 
     const data = await response.json();
 
     if (!response.ok || data.error) {
-      console.error("Google AI Studio Error Details:", data);
-      const message = data?.error?.message || `HTTP error ${response.status}`;
-      return `Gemini API Error: ${message}`;
+      console.error("Gemini API Error:", data);
+      return `API Error: ${data?.error?.message || response.statusText}`;
     }
 
     const output = data?.candidates?.[0]?.content?.parts?.[0]?.text;
     return output ? output.trim() : "No text returned by the model.";
   } catch (err: any) {
-    console.error("Network/Fetch Exception:", err);
-    return `Network Connection Error: ${err.message || "Failed to reach Google servers"}`;
+    console.error("Fetch Exception:", err);
+    return `Network Error: ${err.message || "Failed to reach AI service"}`;
   }
 };
 
